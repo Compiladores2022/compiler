@@ -23,7 +23,7 @@
  
 prog: decl subprog
 
-    | decl  { printf("No hay errores \n"); } 
+    | decl  { printf("No errors were found \n"); }
 
     | RETURN expr ';'
     ;
