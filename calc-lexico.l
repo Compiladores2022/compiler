@@ -14,16 +14,21 @@
 char [a-zA-Z]
 digit [0-9]
 bool "true"|"false"
+type "int"|"bool"
 
 %%
 
 {digit}+                     {
-                                printf("INT : %d\n",atoi(yytext)); 
+                                printf("INT : %d\n",atoi(yytext));
                                 return INT;}
 
 {bool}                       {
                                 printf("BOOL : %d\n", yytext);
                                 return BOOL;}
+
+{type}                       {
+                                printf("TYPE : %d\n", yytext);
+                                return TYPE;}
 
 {char}({char}|{digit})*      {
                                 printf("ID : %s\n",yytext);
