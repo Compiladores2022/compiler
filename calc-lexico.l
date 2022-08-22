@@ -1,0 +1,52 @@
+%{
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+#include "calc-sintaxis.tab.h"
+
+%}
+
+%option noyywrap
+%option yylineno
+
+char [a-zA-Z]
+digit [0-9]
+bool "true"|"false"
+
+%%
+
+{digit}+                     {
+                                printf("INT : %d\n",atoi(yytext)); 
+                                return INT;}
+
+{bool}                       {
+                                printf("BOOL : %d\n", yytext);
+                                return BOOL;}
+
+{char}({char}|{digit})*      {
+                                printf("ID : %s\n",yytext);
+                                return ID;}
+
+[&\|+-*;()]                  {  printf("%s\n",yytext);
+                                  return *yytext;}
+
+.|\n                          ; /* ignore all the rest */
+
+%%
+
+void yyerror(){
+	printf("%s%d\n","-> ERROR Sintactico en la linea: ",yylineno);
+}
+
+int main(int argc,char *argv[]){
+	++argv,--argc;
+	if (argc > 0)
+		yyin = fopen(argv[0],"r");
+	else
+		yyin = stdin;
+
+	yyparse();
+
+}
