@@ -5,9 +5,11 @@
 
 %}
  
+%token ID
+%token TYPE
 %token INT
 %token BOOL
-%token ID
+%token RETURN
 
 %type expr
 %type CONST
@@ -19,8 +21,27 @@
  
 %%
  
-prog: expr ';'  { printf("No hay errores \n"); } 
+prog: decl subprog
+
+    | decl  { printf("No hay errores \n"); } 
+
+    | RETURN expr ';'
     ;
+
+subprog: decl subprog
+
+       | assign subprog
+
+       | RETURN expr ';' subprog
+
+       |
+       ;
+
+decl: TYPE assign ';'
+    ;
+
+assign: ID '=' expr ';'
+      ;
   
 expr: CONST               
 
