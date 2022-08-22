@@ -15,6 +15,7 @@ char [a-zA-Z]
 digit [0-9]
 bool "true"|"false"
 type "int"|"bool"
+return "return"
 
 %%
 
@@ -27,14 +28,18 @@ type "int"|"bool"
                                 return BOOL;}
 
 {type}                       {
-                                printf("TYPE : %d\n", yytext);
+                                printf("TYPE : %s\n", yytext);
                                 return TYPE;}
+
+{return}                     {
+                                printf("RETURN : %s\n", yytext);
+                                return RETURN;}
 
 {char}({char}|{digit})*      {
                                 printf("ID : %s\n",yytext);
                                 return ID;}
 
-[&\|+-*;()]                  {  printf("%s\n",yytext);
+[&\|+\-*;()]                  {  printf("%s\n",yytext);
                                   return *yytext;}
 
 .|\n                          ; /* ignore all the rest */
