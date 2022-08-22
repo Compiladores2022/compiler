@@ -24,7 +24,7 @@ return "return"
                                 return INT;}
 
 {bool}                       {
-                                printf("BOOL : %d\n", yytext);
+                                printf("BOOL : %s\n", yytext);
                                 return BOOL;}
 
 {type}                       {
@@ -39,8 +39,9 @@ return "return"
                                 printf("ID : %s\n",yytext);
                                 return ID;}
 
-[&\|+\-*;()]                  {  printf("%s\n",yytext);
-                                  return *yytext;}
+[&|+\-*;()=]                 {  
+                                printf("%s\n",yytext);
+                                return *yytext;}
 
 .|\n                          ; /* ignore all the rest */
 
