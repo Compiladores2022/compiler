@@ -6,10 +6,11 @@
 %}
  
 %token INT
+%token BOOL
 %token ID
 
 %type expr
-%type VALOR
+%type CONST
     
 %left '+' '-' 
 %left '*'
@@ -21,7 +22,9 @@
 prog: expr ';'  { printf("No hay errores \n"); } 
     ;
   
-expr: VALOR               
+expr: CONST               
+
+    | ID
 
     | expr '+' expr    
     
@@ -37,11 +40,9 @@ expr: VALOR
     ;
 
 
-VALOR : INT              
+CONST : INT              
 
-    | TRUE
-
-    | FALSE
+    | BOOL
     ;
  
 %%
