@@ -59,7 +59,7 @@ return "return"
 %%
 
 void yyerror(){
-	printf("%s%d\n","-> ERROR Sintactico en la linea: ",yylineno);
+	printf("%s%d\n","-> Syntax error in line: ",yylineno);
     exit(1);
 }
 
