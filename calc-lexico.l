@@ -59,7 +59,8 @@ return "return"
 %%
 
 void yyerror(){
-	fprintf(stderr, "%s%d\n","-> ERROR Sintactico en la linea: ",yylineno);
+	printf("%s%d\n","-> ERROR Sintactico en la linea: ",yylineno);
+    exit(1);
 }
 
 int main(int argc,char *argv[]){
@@ -70,5 +71,5 @@ int main(int argc,char *argv[]){
 		yyin = stdin;
 
 	yyparse();
-    return 100;
+    return 0;
 }
