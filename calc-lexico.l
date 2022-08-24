@@ -52,15 +52,14 @@ return "return"
 <C_COMMENT>\n   { }
 <C_COMMENT>.    { }
 
-\n|\t|" "                     ; /* ignore some special symbols */
+\n|" "                        ; /* ignore some special symbols */
 
-.                             { printf("Error: %s\n",yytext); }
+.                             { yyerror(); }
 
 %%
 
 void yyerror(){
-	printf("%s%d\n","-> ERROR Sintactico en la linea: ",yylineno);
-    exit(1);
+	fprintf(stderr, "%s%d\n","-> ERROR Sintactico en la linea: ",yylineno);
 }
 
 int main(int argc,char *argv[]){
@@ -71,5 +70,5 @@ int main(int argc,char *argv[]){
 		yyin = stdin;
 
 	yyparse();
-
+    return 100;
 }
