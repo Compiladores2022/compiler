@@ -17,6 +17,8 @@ bool "true"|"false"
 type "int"|"bool"
 return "return"
 
+%x C_COMMENT
+
 %%
 
 {digit}+                     {
@@ -43,7 +45,12 @@ return "return"
                                 printf("%s\n",yytext);
                                 return *yytext;}
 
-.|\n                          ; /* ignore all the rest */
+.|\n|"//".*"\n"              ; /* ignore all the rest */
+
+"/*"            { BEGIN(C_COMMENT); }
+<C_COMMENT>"*/" { BEGIN(INITIAL); }
+<C_COMMENT>\n   { }
+<C_COMMENT>.    { }
 
 %%
 
