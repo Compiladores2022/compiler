@@ -45,17 +45,22 @@ return "return"
                                 printf("%s\n",yytext);
                                 return *yytext;}
 
-.|\n|"//".*"\n"              ; /* ignore all the rest */
+"//".*\n                     ; /* ignore inline comments*/
 
 "/*"            { BEGIN(C_COMMENT); }
 <C_COMMENT>"*/" { BEGIN(INITIAL); }
 <C_COMMENT>\n   { }
 <C_COMMENT>.    { }
 
+\n|\t|" "                     ; /* ignore some special symbols */
+
+.                             { printf("Error: %s\n",yytext); }
+
 %%
 
 void yyerror(){
 	printf("%s%d\n","-> ERROR Sintactico en la linea: ",yylineno);
+    exit(1);
 }
 
 int main(int argc,char *argv[]){
