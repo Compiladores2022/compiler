@@ -2,7 +2,9 @@
 
 echo "SETTING UP COMPILER...\n"
 
-sh script.sh
+flex calc-lexico.l
+bison -d calc-sintaxis.y
+gcc lex.yy.c calc-sintaxis.tab.c
 
 echo "RUNNING TESTS FOR VALID PROGRAMS...\n"
 
