@@ -4,7 +4,7 @@ echo "SETTING UP COMPILER...\n"
 
 sh script.sh
 
-echo "RUNNING TESTS...\n"
+echo "RUNNING TESTS FOR VALID PROGRAMS...\n"
 
 for test in tests/acceptedPrograms/*.txt; do
     ./a.out $test > /tmp/out
@@ -14,6 +14,8 @@ for test in tests/acceptedPrograms/*.txt; do
        cat /tmp/out
     fi
 done
+
+echo "RUNNING TESTS FOR INVALID PROGRAMS...\n"
 
 for test in tests/invalidPrograms/*.txt; do
     ./a.out $test > /tmp/out

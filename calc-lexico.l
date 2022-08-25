@@ -12,6 +12,7 @@
 %option yylineno
 
 char [a-zA-Z]
+lowerchar [a-z]
 digit [0-9]
 bool "true"|"false"
 type "int"|"bool"
@@ -21,40 +22,40 @@ return "return"
 
 %%
 
-{digit}+                     {
-                                printf("INT : %d\n",atoi(yytext));
-                                return INT;}
+{digit}+                         {
+                                    printf("INT : %d\n",atoi(yytext));
+                                    return INT;}
 
-{bool}                       {
-                                printf("BOOL : %s\n", yytext);
-                                return BOOL;}
+{bool}                           {
+                                    printf("BOOL : %s\n", yytext);
+                                    return BOOL;}
 
-{type}                       {
-                                printf("TYPE : %s\n", yytext);
-                                return TYPE;}
+{type}                           {
+                                    printf("TYPE : %s\n", yytext);
+                                    return TYPE;}
 
-{return}                     {
-                                printf("RETURN : %s\n", yytext);
-                                return RETURN;}
+{return}                         {
+                                    printf("RETURN : %s\n", yytext);
+                                    return RETURN;}
 
-{char}({char}|{digit})*      {
-                                printf("ID : %s\n",yytext);
-                                return ID;}
+{lowerchar}({char}|{digit})*     {
+                                    printf("ID : %s\n",yytext);
+                                    return ID;}
 
-[&|+\-*;()=]                 {  
-                                printf("%s\n",yytext);
-                                return *yytext;}
+[&|+\-*;()=]                     {
+                                    printf("%s\n",yytext);
+                                    return *yytext;}
 
-"//".*\n                     ; /* ignore inline comments*/
+"//".*\n                         ; /* ignore inline comments*/
 
-"/*"            { BEGIN(C_COMMENT); }
-<C_COMMENT>"*/" { BEGIN(INITIAL); }
-<C_COMMENT>\n   { }
-<C_COMMENT>.    { }
+"/*"                             { BEGIN(C_COMMENT); }
+<C_COMMENT>"*/"                  { BEGIN(INITIAL); }
+<C_COMMENT>\n                    { }
+<C_COMMENT>.                     { }
 
-\n|" "                        ; /* ignore some special symbols */
+\n|" "                           ; /* ignore some special symbols */
 
-.                             { yyerror(); }
+.                                { yyerror(); }
 
 %%
 
