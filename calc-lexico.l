@@ -12,7 +12,6 @@
 %option yylineno
 
 char [a-zA-Z]
-lowerchar [a-z]
 digit [0-9]
 bool "true"|"false"
 type "int"|"bool"
@@ -38,7 +37,7 @@ return "return"
                                     printf("RETURN : %s\n", yytext);
                                     return RETURN;}
 
-{lowerchar}({char}|{digit})*     {
+{char}({char}|{digit})*          {
                                     printf("ID : %s\n",yytext);
                                     return ID;}
 
