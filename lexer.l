@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "calc-sintaxis.tab.h"
+#include "parser.tab.h"
 
 %}
 
