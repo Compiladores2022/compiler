@@ -25,7 +25,8 @@ prog: decl ';' subprog { printf("No errors were found \n"); }
     | RETURN expr ';' { printf("No errors were found \n"); }
     ;
 
-subprog: /* empty */ 
+subprog: assign ';'
+       | RETURN expr ';' 
        | decl ';' subprog
        | assign ';' subprog
        | RETURN expr ';' subprog
