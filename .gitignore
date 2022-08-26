@@ -4,3 +4,8 @@ build.sh
 
 # Vim
 **/*.swp
+
+# Generated files from flex and bison
+lex.yy.c
+parser.tab.c
+parser.tab.h
