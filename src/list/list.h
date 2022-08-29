@@ -8,6 +8,7 @@ typedef struct node {
 
 typedef struct {
     node* head;
+    node* last;
 } list;
 
 list initList(void);
