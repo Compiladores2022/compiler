@@ -8,7 +8,7 @@ echo "RUNNING TESTS FOR VALID PROGRAMS...\n"
 
 exit_status=0
 
-for test in tests/acceptedPrograms/*.txt; do
+for test in tests/accepted-programs/*.txt; do
     ./a.out $test > /tmp/out
     if [ $? -eq 1 ]
     then
@@ -20,7 +20,7 @@ done
 
 echo "RUNNING TESTS FOR INVALID PROGRAMS...\n"
 
-for test in tests/invalidPrograms/*.txt; do
+for test in tests/rejected-programs/*.txt; do
     ./a.out $test > /tmp/out
     if [ $? -eq 0 ]
     then
