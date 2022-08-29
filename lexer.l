@@ -4,7 +4,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "calc-sintaxis.tab.h"
+#include "parser.tab.h"
+
+void yyerror();
 
 %}
 
@@ -12,6 +14,7 @@
 %option yylineno
 
 char [a-zA-Z]
+lower_char [a-z]
 digit [0-9]
 bool "true"|"false"
 type "int"|"bool"
@@ -37,7 +40,7 @@ return "return"
                                     printf("RETURN : %s\n", yytext);
                                     return RETURN;}
 
-{char}({char}|{digit})*          {
+{lower_char}({char}|{digit})*    {
                                     printf("ID : %s\n",yytext);
                                     return ID;}
 

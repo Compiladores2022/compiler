@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+void yyerror();
+int yylex();
+
 %}
  
 %token ID
@@ -25,7 +28,8 @@ prog: decl ';' subprog { printf("No errors were found \n"); }
     | RETURN expr ';' { printf("No errors were found \n"); }
     ;
 
-subprog: /* empty */ 
+subprog: assign ';'
+       | RETURN expr ';' 
        | decl ';' subprog
        | assign ';' subprog
        | RETURN expr ';' subprog

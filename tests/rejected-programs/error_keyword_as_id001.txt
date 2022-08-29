@@ -1,0 +1,4 @@
+bool var1 = true;
+int bool = 3 + 943;
+
+return var1;

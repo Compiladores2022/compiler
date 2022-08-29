@@ -1,0 +1,4 @@
+int foo = (4+77)*(5-10);
+bool bar = p | q & r;
+
+return foo;
