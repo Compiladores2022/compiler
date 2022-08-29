@@ -4,10 +4,10 @@
 #include "list.h"
 
 
-list* initList(void) {
+list initList(void) {
     list* l = (list*) malloc(sizeof(list));
     l->head = (node*) malloc(sizeof(node));
-    return l;
+    return *l;
 }
 
 void add(list l, void* v) {

@@ -3,7 +3,7 @@
 #include "list.h"
 
 int main() {
-    list l = *initList();
+    list l = initList();
 
     for (int i = 0; i < 10; i++) {
         int* n = (int*)malloc(sizeof(int));

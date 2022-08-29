@@ -10,7 +10,7 @@ typedef struct {
     node* head;
 } list;
 
-list* initList(void);
+list initList(void);
 
 void add(list l, void* v);
 
