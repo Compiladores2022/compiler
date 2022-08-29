@@ -9,12 +9,12 @@ list* initList(void) {
     return l;
 }
 
-void add(list* l, void* v) {
+void add(list l, void* v) {
     node* n = (node*) malloc(sizeof(node));
     n->value = v;
     n->next = NULL;
 
-    node* cursor = l->head;
+    node* cursor = l.head;
     while (cursor->next != NULL) {
         cursor = cursor->next;
     }
