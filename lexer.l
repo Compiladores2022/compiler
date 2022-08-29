@@ -6,6 +6,8 @@
 
 #include "parser.tab.h"
 
+void yyerror();
+
 %}
 
 %option noyywrap
