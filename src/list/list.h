@@ -15,4 +15,8 @@ list initList(void);
 
 void add(list l, void* v);
 
+void addFirst(list l, void* v);
+
+void* removeFirst(list l);
+
 #endif 
