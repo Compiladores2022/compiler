@@ -1,0 +1,24 @@
+
+
+name: Test Twelve Mens Morris
+
+on:
+  push:
+    paths:
+      - '**/list/*'
+  pull_request:
+    paths:
+      - '**/list/*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test symbol-list
+      run: |
+        gcc test.c list.c -o test
+        ./test
