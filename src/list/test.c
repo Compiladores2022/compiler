@@ -3,7 +3,7 @@
 #include "list.h"
 
 int main() {
-    list l = initList();
+    list_t l = init_list();
 
     for (int i = 0; i < 10; i++) {
         int* n = (int*)malloc(sizeof(int));
@@ -13,7 +13,7 @@ int main() {
     }
 
     printf("Iterating list: \n");
-    node* cursor = (l.head)->next;
+    node_t* cursor = (l.head)->next;
     while (cursor != NULL) {
         int* v = (int*) cursor->value;
         printf("%d\n", *v);
