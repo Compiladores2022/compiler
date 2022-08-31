@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include "symbol-table.h"
 
 int main() {

@@ -12,8 +12,7 @@ symbol_t* search_symbol_l(list_t l, char* name) {
     symbol_t* s = NULL;
     while (cur != NULL) {
         if (!strcmp(name, ((symbol_t*) cur->value)->name)) {
-            s = (symbol_t*) cur->value;
-            break;
+            return (symbol_t*) cur->value;
         }
         cur = cur->next;
     }
