@@ -5,12 +5,12 @@
 
 typedef list_t symstack_t;
 
-symstack_t init_stack(void);
+symstack_t* init_stack(void);
 
-void push(symstack_t s, void* v);
+void push(symstack_t* s, void* v);
 
-void* pop(symstack_t s);
+void* pop(symstack_t* s);
 
-void* top(symstack_t s);
+void* top(symstack_t* s);
 
 #endif 

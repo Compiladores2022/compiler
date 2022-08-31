@@ -5,7 +5,6 @@
 #include "symbol.h"
 #include "flags.h"
 #include "types.h"
-#include "../../list/list.h"
 
 symbol_t* create_symbol(void) {
     symbol_t* s = malloc(sizeof(symbol_t));
