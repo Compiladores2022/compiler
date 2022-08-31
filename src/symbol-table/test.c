@@ -22,18 +22,6 @@ int main() {
     set_name(s5, "test5");
     printf("Created s5\n");
 
-    /*
-    symstack_t* stack = init_stack();
-    list_t* list = init_list();
-
-    add_symbol(list, s1);
-    push(stack, list);
-
-    list_t* l_ptr = (list_t*) top(stack);
-    symbol_t* s = (symbol_t*) (l_ptr->head)->next->value;
-    printf("%s", s->name);
-    */
-
     insert_symbol(st, s1);
     insert_symbol(st, s2);
     push_level(st);
