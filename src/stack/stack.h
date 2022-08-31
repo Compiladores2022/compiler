@@ -3,14 +3,14 @@
 
 #include "../list/list.h"
 
-typedef list stack;
+typedef list_t stack_t;
 
-stack initStack(void);
+stack_t init_stack(void);
 
-void push(stack s, void* v);
+void push(stack_t s, void* v);
 
-void* pop(stack s);
+void* pop(stack_t s);
 
-void* top(stack s);
+void* top(stack_t s);
 
 #endif 

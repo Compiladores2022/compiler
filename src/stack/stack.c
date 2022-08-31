@@ -2,22 +2,22 @@
 #include "stack.h"
 #include "../list/list.h"
 
-stack initStack(void) {
-    return initList();
+stack_t init_stack(void) {
+    return init_list();
 }
 
-void push(stack s, void* v) {
-    addFirst(s, v);
+void push(stack_t s, void* v) {
+    add_first(s, v);
 }
 
-void* pop(stack s) {
-    return removeFirst(s);
+void* pop(stack_t s) {
+    return remove_first(s);
 }
 
-void* top(stack s) {
-    node* topNode = s.head->next;
-    if (topNode) {
-        return topNode->value;
+void* top(stack_t s) {
+    node_t* top_node = s.head->next;
+    if (top_node) {
+        return top_node->value;
     }
     return NULL;
 }
