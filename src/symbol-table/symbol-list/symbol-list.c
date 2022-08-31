@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+
 #include "symbol-list.h"
 
 void add_symbol(list_t l, symbol_t* s) {
