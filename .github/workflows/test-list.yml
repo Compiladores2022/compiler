@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Test symbol-list
+    - name: Test list
       run: |
         cd src/list/
         gcc test.c list.c -o test
