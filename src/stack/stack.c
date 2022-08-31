@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "stack.h"
+
 #include "../list/list.h"
 
 symstack_t init_stack(void) {
