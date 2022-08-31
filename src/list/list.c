@@ -3,7 +3,7 @@
 #include <string.h>
 #include "list.h"
 
-node_t* create_node_t(void * v) {
+node_t* create_node(void * v) {
     node_t* n = (node_t*) malloc(sizeof(node_t));
     n->value = v;
     n->next = NULL;
@@ -18,7 +18,7 @@ list_t init_list(void) {
 }
 
 void add(list_t l, void* v) {
-    node_t* n = create_node_t(v);
+    node_t* n = create_node(v);
 
     if (l.head->next == NULL) {
         l.head->next = n;
@@ -30,7 +30,7 @@ void add(list_t l, void* v) {
 }
 
 void add_first(list_t l, void* v) {
-    node_t* n = create_node_t(v);
+    node_t* n = create_node(v);
     
     if (l.head->next == NULL) {
         l.head->next = n;
@@ -42,10 +42,10 @@ void add_first(list_t l, void* v) {
 }
 
 void* remove_first(list_t l) {
-    node_t* topNode = l.head->next;
-    if (topNode) {
+    node_t* top_node = l.head->next;
+    if (top_node) {
         l.head->next = l.head->next->next;
-        return topNode->value;
+        return top_node->value;
     }
     return NULL;
 }
