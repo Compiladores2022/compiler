@@ -22,8 +22,8 @@ void set_value(symbol_t* s, int value);
 
 void set_name(symbol_t* s, char* value);
 
-void add_symbol(list l, symbol_t* s);
+void add_symbol(list_t l, symbol_t* s);
 
-symbol_t* search_symbol_l(list l, char* name);
+symbol_t* search_symbol_l(list_t l, char* name);
 
 #endif
