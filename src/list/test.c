@@ -4,7 +4,6 @@
 #include "list.h"
 
 int main() {
-
     list_t l = init_list();
 
     for (int i = 0; i < 10; i++) {
