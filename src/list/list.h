@@ -1,22 +1,22 @@
 #ifndef LIST_H
 #define LIST_H 
 
-typedef struct node {
+typedef struct node_t {
     void* value;
-    struct node* next;
-} node;
+    struct node_t* next;
+} node_t;
 
 typedef struct {
-    node* head;
-    node* last;
-} list;
+    node_t* head;
+    node_t* last;
+} list_t;
 
-list initList(void);
+list_t init_list(void);
 
-void add(list l, void* v);
+void add(list_t l, void* v);
 
-void addFirst(list l, void* v);
+void add_first(list_t l, void* v);
 
-void* removeFirst(list l);
+void* remove_first(list_t l);
 
 #endif 
