@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Test symbol-list
+    - name: Test symbol-table
       run: |
-        cd src/symbol-table/symbol-list/
+        cd src/symbol-table/
         gcc test.c symbol-table.c ../stack/stack.c ../list/list.c symbol-list/symbol-list.c -o test
         ./test
