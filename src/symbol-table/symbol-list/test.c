@@ -10,7 +10,7 @@
 
 int main() {
 
-    list_t l = init_list();
+    list_t* l = init_list();
     symbol_t* symbols[10];
     char* name;
 
@@ -31,7 +31,7 @@ int main() {
     printf("Symbol found: %s\n", t->name);
 
     printf("Iterating list: \n");
-    node_t* cursor = (l.head)->next;
+    node_t* cursor = (l->head)->next;
     while (cursor != NULL) {
         symbol_t v = *(symbol_t*) cursor->value;
         printf("%s \n", v.name);
