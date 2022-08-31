@@ -19,5 +19,5 @@ jobs:
     - name: Test symbol-table
       run: |
         cd src/symbol-table/
-        gcc test.c symbol-table.c ../stack/stack.c ../list/list.c symbol-list/symbol-list.c -o test
+        gcc test.c symbol-table.c ../stack/stack.c ../list/list.c symbol-list/symbol-list.c symbol/symbol.c -o test
         ./test
