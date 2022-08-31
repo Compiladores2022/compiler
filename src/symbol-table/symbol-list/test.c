@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "symbol.h"
-#include "flags.h"
-#include "types.h"
-#include "../list/list.h"
+#include "../symbol/symbol.h"
+#include "../symbol/flags.h"
+#include "../symbol/types.h"
+#include "../../list/list.h"
+#include "symbol-list.h"
 
 int main() {
 

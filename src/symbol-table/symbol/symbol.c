@@ -5,7 +5,7 @@
 #include "symbol.h"
 #include "flags.h"
 #include "types.h"
-#include "../list/list.h"
+#include "../../list/list.h"
 
 symbol_t* create_symbol(void) {
     symbol_t* s = malloc(sizeof(symbol_t));
@@ -26,21 +26,4 @@ void set_value(symbol_t* s, int value) {
 
 void set_name(symbol_t* s, char* name) {
     s->name = name;
-}
-
-void add_symbol(list_t l, symbol_t* s) {
-    add(l, s);
-}
-
-symbol_t* search_symbol_l(list_t l, char* name) {
-    node_t* cur = (l.head)->next;
-    symbol_t* s = NULL;
-    while (cur != NULL) {
-        if (!strcmp(name, ((symbol_t*) cur->value)->name)) {
-            s = (symbol_t*) cur->value;
-            break;
-        }
-        cur = cur->next;
-    }
-    return s;
 }
