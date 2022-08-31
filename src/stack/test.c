@@ -3,7 +3,7 @@
 #include "stack.h"
 
 int main() {
-    stack_t s = init_stack();
+    symstack_t s = init_stack();
 
     for (int i = 0; i < 10; i++) {
         int* x = (int*)malloc(sizeof(int));
