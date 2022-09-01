@@ -1,0 +1,23 @@
+name: Test Symbol Table 
+
+on:
+  push:
+    paths:
+      - '**/symbol-table/*'
+  pull_request:
+    paths:
+      - '**/symbol-table/*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test symbol-table
+      run: |
+        cd src/symbol-table/
+        gcc test.c symbol-table.c ../stack/stack.c ../list/list.c symbol-list/symbol-list.c symbol/symbol.c -o test
+        ./test
