@@ -1,0 +1,23 @@
+name: Test List
+
+on:
+  push:
+    paths:
+      - '**/list/*'
+  pull_request:
+    paths:
+      - '**/list/*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test list
+      run: |
+        cd src/list/
+        gcc test.c list.c -o test
+        ./test

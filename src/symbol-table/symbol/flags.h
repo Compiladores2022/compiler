@@ -4,6 +4,6 @@
 typedef enum {
 VAR,
 FUNC,
-} s_flag;
+} flag_t;
 
 #endif

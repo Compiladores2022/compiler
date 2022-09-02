@@ -4,6 +4,6 @@
 typedef enum {
 INT,
 BOOL,
-} s_type;
+} type_t;
 
 #endif
