@@ -44,7 +44,7 @@ lex.yy.c: src/lexer.l
 	flex $^
 
 parser.tab.c parser.tab.h: src/parser.y
-	bison -d  $^
+	bison -d $^
 
 compiler: $(DEPS)
-	$(CC) -o $@ $^
+	$(CC) -o npc $^
