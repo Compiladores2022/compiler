@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "symbol-table.h"
-#include "symbol/symbol.h"
+#include "../symbol/symbol.h"
 
 int main() {
     symtable_t* st = init_symtable();
