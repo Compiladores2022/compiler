@@ -38,7 +38,7 @@ $(TARGETS):
 
 # COMPILER
 
-DEPS := src/lex.yy.c src/parser.tab.c $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST)
+DEPS := src/lex.yy.c src/parser.tab.c $(SYMBOL_TABLE) $(SYNTAX_TREE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST) $(TREE)
 
 LEXER := src/lexer.l
 PARSER := src/parser.y
