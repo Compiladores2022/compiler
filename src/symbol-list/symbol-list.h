@@ -1,7 +1,7 @@
 #ifndef SYMBOL_LIST_H
 #define SYMBOL_LIST_H
 
-#include "../../list/list.h"
+#include "../libs/list/list.h"
 #include "../symbol/symbol.h"
 
 void add_symbol(list_t* l, symbol_t* s);

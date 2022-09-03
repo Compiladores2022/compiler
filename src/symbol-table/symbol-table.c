@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "symbol-table.h"
-#include "symbol-list/symbol-list.h"
+#include "../symbol-list/symbol-list.h"
 
 symtable_t* init_symtable(void) {
     symtable_t* st = (symtable_t*) malloc(sizeof(symtable_t));

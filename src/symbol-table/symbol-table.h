@@ -1,10 +1,9 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
-#include "symbol-list/symbol-list.h"
-#include "symbol/symbol.h"
-#include "../stack/stack.h"
-#include "../list/list.h"
+#include "../symbol-list/symbol-list.h"
+#include "../symbol/symbol.h"
+#include "../libs/stack/stack.h"
 
 typedef struct {
     symstack_t* stack;

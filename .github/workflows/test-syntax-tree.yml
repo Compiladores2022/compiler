@@ -1,0 +1,23 @@
+name: Test Syntax Tree
+
+on:
+  push:
+    paths:
+      - '**/syntax-tree/*'
+  pull_request:
+    paths:
+      - '**/syntax-tree/*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test syntax-tree
+      run: |
+        cd src/syntax-tree/
+        gcc test.c syntax-tree.c ../symbol/symbol.c ../libs/tree/tree-node.c -o test
+        ./test

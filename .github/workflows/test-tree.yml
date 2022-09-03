@@ -1,12 +1,12 @@
-name: Test List
+name: Test Tree
 
 on:
   push:
     paths:
-      - '**/list/*'
+      - '**/tree/*'
   pull_request:
     paths:
-      - '**/list/*'
+      - '**/tree/*'
 
 permissions:
   contents: read
@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Test list
+    - name: Test tree
       run: |
-        cd src/libs/list/
-        gcc test.c list.c -o test
+        cd src/libs/tree/
+        gcc test.c tree-node.c -o test
         ./test
