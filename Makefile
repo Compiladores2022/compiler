@@ -9,7 +9,7 @@ STACK_TEST := $(shell find src/libs/stack -name "*.c")
 TREE := $(shell find src/libs/tree -name "*.c" -not -name "*test*")
 TREE_TEST := $(shell find src/libs/tree -name "*.c")
 
-SYMBOL := $(shTEST := $(shell find src/symbol-list -name "*.c")
+SYMBOL := $(shell find src/symbol -name "*.c")
 
 SYMBOL_LIST := $(shell find src/symbol-list -name "*.c" -not -name "*test*")
 SYMBOL_LIST_TEST := $(shell find src/symbol-list -name "*.c")
@@ -38,16 +38,16 @@ $(TARGETS):
 
 # COMPILER
 
-DEPS := lex.yy.c parser.tab.c $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST)
+DEPS := src/lex.yy.c src/parser.tab.c $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST)
 
 LEXER := src/lexer.l
 PARSER := src/parser.y
 
-lex.yy.c: $(LEXER)
-	flex $^
+src/lex.yy.c: $(LEXER)
+	flex -o src/lex.yy.c $^
 
-parser.tab.c parser.tab.h: $(PARSER)
-	bison -d $^
+src/parser.tab.c: $(PARSER)
+	bison -d -o src/parser.tab.c $^
 
 compiler: $(DEPS)
 	$(CC) -o npc $^
@@ -57,4 +57,4 @@ compiler: $(DEPS)
 .PHONY: clean
 
 clean:
-	rm lex.yy.c npc parser.tab.c parser.tab.h
+	rm src/lex.yy.c npc src/parser.tab.c src/parser.tab.h
