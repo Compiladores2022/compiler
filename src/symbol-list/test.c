@@ -5,7 +5,7 @@
 #include "../symbol/symbol.h"
 #include "../symbol/flags.h"
 #include "../symbol/types.h"
-#include "../../list/list.h"
+#include "../libs/list/list.h"
 #include "symbol-list.h"
 
 int main() {
