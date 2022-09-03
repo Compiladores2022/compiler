@@ -20,7 +20,7 @@ SYMBOL_TABLE_TEST := $(shell find src/symbol-table -name "*.c")
 SYNTAX_TREE := $(shell find src/syntax-tree -name "*.c" -not -name "*test*")
 SYNTAX_TREE_TEST := $(shell find src/syntax-tree -name "*.c")
 
-all: list stack symbol_list symbol_table
+all: list stack symbol_list symbol_table syntax-tree
 
 list: $(LIST_TEST)
 	$(CC) -o list-test $^
