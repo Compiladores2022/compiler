@@ -15,16 +15,17 @@ void yyerror();
 
 char [a-zA-Z]
 lower_char [a-z]
-digit [0-9]
+number [0-9]+
 bool "true"|"false"
 type "int"|"bool"
 return "return"
+id {lower_char}({char}|{number})*
 
 %x C_COMMENT
 
 %%
 
-{digit}+                         {
+{number}                         {
                                     printf("INT : %d\n",atoi(yytext));
                                     return INT;}
 
@@ -40,8 +41,9 @@ return "return"
                                     printf("RETURN : %s\n", yytext);
                                     return RETURN;}
 
-{lower_char}({char}|{digit})*    {
+{id}                             {
                                     printf("ID : %s\n",yytext);
+                                    yylval.sval = strdup(yytext);
                                     return ID;}
 
 [&|+\-*;()=]                     {
