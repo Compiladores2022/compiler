@@ -2,8 +2,8 @@
 #define TYPES_H
 
 typedef enum {
-INT,
-BOOL,
+INT_t,
+BOOL_t,
 } type_t;
 
 #endif
