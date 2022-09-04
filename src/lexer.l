@@ -21,6 +21,10 @@ bool "true"|"false"
 type "int"|"bool"
 return "return"
 id {lower_char}({char}|{number})*
+operator [&|+\-*;()=]
+comment "//".*\n
+ignore \n|" "
+other .
 
 %x C_COMMENT
 
@@ -47,20 +51,20 @@ id {lower_char}({char}|{number})*
                                     yylval.sval = strdup(yytext);
                                     return ID;}
 
-[&|+\-*;()=]                     {
+{operator}                       {
                                     printf("%s\n",yytext);
                                     return *yytext;}
 
-"//".*\n                         ; /* ignore inline comments*/
+{comment}                        ; /* ignore inline comments*/
 
 "/*"                             { BEGIN(C_COMMENT); }
 <C_COMMENT>"*/"                  { BEGIN(INITIAL); }
 <C_COMMENT>\n                    { }
 <C_COMMENT>.                     { }
 
-\n|" "                           ; /* ignore some special symbols */
+{ignore}                         ; /* ignore some special symbols */
 
-.                                { yyerror(); }
+{other}                          { yyerror(); }
 
 %%
 
