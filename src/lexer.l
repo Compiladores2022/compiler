@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "parser.tab.h"
+#include "utils/utils.h"
 
 void yyerror();
 
@@ -70,11 +71,15 @@ void yyerror(){
 
 int main(int argc,char *argv[]){
 	++argv,--argc;
-	if (argc > 0)
+	if (argc > 0) {
+        if (strcmp(extension(argv[0]), ".np")) {
+             printf("File extension not compatible with compiler \n");
+             return 1;
+        }
 		yyin = fopen(argv[0],"r");
-	else
+	} else {
 		yyin = stdin;
-
+    }
 	yyparse();
     return 0;
 }

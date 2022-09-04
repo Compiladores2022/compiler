@@ -2,6 +2,7 @@ CC = gcc
 
 # SET PATHS
 
+UTILS_PATH := src/utils
 LIST_PATH := src/libs/list
 STACK_PATH := src/libs/stack
 TREE_PATH := src/libs/tree
@@ -14,6 +15,9 @@ LEXER_PATH := src/lexer.l
 PARSER_PATH := src/parser.y
 
 # FETCH FILES
+
+UTILS_TEST := $(wildcard $(UTILS_PATH)/*.c)
+UTILS := $(filter-out $(UTILS_PATH)/test.c, $(UTILS_TEST))
 
 LIST_TEST := $(wildcard $(LIST_PATH)/*.c)
 LIST := $(filter-out $(LIST_PATH)/test.c, $(LIST_TEST))
@@ -37,8 +41,16 @@ SYNTAX_TREE := $(filter-out $(SYNTAX_TREE_PATH)/test.c, $(SYNTAX_TREE_TEST))
 
 # COMPILER INFRASTRUCTURE RULES
 
-TARGETS := list stack tree symbol_list symbol_table syntax_tree npc
+TARGETS := utils \
+           list \
+           stack \
+           tree \
+           symbol_list \
+           symbol_table \
+           syntax_tree \
+           npc
 
+utils: $(UTILS_TEST)
 list: $(LIST_TEST)
 tree: $(TREE_TEST)
 stack: $(STACK_TEST) $(LIST)
@@ -57,7 +69,16 @@ $(LEXER): $(LEXER_PATH)
 $(PARSER): $(PARSER_PATH)
 	bison -d -o $@ $^
 
-npc: $(LEXER) $(PARSER) $(SYNTAX_TREE) $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(TREE) $(LIST)
+npc: $(LEXER) \
+     $(PARSER) \
+     $(SYNTAX_TREE) \
+     $(SYMBOL_TABLE) \
+     $(SYMBOL_LIST) \
+     $(SYMBOL) \
+     $(STACK) \
+     $(TREE) \
+     $(LIST) \
+     $(UTILS)
 
 # BUILD RULES
 

@@ -10,6 +10,7 @@ echo "RUNNING TESTS FOR VALID PROGRAMS...\n"
 exit_status=0
 
 for test in tests/accepted-programs/*.txt; do
+    echo "CORRO $test"
     ./npc $test > /tmp/out
     if [ $? -eq 1 ]
     then
