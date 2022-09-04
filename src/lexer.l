@@ -77,7 +77,7 @@ int main(int argc,char *argv[]){
 	++argv,--argc;
 	if (argc > 0) {
         if (strcmp(extension(argv[0]), ".np")) {
-             printf("File extension not compatible with compiler \n");
+             printf("File extension not compatible with compiler\n");
              return 1;
         }
 		yyin = fopen(argv[0],"r");
