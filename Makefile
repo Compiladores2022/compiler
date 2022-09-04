@@ -1,5 +1,15 @@
 CC = gcc
 
+# DEFINE FUNCTIONS
+
+define files
+	$(filter-out $(1)/test.c, $(wildcard $(1)/*.c))
+endef
+
+define test
+	$(wildcard $(1)/*test*.c)
+endef
+
 # SET PATHS
 
 UTILS_PATH := src/utils
@@ -16,28 +26,14 @@ PARSER_PATH := src/parser.y
 
 # FETCH FILES
 
-UTILS_TEST := $(wildcard $(UTILS_PATH)/*.c)
-UTILS := $(filter-out $(UTILS_PATH)/test.c, $(UTILS_TEST))
-
-LIST_TEST := $(wildcard $(LIST_PATH)/*.c)
-LIST := $(filter-out $(LIST_PATH)/test.c, $(LIST_TEST))
-
-STACK_TEST := $(wildcard $(STACK_PATH)/*.c)
-STACK := $(filter-out $(STACK_PATH)/test.c, $(STACK_TEST))
-
-TREE_TEST := $(wildcard $(TREE_PATH)/*.c)
-TREE := $(filter-out $(TREE_PATH)/test.c, $(TREE_TEST))
-
-SYMBOL := $(wildcard $(SYMBOL_PATH)/*.c)
-
-SYMBOL_LIST_TEST := $(wildcard $(SYMBOL_LIST_PATH)/*.c)
-SYMBOL_LIST := $(filter-out $(SYMBOL_LIST_PATH)/test.c, $(SYMBOL_LIST_TEST))
-
-SYMBOL_TABLE_TEST := $(wildcard $(SYMBOL_TABLE_PATH)/*.c)
-SYMBOL_TABLE := $(filter-out $(SYMBOL_TABLE_PATH)/test.c, $(SYMBOL_TABLE_TEST))
-
-SYNTAX_TREE_TEST := $(wildcard $(SYNTAX_TREE_PATH)/*.c)
-SYNTAX_TREE := $(filter-out $(SYNTAX_TREE_PATH)/test.c, $(SYNTAX_TREE_TEST))
+UTILS :=  $(call files, $(UTILS_PATH))
+LIST := $(call files, $(LIST_PATH))
+STACK := $(call files, $(STACK_PATH))
+TREE := $(call files, $(TREE_PATH))
+SYMBOL := $(call files, $(SYMBOL_PATH))
+SYMBOL_LIST := $(call files, $(SYMBOL_LIST_PATH))
+SYMBOL_TABLE := $(call files, $(SYMBOL_TABLE_PATH))
+SYNTAX_TREE := $(call files, $(SYNTAX_TREE_PATH))
 
 # COMPILER INFRASTRUCTURE RULES
 
@@ -50,13 +46,13 @@ TARGETS := utils \
            syntax_tree \
            npc
 
-utils: $(UTILS_TEST)
-list: $(LIST_TEST)
-tree: $(TREE_TEST)
-stack: $(STACK_TEST) $(LIST)
-symbol_list: $(SYMBOL_LIST_TEST) $(LIST) $(SYMBOL)
-symbol_table: $(SYMBOL_TABLE_TEST) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST)
-syntax_tree: $(SYNTAX_TREE_TEST) $(SYMBOL) $(TREE)
+utils: $(UTILS) $(call test, $(UTILS_PATH))
+list: $(LIST) $(call test, $(LIST_PATH))
+tree: $(TREE) $(call test, $(TREE_PATH))
+stack: $(STACK) $(LIST) $(call test, $(STACK_PATH))
+symbol_list: $(SYMBOL_LIST) $(LIST) $(SYMBOL) $(call test, $(SYMBOL_LIST_PATH))
+symbol_table: $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST) $(call test, $(SYMBOL_TABLE_PATH))
+syntax_tree: $(SYNTAX_TREE) $(SYMBOL) $(TREE) $(call test, $(SYNTAX_TREE_PATH))
 
 # COMPILER RULES
 
