@@ -18,6 +18,5 @@ jobs:
     - uses: actions/checkout@v3
     - name: Test symbol-table
       run: |
-        cd src/symbol-table/
-        gcc test.c symbol-table.c ../libs/stack/stack.c ../libs/list/list.c ../symbol-list/symbol-list.c ../symbol/symbol.c -o test
-        ./test
+        make symbol_table
+        ./symbol_table
