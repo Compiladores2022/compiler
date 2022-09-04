@@ -1,26 +1,38 @@
 CC = gcc
 
-LIST := $(shell find src/libs/list -name "*.c" -not -name "*test*")
-LIST_TEST := $(shell find src/libs/list -name "*.c")
+# SET PATHS
 
-STACK := $(shell find src/libs/stack -name "*.c" -not -name "*test*")
-STACK_TEST := $(shell find src/libs/stack -name "*.c")
+LIST_PATH := src/libs/list
+STACK_PATH := src/libs/stack
+TREE_PATH := src/libs/tree
+SYMBOL_PATH := src/symbol
+SYMBOL_LIST_PATH := src/symbol-list/
+SYMBOL_TABLE_PATH := src/symbol-table/
+SYNTAX_TREE_PATH := src/syntax-tree/
 
-TREE := $(shell find src/libs/tree -name "*.c" -not -name "*test*")
-TREE_TEST := $(shell find src/libs/tree -name "*.c")
+# FETCH FILES
 
-SYMBOL := $(shell find src/symbol -name "*.c")
+LIST_TEST := $(wildcard $(LIST_PATH)/*.c)
+LIST := $(filter-out $(LIST_PATH)/test.c, $(LIST_TEST))
 
-SYMBOL_LIST := $(shell find src/symbol-list -name "*.c" -not -name "*test*")
-SYMBOL_LIST_TEST := $(shell find src/symbol-list -name "*.c")
+STACK_TEST := $(wildcard $(STACK_PATH)/*.c)
+STACK := $(filter-out $(STACK_PATH)/test.c, $(STACK_TEST))
 
-SYMBOL_TABLE := $(shell find src/symbol-table -name "*.c" -not -name "*test*")
-SYMBOL_TABLE_TEST := $(shell find src/symbol-table -name "*.c")
+TREE_TEST := $(wildcard $(TREE_PATH)/*.c)
+TREE := $(filter-out $(TREE_PATH)/test.c, $(TREE_TEST))
 
-SYNTAX_TREE := $(shell find src/syntax-tree -name "*.c" -not -name "*test*")
-SYNTAX_TREE_TEST := $(shell find src/syntax-tree -name "*.c")
+SYMBOL := $(wildcard $(SYMBOL_PATH)/*.c)
 
-# INFRASTRUCTURE
+SYMBOL_LIST_TEST := $(wildcard $(SYMBOL_LIST_PATH)/*.c)
+SYMBOL_LIST := $(filter-out $(SYMBOL_LIST_PATH)/test.c, $(SYMBOL_LIST_TEST))
+
+SYMBOL_TABLE_TEST := $(wildcard $(SYMBOL_TABLE_PATH)/*.c)
+SYMBOL_TABLE := $(filter-out $(SYMBOL_TABLE_PATH)/test.c, $(SYMBOL_TABLE_TEST))
+
+SYNTAX_TREE_TEST := $(wildcard $(SYNTAX_TREE_PATH)/*.c)
+SYNTAX_TREE := $(filter-out $(SYNTAX_TREE_PATH)/test.c, $(SYNTAX_TREE_TEST))
+
+# COMPILER INFRASTRUCTURE RULES
 
 TARGETS := list stack tree symbol_list symbol_table syntax_tree npc
 
@@ -33,10 +45,10 @@ symbol_list: $(SYMBOL_LIST_TEST) $(LIST) $(SYMBOL)
 symbol_table: $(SYMBOL_TABLE_TEST) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST)
 syntax_tree: $(SYNTAX_TREE_TEST) $(SYMBOL) $(TREE)
 
-# COMPILER
+# COMPILER RULES
 
 LEXER := src/lex.yy.c
-PARSER := src/parser.tab.c
+PARSER := src/parser.tab.c src/parser.tab.h
 
 $(LEXER): src/lexer.l
 	flex -o $@ $^
@@ -55,8 +67,5 @@ $(TARGETS):
 
 .PHONY: clean
 
-COMPILER_TRASH := src/lex.yy.c npc src/parser.tab.c src/parser.tab.h
-SUPPORT_TRASH := list stack symbol_list symbol_table syntax_tree tree
-
 clean:
-	rm -f $(COMPILER_TRASH) $(SUPPORT_TRASH)
+	rm -f $(LEXER) $(PARSER) $(TARGETS)
