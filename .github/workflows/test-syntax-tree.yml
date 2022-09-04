@@ -18,6 +18,5 @@ jobs:
     - uses: actions/checkout@v3
     - name: Test syntax-tree
       run: |
-        cd src/syntax-tree/
-        gcc test.c syntax-tree.c ../symbol/symbol.c ../libs/tree/tree-node.c -o test
-        ./test
+        make syntax_tree
+        ./syntax_tree
