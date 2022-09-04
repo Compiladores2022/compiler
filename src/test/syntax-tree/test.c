@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "syntax-tree.h"
-#include "../symbol/symbol.h"
+#include "../../main/syntax-tree/syntax-tree.h"
+#include "../../main/symbol/symbol.h"
 
 int main() {
     symbol_t* s0 = create_symbol();

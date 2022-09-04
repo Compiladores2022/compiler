@@ -2,7 +2,7 @@
 #define SYNTAX_TREENODE_H
 
 #include "../symbol/symbol.h"
-#include "../libs/tree/tree-node.h"
+#include "../tree/tree-node.h"
 
 tree_node_t* init_leaf_s(symbol_t* s);
 

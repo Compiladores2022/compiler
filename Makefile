@@ -3,26 +3,26 @@ CC = gcc
 # DEFINE FUNCTIONS
 
 define files
-	$(filter-out $(1)/test.c, $(wildcard $(1)/*.c))
+	$(wildcard $(1)/*.c)
 endef
 
 define test
-	$(wildcard $(1)/*test*.c)
+	$(wildcard $(subst main,test,$(1))/*test*.c)
 endef
 
 # SET PATHS
 
-UTILS_PATH := src/utils
-LIST_PATH := src/libs/list
-STACK_PATH := src/libs/stack
-TREE_PATH := src/libs/tree
-SYMBOL_PATH := src/symbol
-SYMBOL_LIST_PATH := src/symbol-list
-SYMBOL_TABLE_PATH := src/symbol-table
-SYNTAX_TREE_PATH := src/syntax-tree
+UTILS_PATH := src/main/utils
+LIST_PATH := src/main/list
+STACK_PATH := src/main/stack
+TREE_PATH := src/main/tree
+SYMBOL_PATH := src/main/symbol
+SYMBOL_LIST_PATH := src/main/symbol-list
+SYMBOL_TABLE_PATH := src/main/symbol-table
+SYNTAX_TREE_PATH := src/main/syntax-tree
 
-LEXER_PATH := src/lexer.l
-PARSER_PATH := src/parser.y
+LEXER_PATH := src/main/npc/lexer.l
+PARSER_PATH := src/main/npc/parser.y
 
 # FETCH FILES
 
@@ -56,8 +56,8 @@ syntax_tree: $(SYNTAX_TREE) $(SYMBOL) $(TREE) $(call test, $(SYNTAX_TREE_PATH))
 
 # COMPILER RULES
 
-LEXER := src/lex.yy.c
-PARSER := src/parser.tab.c src/parser.tab.h
+LEXER := src/main/npc/lex.yy.c
+PARSER := src/main/npc/parser.tab.c src/main/npc/parser.tab.h
 
 $(LEXER): $(LEXER_PATH)
 	flex -o $@ $^
