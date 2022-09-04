@@ -22,7 +22,7 @@ SYNTAX_TREE_TEST := $(shell find src/syntax-tree -name "*.c")
 
 # INFRASTRUCTURE
 
-TARGETS := list stack symbol_list symbol_table syntax_tree npc
+TARGETS := list stack tree symbol_list symbol_table syntax_tree npc
 
 all: $(TARGETS)
 
