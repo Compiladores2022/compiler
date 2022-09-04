@@ -22,7 +22,7 @@ SYNTAX_TREE_TEST := $(shell find src/syntax-tree -name "*.c")
 
 # INFRASTRUCTURE
 
-TARGETS := list stack symbol_list symbol_table syntax_tree
+TARGETS := list stack symbol_list symbol_table syntax_tree npc
 
 all: $(TARGETS)
 
@@ -33,24 +33,23 @@ symbol_list: $(SYMBOL_LIST_TEST) $(LIST) $(SYMBOL)
 symbol_table: $(SYMBOL_TABLE_TEST) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST)
 syntax_tree: $(SYNTAX_TREE_TEST) $(SYMBOL) $(TREE)
 
-$(TARGETS):
-	$(CC) -o $@ $^
-
 # COMPILER
 
-DEPS := src/lex.yy.c src/parser.tab.c $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST)
+LEXER := src/lex.yy.c
+PARSER := src/parser.tab.c
 
-LEXER := src/lexer.l
-PARSER := src/parser.y
+$(LEXER): src/lexer.l
+	flex -o $@ $^
 
-src/lex.yy.c: $(LEXER)
-	flex -o src/lex.yy.c $^
+$(PARSER): src/parser.y
+	bison -d -o $@ $^
 
-src/parser.tab.c: $(PARSER)
-	bison -d -o src/parser.tab.c $^
+npc: $(LEXER) $(PARSER) $(SYNTAX_TREE) $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(TREE) $(LIST)
 
-compiler: $(DEPS)
-	$(CC) -o npc $^
+# BUILD
+
+$(TARGETS):
+	$(CC) -o $@ $^
 
 # PHONY
 
