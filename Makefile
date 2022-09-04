@@ -6,9 +6,12 @@ LIST_PATH := src/libs/list
 STACK_PATH := src/libs/stack
 TREE_PATH := src/libs/tree
 SYMBOL_PATH := src/symbol
-SYMBOL_LIST_PATH := src/symbol-list/
-SYMBOL_TABLE_PATH := src/symbol-table/
-SYNTAX_TREE_PATH := src/syntax-tree/
+SYMBOL_LIST_PATH := src/symbol-list
+SYMBOL_TABLE_PATH := src/symbol-table
+SYNTAX_TREE_PATH := src/syntax-tree
+
+LEXER_PATH := src/lexer.l
+PARSER_PATH := src/parser.y
 
 # FETCH FILES
 
@@ -36,8 +39,6 @@ SYNTAX_TREE := $(filter-out $(SYNTAX_TREE_PATH)/test.c, $(SYNTAX_TREE_TEST))
 
 TARGETS := list stack tree symbol_list symbol_table syntax_tree npc
 
-all: $(TARGETS)
-
 list: $(LIST_TEST)
 tree: $(TREE_TEST)
 stack: $(STACK_TEST) $(LIST)
@@ -50,18 +51,20 @@ syntax_tree: $(SYNTAX_TREE_TEST) $(SYMBOL) $(TREE)
 LEXER := src/lex.yy.c
 PARSER := src/parser.tab.c src/parser.tab.h
 
-$(LEXER): src/lexer.l
+$(LEXER): $(LEXER_PATH)
 	flex -o $@ $^
 
-$(PARSER): src/parser.y
+$(PARSER): $(PARSER_PATH)
 	bison -d -o $@ $^
 
 npc: $(LEXER) $(PARSER) $(SYNTAX_TREE) $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(TREE) $(LIST)
 
-# BUILD
+# BUILD RULES
 
 $(TARGETS):
 	$(CC) -o $@ $^
+
+all: $(TARGETS)
 
 # PHONY RULES
 
