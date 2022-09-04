@@ -2,6 +2,7 @@
 
 echo "SETTING UP COMPILER...\n"
 
+make clean
 make all
 
 echo "RUNNING TESTS FOR VALID PROGRAMS...\n"
