@@ -18,6 +18,5 @@ jobs:
     - uses: actions/checkout@v3
     - name: Test list
       run: |
-        cd src/libs/list/
-        gcc test.c list.c -o test
-        ./test
+        make list
+        ./list

@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "parser.tab.h"
+#include "utils/utils.h"
 
 void yyerror();
 
@@ -15,16 +16,21 @@ void yyerror();
 
 char [a-zA-Z]
 lower_char [a-z]
-digit [0-9]
+number [0-9]+
 bool "true"|"false"
 type "int"|"bool"
 return "return"
+id {lower_char}({char}|{number})*
+operator [&|+\-*;()=]
+comment "//".*\n
+ignore \n|" "
+other .
 
 %x C_COMMENT
 
 %%
 
-{digit}+                         {
+{number}                         {
                                     printf("INT : %d\n",atoi(yytext));
                                     return INT;}
 
@@ -40,24 +46,25 @@ return "return"
                                     printf("RETURN : %s\n", yytext);
                                     return RETURN;}
 
-{lower_char}({char}|{digit})*    {
+{id}                             {
                                     printf("ID : %s\n",yytext);
+                                    yylval.sval = strdup(yytext);
                                     return ID;}
 
-[&|+\-*;()=]                     {
+{operator}                       {
                                     printf("%s\n",yytext);
                                     return *yytext;}
 
-"//".*\n                         ; /* ignore inline comments*/
+{comment}                        ; /* ignore inline comments*/
 
 "/*"                             { BEGIN(C_COMMENT); }
 <C_COMMENT>"*/"                  { BEGIN(INITIAL); }
 <C_COMMENT>\n                    { }
 <C_COMMENT>.                     { }
 
-\n|" "                           ; /* ignore some special symbols */
+{ignore}                         ; /* ignore some special symbols */
 
-.                                { yyerror(); }
+{other}                          { yyerror(); }
 
 %%
 
@@ -68,11 +75,15 @@ void yyerror(){
 
 int main(int argc,char *argv[]){
 	++argv,--argc;
-	if (argc > 0)
+	if (argc > 0) {
+        if (strcmp(extension(argv[0]), ".np")) {
+             printf("File extension not compatible with compiler\n");
+             return 1;
+        }
 		yyin = fopen(argv[0],"r");
-	else
+	} else {
 		yyin = stdin;
-
+    }
 	yyparse();
     return 0;
 }

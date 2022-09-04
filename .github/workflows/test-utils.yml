@@ -1,12 +1,12 @@
-name: Test Tree
+name: Test Utils 
 
 on:
   push:
     paths:
-      - '**/tree/*'
+      - '**/utils/*'
   pull_request:
     paths:
-      - '**/tree/*'
+      - '**/utils/*'
 
 permissions:
   contents: read
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Test tree
+    - name: Test utils
       run: |
-        make tree
-        ./tree
+        make utils 
+        ./utils

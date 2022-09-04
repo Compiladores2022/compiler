@@ -1,41 +1,91 @@
 CC = gcc
 
-LIST := $(shell find src/libs/list -name "*.c" -not -name "*test*")
-LIST_TEST := $(shell find src/libs/list -name "*.c")
+# DEFINE FUNCTIONS
 
-STACK := $(shell find src/libs/stack -name "*.c" -not -name "*test*")
-STACK_TEST := $(shell find src/libs/stack -name "*.c")
+define files
+	$(filter-out $(1)/test.c, $(wildcard $(1)/*.c))
+endef
 
-TREE := $(shell find src/libs/tree -name "*.c" -not -name "*test*")
-TREE_TEST := $(shell find src/libs/tree -name "*.c")
+define test
+	$(wildcard $(1)/*test*.c)
+endef
 
-SYMBOL := $(shell find src/symbol -name "*.c")
+# SET PATHS
 
-SYMBOL_LIST := $(shell find src/symbol-list -name "*.c" -not -name "*test*")
-SYMBOL_LIST_TEST := $(shell find src/symbol-list -name "*.c")
+UTILS_PATH := src/utils
+LIST_PATH := src/libs/list
+STACK_PATH := src/libs/stack
+TREE_PATH := src/libs/tree
+SYMBOL_PATH := src/symbol
+SYMBOL_LIST_PATH := src/symbol-list
+SYMBOL_TABLE_PATH := src/symbol-table
+SYNTAX_TREE_PATH := src/syntax-tree
 
-SYMBOL_TABLE := $(shell find src/symbol-table -name "*.c" -not -name "*test*")
-SYMBOL_TABLE_TEST := $(shell find src/symbol-table -name "*.c")
+LEXER_PATH := src/lexer.l
+PARSER_PATH := src/parser.y
 
-SYNTAX_TREE := $(shell find src/syntax-tree -name "*.c" -not -name "*test*")
-SYNTAX_TREE_TEST := $(shell find src/syntax-tree -name "*.c")
+# FETCH FILES
 
-all: list stack symbol_list symbol_table syntax-tree
+UTILS :=  $(call files, $(UTILS_PATH))
+LIST := $(call files, $(LIST_PATH))
+STACK := $(call files, $(STACK_PATH))
+TREE := $(call files, $(TREE_PATH))
+SYMBOL := $(call files, $(SYMBOL_PATH))
+SYMBOL_LIST := $(call files, $(SYMBOL_LIST_PATH))
+SYMBOL_TABLE := $(call files, $(SYMBOL_TABLE_PATH))
+SYNTAX_TREE := $(call files, $(SYNTAX_TREE_PATH))
 
-list: $(LIST_TEST)
-	$(CC) -o list-test $^
+# COMPILER INFRASTRUCTURE RULES
 
-tree: $(TREE_TEST)
-	$(CC) -o stack-test  $^
+TARGETS := utils \
+           list \
+           stack \
+           tree \
+           symbol_list \
+           symbol_table \
+           syntax_tree \
+           npc
 
-stack: $(STACK_TEST) $(LIST)
-	$(CC) -o stack-test  $^
+utils: $(UTILS) $(call test, $(UTILS_PATH))
+list: $(LIST) $(call test, $(LIST_PATH))
+tree: $(TREE) $(call test, $(TREE_PATH))
+stack: $(STACK) $(LIST) $(call test, $(STACK_PATH))
+symbol_list: $(SYMBOL_LIST) $(LIST) $(SYMBOL) $(call test, $(SYMBOL_LIST_PATH))
+symbol_table: $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST) $(call test, $(SYMBOL_TABLE_PATH))
+syntax_tree: $(SYNTAX_TREE) $(SYMBOL) $(TREE) $(call test, $(SYNTAX_TREE_PATH))
 
-symbol_list: $(SYMBOL_LIST_TEST) $(LIST) $(SYMBOL)
-	$(CC) -o symbol-list-test  $^
+# COMPILER RULES
 
-symbol_table: $(SYMBOL_TABLE_TEST) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST)
-	$(CC) -o symbol-table-test $^
+LEXER := src/lex.yy.c
+PARSER := src/parser.tab.c src/parser.tab.h
 
-syntax_tree: $(SYNTAX_TREE_TEST) $(SYMBOL) $(TREE)
-	$(CC) -o syntax-tree-test $^
+$(LEXER): $(LEXER_PATH)
+	flex -o $@ $^
+
+$(PARSER): $(PARSER_PATH)
+	bison -d -o $@ $^
+
+npc: $(LEXER) \
+     $(PARSER) \
+     $(SYNTAX_TREE) \
+     $(SYMBOL_TABLE) \
+     $(SYMBOL_LIST) \
+     $(SYMBOL) \
+     $(STACK) \
+     $(TREE) \
+     $(LIST) \
+     $(UTILS)
+
+# BUILD RULES
+
+$(TARGETS):
+	$(CC) -o $@ $^
+
+all: $(TARGETS)
+
+# PHONY RULES
+
+.PHONY: clean
+
+clean:
+	rm -f $(LEXER) $(PARSER) $(TARGETS)
