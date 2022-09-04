@@ -2,8 +2,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "symbol-table/symbol-table.h"
 #include "symbol/symbol.h"
+#include "utils/utils.h"
 
 void yyerror();
 int yylex();
@@ -31,62 +33,31 @@ symtable_t* st;
 %left '&'
  
 %%
- 
 
-
-
-init: 
-    { 
-        st = init_symtable();
-        push_level(st);
-    } prog { printf("No errors were found \n"); }
+init:
+    { SYMBOL_TABLE() } prog { NO_ERRORS() }
     ;
 
-prog: assign ';'
+prog:
+    assign ';'
     | RETURN expr ';' 
     | decl ';' prog
     | assign ';' prog
     | RETURN expr ';' prog
     ;
 
-decl: TYPE ID 
-    { 
-        symbol_t* s = create_symbol();
-        s->name = $2;
-        insert_symbol(st, s);
-        printf("Identifier: %s was added\n", s->name);
-    } '=' expr
-    | TYPE ID { 
-        symbol_t* s = create_symbol();
-        s->name = $2;
-        insert_symbol(st, s);
-        printf("Identifier: %s was added\n", s->name);
-    }
+decl:
+    TYPE ID { ADD_SYMBOL($2) } '=' expr
+    | TYPE ID { ADD_SYMBOL($2) }
     ;
 
 assign: 
-      ID { 
-        symbol_t* s = search_symbol(st, $1);
-        if (s == NULL) {
-            printf("Error - Undeclared identifier: %s\n", $1);
-            yyerror();
-        } else {
-            printf("Identifier found: %s\n", s->name);
-        }
-      } '=' expr 
+      ID { SEARCH_SYMBOL($1) } '=' expr
       ;
 
-expr: CONST               
-    | ID 
-    {
-        symbol_t* s = search_symbol(st, $1);
-        if (s == NULL) {
-            printf("Error - Undeclared identifier: %s\n", $1);
-            yyerror();
-        } else {
-            printf("Identifier found: %s\n", s->name);
-        }
-    }
+expr:
+    CONST
+    | ID { SEARCH_SYMBOL($1) }
     | expr '+' expr    
     | expr '-' expr  
     | expr '*' expr
@@ -95,11 +66,9 @@ expr: CONST
     | '(' expr ')'      
     ;
 
-
-CONST: INT              
+CONST:
+     INT
      | BOOL
      ;
  
 %%
-
-
