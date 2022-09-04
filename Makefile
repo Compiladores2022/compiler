@@ -55,5 +55,8 @@ $(TARGETS):
 
 .PHONY: clean
 
+COMPILER_TRASH := src/lex.yy.c npc src/parser.tab.c src/parser.tab.h
+SUPPORT_TRASH := list stack symbol_list symbol_table syntax_tree tree
+
 clean:
-	rm -f src/lex.yy.c npc src/parser.tab.c src/parser.tab.h
+	rm -f $(COMPILER_TRASH) $(SUPPORT_TRASH)
