@@ -51,7 +51,7 @@ npc: $(LEXER) $(PARSER) $(SYNTAX_TREE) $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) 
 $(TARGETS):
 	$(CC) -o $@ $^
 
-# PHONY
+# PHONY RULES
 
 .PHONY: clean
 
