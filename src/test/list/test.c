@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "list.h"
+#include "../../main/list/list.h"
 
 int main() {
     list_t* l = init_list();

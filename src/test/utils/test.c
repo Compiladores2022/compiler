@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "../../utils/utils.h"
+#include "../../main/utils/utils.h"
 
 int main() {
     assert(strcmp(extension("foo/bar.baz.qux"), ".qux") == 0);

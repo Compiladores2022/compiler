@@ -3,7 +3,7 @@
 
 #include "../symbol-list/symbol-list.h"
 #include "../symbol/symbol.h"
-#include "../libs/stack/stack.h"
+#include "../stack/stack.h"
 
 typedef struct {
     symstack_t* stack;

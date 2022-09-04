@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "symbol-table.h"
-#include "../symbol/symbol.h"
+#include "../../main/symbol-table/symbol-table.h"
+#include "../../main/symbol/symbol.h"
 
 int main() {
     symtable_t* st = init_symtable();
