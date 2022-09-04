@@ -9,7 +9,7 @@ echo "RUNNING TESTS FOR VALID PROGRAMS...\n"
 
 exit_status=0
 
-for test in tests/accepted-programs/*.np; do
+for test in src/test/npc/accepted-programs/*.np; do
     ./npc $test > /tmp/out
     if [ $? -eq 1 ]
     then
@@ -21,7 +21,7 @@ done
 
 echo "RUNNING TESTS FOR INVALID PROGRAMS...\n"
 
-for test in tests/rejected-programs/*.np; do
+for test in src/test/npc/rejected-programs/*.np; do
     ./npc $test > /tmp/out
     if [ $? -eq 0 ]
     then
