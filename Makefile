@@ -56,4 +56,4 @@ $(TARGETS):
 .PHONY: clean
 
 clean:
-	rm src/lex.yy.c npc src/parser.tab.c src/parser.tab.h
+	rm -f src/lex.yy.c npc src/parser.tab.c src/parser.tab.h
