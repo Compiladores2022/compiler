@@ -35,20 +35,19 @@ symtable_t* st;
 
 
 
-prog: 
+init: 
     { 
         st = init_symtable();
         push_level(st);
-    } decl ';' subprog { printf("No errors were found \n"); }
-    | RETURN expr ';' { printf("No errors were found \n"); }
+    } prog { printf("No errors were found \n"); }
     ;
 
-subprog: assign ';'
-       | RETURN expr ';' 
-       | decl ';' subprog
-       | assign ';' subprog
-       | RETURN expr ';' subprog
-       ;
+prog: assign ';'
+    | RETURN expr ';' 
+    | decl ';' prog
+    | assign ';' prog
+    | RETURN expr ';' prog
+    ;
 
 decl: TYPE ID 
     { 
