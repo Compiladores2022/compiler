@@ -32,6 +32,7 @@ symtable_t* st;
 %token RETURN
 
 %type <node> expr
+%type <node> assign
 %type <node> CONST
     
 %left <sval> '+' '-'
@@ -59,7 +60,7 @@ decl:
     ;
 
 assign: 
-      ID '=' expr               { SEARCH_SYMBOL($1); }
+      ID '=' expr               { symbol_t* s = SEARCH_SYMBOL($1); $$ = CREATE_ASSIGNMENT(s, $3); }
       ;
 
 expr:
