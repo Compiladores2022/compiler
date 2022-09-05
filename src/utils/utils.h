@@ -12,11 +12,16 @@
         printf("No errors were found! \n");     \
     }
 
-#define ADD_SYMBOL(symbol_name) {                                       \
-    symbol_t* s = create_symbol();                                      \
-    s->name = symbol_name;                                              \
-    insert_symbol(st, s);                                               \
-    printf("Identifier: %s was added\n", s->name);                      \
+#define ADD_SYMBOL(symbol_name) {                                               \
+    if (search_symbol(st, symbol_name) == NULL) {                               \
+        symbol_t* s = create_symbol();                                          \
+        s->name = symbol_name;                                                  \
+        insert_symbol(st, s);                                                   \
+        printf("Identifier: %s was added\n", s->name);                          \
+    } else {                                                                    \
+        printf("Identifier: %s is trying to be re-declared\n", symbol_name);    \
+        yyerror();                                                              \
+    }                                                                           \
  }
 
 #define SEARCH_SYMBOL(symbol_name) {                                    \
