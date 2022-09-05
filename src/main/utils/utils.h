@@ -41,17 +41,19 @@
     symbol_t* s = create_symbol();                                      \
     s->flag = OP_F;                                                     \
     s->name = symbol_name;                                              \
+    printf("Creating '%s' expression\n", s->name);                      \
     tree_node_t* node = init_tree_s(s, left, right);                    \
     node;                                                               \
 })
 
-#define CREATE_CONST(symbol_type, symbol_value) ({            \
-    symbol_t* s = create_symbol();                            \
-    s->flag = BASIC_F;                                        \
-    s->type = symbol_type;                                    \
-    s->value = symbol_value;                                  \
-    tree_node_t* node = init_leaf_s(s);                       \
-    node;                                                     \
+#define CREATE_CONST(symbol_type, symbol_value) ({                      \
+    symbol_t* s = create_symbol();                                      \
+    s->flag = BASIC_F;                                                  \
+    s->type = symbol_type;                                              \
+    s->value = symbol_value;                                            \
+    printf("Creation '%d' value of type %d\n", s->value, s->type);      \
+    tree_node_t* node = init_leaf_s(s);                                 \
+    node;                                                               \
 })
 
 // FUNCTIONS
