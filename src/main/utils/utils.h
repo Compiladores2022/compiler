@@ -41,4 +41,6 @@
 
 const char* extension(const char path[]);
 
+int atob(char* bool);
+
 #endif

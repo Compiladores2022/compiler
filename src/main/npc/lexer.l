@@ -37,6 +37,7 @@ other .
 
 {bool}                           {
                                     printf("BOOL : %s\n", yytext);
+                                    yylval.bval = atob(yytext);
                                     return BOOL;}
 
 {type}                           {
