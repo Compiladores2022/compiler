@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #include "parser.tab.h"
-#include "utils/utils.h"
+#include "../utils/utils.h"
 
 void yyerror();
 

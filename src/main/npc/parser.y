@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "symbol-table/symbol-table.h"
-#include "symbol/symbol.h"
-#include "utils/utils.h"
+#include "../symbol-table/symbol-table.h"
+#include "../symbol/symbol.h"
+#include "../utils/utils.h"
 
 void yyerror();
 int yylex();

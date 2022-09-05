@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "stack.h"
+#include "../../main/stack/stack.h"
 
 int main() {
     symstack_t* s = init_stack();

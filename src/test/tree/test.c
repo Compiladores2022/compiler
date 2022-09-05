@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "tree-node.h"
+#include "../../main/tree/tree-node.h"
 
 int main() {
     int var0 = 0;
