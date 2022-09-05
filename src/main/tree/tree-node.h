@@ -1,10 +1,10 @@
 #ifndef TREENODE_H
 #define TREENODE_H
 
-typedef struct tree_node_t {
+typedef struct tree_node_s {
     void* value;
-    struct tree_node_t* left;
-    struct tree_node_t* right;
+    struct tree_node_s* left;
+    struct tree_node_s* right;
 } tree_node_t;
 
 tree_node_t* init_leaf(void* value);
