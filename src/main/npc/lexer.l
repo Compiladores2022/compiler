@@ -32,6 +32,7 @@ other .
 
 {number}                         {
                                     printf("INT : %d\n",atoi(yytext));
+                                    yylval.ival = atoi(yytext);
                                     return INT;}
 
 {bool}                           {
