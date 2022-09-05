@@ -30,4 +30,6 @@ for test in tests/rejected-programs/*.np; do
     fi
 done
 
+make clean
+
 exit $exit_status
