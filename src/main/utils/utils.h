@@ -12,13 +12,14 @@
         printf("No errors were found! \n");     \
     }
 
-#define ADD_SYMBOL(symbol_name) ({                                                      \
+#define ADD_SYMBOL(symbol_name, symbol_type) ({                                         \
     symbol_t* s;                                                                        \
     if (search_symbol(st, symbol_name) == NULL) {                                       \
         s = create_symbol();                                                            \
         s->name = symbol_name;                                                          \
+        s->type = symbol_type;                                                          \
         insert_symbol(st, s);                                                           \
-        printf("Identifier '%s' was added\n", s->name);                                 \
+        printf("Identifier '%s' of type %d was added\n", s->name, s->type);             \
     } else {                                                                            \
         printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);   \
         yyerror();                                                                      \
@@ -29,10 +30,10 @@
 #define SEARCH_SYMBOL(symbol_name) ({                                   \
     symbol_t* s = search_symbol(st, symbol_name);                       \
     if (s == NULL) {                                                    \
-        printf("Error - Undeclared identifier '%s'\n", symbol_name);     \
+        printf("Error - Undeclared identifier '%s'\n", symbol_name);    \
         yyerror();                                                      \
     } else {                                                            \
-        printf("Identifier '%s' was found\n", s->name);                      \
+        printf("Identifier '%s' was found\n", s->name);                 \
     }                                                                   \
     s;                                                                  \
 })
@@ -60,6 +61,7 @@
     tree_node_t* left = init_leaf_s(symbol);                            \
     symbol_t* s = create_symbol();                                      \
     s->flag = ASSIGN_F;                                                 \
+    s->name = "=";                                                      \
     s->type = symbol->type;                                             \
     printf("Creating assignment of type %d\n", symbol->type);           \
     tree_node_t* node = init_tree_s(s, left, right);                    \
