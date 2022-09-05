@@ -30,32 +30,39 @@ other .
 
 %%
 
-{number}                         {
-                                    printf("INT : %d\n",atoi(yytext));
-                                    yylval.ival = atoi(yytext);
-                                    return INT;}
+{number}                        {
+                                   printf("INT : %d\n",atoi(yytext));
+                                   yylval.ival = atoi(yytext);
+                                   return INT;
+                                }
 
-{bool}                           {
-                                    printf("BOOL : %s\n", yytext);
-                                    yylval.bval = atob(yytext);
-                                    return BOOL;}
+{bool}                          {
+                                   printf("BOOL : %s\n", yytext);
+                                   yylval.bval = atob(yytext);
+                                   return BOOL;
+                                }
 
-{type}                           {
-                                    printf("TYPE : %s\n", yytext);
-                                    return TYPE;}
+{type}                          {
+                                   printf("TYPE : %s\n", yytext);
+                                   return TYPE;
+                                }
 
-{return}                         {
-                                    printf("RETURN : %s\n", yytext);
-                                    return RETURN;}
+{return}                        {
+                                   printf("RETURN : %s\n", yytext);
+                                   return RETURN;
+                                }
 
-{id}                             {
-                                    printf("ID : %s\n",yytext);
-                                    yylval.sval = strdup(yytext);
-                                    return ID;}
+{id}                            {
+                                   printf("ID : %s\n",yytext);
+                                   yylval.sval = strdup(yytext);
+                                   return ID;
+                                }
 
-{operator}                       {
-                                    printf("%s\n",yytext);
-                                    return *yytext;}
+{operator}                      {
+                                   printf("%s\n",yytext);
+                                   yylval.sval = strdup(yytext);
+                                   return *yytext;
+                                }
 
 {comment}                        ; /* ignore inline comments*/
 
