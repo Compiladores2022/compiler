@@ -12,9 +12,10 @@
         printf("No errors were found! \n");     \
     }
 
-#define ADD_SYMBOL(symbol_name) {                                               \
+#define ADD_SYMBOL(symbol_name) ({                                              \
+    symbol_t* s;                                                                \
     if (search_symbol(st, symbol_name) == NULL) {                               \
-        symbol_t* s = create_symbol();                                          \
+        s = create_symbol();                                                    \
         s->name = symbol_name;                                                  \
         insert_symbol(st, s);                                                   \
         printf("Identifier: %s was added\n", s->name);                          \
@@ -22,9 +23,10 @@
         printf("Identifier: %s is trying to be re-declared\n", symbol_name);    \
         yyerror();                                                              \
     }                                                                           \
- }
+    s;                                                                          \
+ })
 
-#define SEARCH_SYMBOL(symbol_name) {                                    \
+#define SEARCH_SYMBOL(symbol_name) ({                                   \
     symbol_t* s = search_symbol(st, symbol_name);                       \
     if (s == NULL) {                                                    \
         printf("Error - Undeclared identifier: %s\n", symbol_name);     \
@@ -32,7 +34,8 @@
     } else {                                                            \
         printf("Identifier found: %s\n", s->name);                      \
     }                                                                   \
-}
+    s;                                                                  \
+})
 
 // FUNCTIONS
 
