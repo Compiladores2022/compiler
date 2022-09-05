@@ -2,9 +2,9 @@
 #define FLAGS_H
 
 typedef enum {
-ID,
-OP,
-BASIC,
+ID_F,
+OP_F,
+BASIC_F,
 } flag_t;
 
 #endif
