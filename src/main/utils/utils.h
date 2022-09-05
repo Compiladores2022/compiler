@@ -37,6 +37,23 @@
     s;                                                                  \
 })
 
+#define CREATE_EXPRESSION(symbol_name, left, right) ({                  \
+    symbol_t* s = create_symbol();                                      \
+    s->flag = OP_F;                                                     \
+    s->name = symbol_name;                                              \
+    tree_node_t* node = init_tree_s(s, left, right);                    \
+    node;                                                               \
+})
+
+#define CREATE_CONST(symbol_type, symbol_value) ({            \
+    symbol_t* s = create_symbol();                            \
+    s->flag = BASIC_F;                                        \
+    s->type = symbol_type;                                    \
+    s->value = symbol_value;                                  \
+    tree_node_t* node = init_leaf_s(s);                       \
+    node;                                                     \
+})
+
 // FUNCTIONS
 
 const char* extension(const char path[]);

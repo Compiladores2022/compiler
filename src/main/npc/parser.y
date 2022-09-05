@@ -6,6 +6,7 @@
 #include "../symbol-table/symbol-table.h"
 #include "../symbol/symbol.h"
 #include "../symbol/flags.h"
+#include "../symbol/types.h"
 #include "../syntax-tree/syntax-tree.h"
 #include "../tree/tree-node.h"
 #include "../utils/utils.h"
@@ -64,56 +65,17 @@ assign:
 expr:
     CONST                       { $$ = $1; }
     | ID                        { $$ = init_leaf_s(SEARCH_SYMBOL($1)); }
-    | expr '+' expr             {
-                                    symbol_t* s = create_symbol(); 
-                                    s->flag = OP_F;
-                                    s->name = $2;
-                                    $$ = init_tree_s(s, $1, $3); 
-                                }
-    | expr '-' expr             {
-                                    symbol_t* s = create_symbol(); 
-                                    s->flag = OP_F;
-                                    s->name = $2;
-                                    $$ = init_tree_s(s, $1, $3); 
-                                }
-    | expr '*' expr             {
-                                    symbol_t* s = create_symbol(); 
-                                    s->flag = OP_F;
-                                    s->name = $2;
-                                    $$ = init_tree_s(s, $1, $3); 
-                                }
-    | expr '|' expr             {
-                                    symbol_t* s = create_symbol(); 
-                                    s->flag = OP_F;
-                                    s->name = $2;
-                                    $$ = init_tree_s(s, $1, $3); 
-                                } 
-    | expr '&' expr             {
-                                    symbol_t* s = create_symbol(); 
-                                    s->flag = OP_F;
-                                    s->name = $2;
-                                    $$ = init_tree_s(s, $1, $3); 
-                                }
+    | expr '+' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
+    | expr '-' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
+    | expr '*' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
+    | expr '|' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
+    | expr '&' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
     | '(' expr ')'              { $$ = $2; }
     ;
 
 CONST:
-     INT                        
-    { 
-        symbol_t* s = create_symbol();
-        s->flag = BASIC_F;
-        s->type = INT_T;
-        s->value = $1;
-        $$ = init_leaf_s(s);
-    }
-     | BOOL
-    { 
-        symbol_t* s = create_symbol();
-        s->flag = BASIC_F;
-        s->type = BOOL_T;
-        s->value = $1;
-        $$ = init_leaf_s(s);
-    }
+     INT                        { $$ = CREATE_CONST(INT_T, $1); }
+     | BOOL                     { $$ = CREATE_CONST(BOOL_T, $1); }
      ;
  
 %%
