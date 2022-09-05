@@ -34,8 +34,8 @@ symtable_t* st;
  
 %%
 
-init:
-    { SYMBOL_TABLE() } prog { NO_ERRORS() }
+init:                           { SYMBOL_TABLE() }
+    prog                        { NO_ERRORS() }
     ;
 
 prog:
@@ -47,17 +47,17 @@ prog:
     ;
 
 decl:
-    TYPE ID { ADD_SYMBOL($2) } '=' expr
-    | TYPE ID { ADD_SYMBOL($2) }
+    TYPE ID '=' expr            { ADD_SYMBOL($2) }
+    | TYPE ID                   { ADD_SYMBOL($2) }
     ;
 
 assign: 
-      ID { SEARCH_SYMBOL($1) } '=' expr
+      ID '=' expr               { SEARCH_SYMBOL($1) }
       ;
 
 expr:
     CONST
-    | ID { SEARCH_SYMBOL($1) }
+    | ID                        { SEARCH_SYMBOL($1) }
     | expr '+' expr    
     | expr '-' expr  
     | expr '*' expr
