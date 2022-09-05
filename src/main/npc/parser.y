@@ -26,13 +26,14 @@ symtable_t* st;
 }
  
 %token <sval> ID
-%token TYPE
+%token <ival> TYPE
 %token <ival> INT
 %token <bval> BOOL
 %token RETURN
 
-%type <node> expr
+%type <node> decl
 %type <node> assign
+%type <node> expr
 %type <node> CONST
     
 %left <sval> '+' '-'
@@ -55,8 +56,20 @@ prog:
     ;
 
 decl:
-    TYPE ID '=' expr            { ADD_SYMBOL($2); }
-    | TYPE ID                   { ADD_SYMBOL($2); }
+    TYPE ID '=' expr            {   
+                                    symbol_t* symbol = ADD_SYMBOL($2, $1);
+                                    symbol_t* s = create_symbol();
+                                    s->flag = DECL_F;
+                                    s->type = symbol->type;
+                                    s->name = "=";
+                                    printf("Creating declaration of '%s' of type %d\n", symbol->name, $1);
+                                    $$ = init_tree_s(s, init_leaf_s(symbol), $4);
+                                }
+    | TYPE ID                   { 
+                                    symbol_t* symbol = ADD_SYMBOL($2, $1);
+                                    printf("Creating declaration of '%s' of type %d\n", symbol->name, $1);
+                                    $$ = init_leaf_s(symbol); 
+                                }
     ;
 
 assign: 
