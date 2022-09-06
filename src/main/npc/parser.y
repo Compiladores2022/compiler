@@ -43,8 +43,8 @@ symtable_t* st;
  
 %%
 
-init:                           { SYMBOL_TABLE() }
-    prog                        { NO_ERRORS() }
+init:                           { st = symbol_table(st); }
+    prog                        { out_msg(0); }
     ;
 
 prog:
@@ -56,40 +56,37 @@ prog:
     ;
 
 decl:
-    TYPE ID '=' expr            {   
-                                    symbol_t* symbol = ADD_SYMBOL($2, $1);
-                                    symbol_t* s = create_symbol();
-                                    s->flag = DECL_F;
-                                    s->type = symbol->type;
-                                    s->name = "=";
-                                    printf("Creating declaration of '%s' of type %d\n", symbol->name, $1);
-                                    $$ = init_tree_s(s, init_leaf_s(symbol), $4);
+    TYPE ID '=' expr            {
+                                    symbol_t* symbol = add_symbol_p(yyerror, st, $2, $1);
+                                    $$ = add_declaration(symbol, init_leaf_s(symbol), $4);
                                 }
     | TYPE ID                   { 
-                                    symbol_t* symbol = ADD_SYMBOL($2, $1);
+                                    symbol_t* symbol = add_symbol_p(yyerror, st, $2, $1);
                                     printf("Creating declaration of '%s' of type %d\n", symbol->name, $1);
                                     $$ = init_leaf_s(symbol); 
                                 }
     ;
 
 assign: 
-      ID '=' expr               { symbol_t* s = SEARCH_SYMBOL($1); $$ = CREATE_ASSIGNMENT(s, $3); }
+ID '=' expr                     { symbol_t* s = search_symbol_p(yyerror, st, $1);
+                                  $$ = create_assignment(s, $3);
+                                }
       ;
 
 expr:
     CONST                       { $$ = $1; }
-    | ID                        { $$ = init_leaf_s(SEARCH_SYMBOL($1)); }
-    | expr '+' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
-    | expr '-' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
-    | expr '*' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
-    | expr '|' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
-    | expr '&' expr             { $$ = CREATE_EXPRESSION($2, $1, $3); }
+    | ID                        { $$ = init_leaf_s(search_symbol_p(yyerror, st, $1)); }
+    | expr '+' expr             { $$ = create_expression($2, $1, $3); }
+    | expr '-' expr             { $$ = create_expression($2, $1, $3); }
+    | expr '*' expr             { $$ = create_expression($2, $1, $3); }
+    | expr '|' expr             { $$ = create_expression($2, $1, $3); }
+    | expr '&' expr             { $$ = create_expression($2, $1, $3); }
     | '(' expr ')'              { $$ = $2; }
     ;
 
 CONST:
-     INT                        { $$ = CREATE_CONST(INT_T, $1); }
-     | BOOL                     { $$ = CREATE_CONST(BOOL_T, $1); }
+     INT                        { $$ = create_const(INT_T, $1); }
+     | BOOL                     { $$ = create_const(BOOL_T, $1); }
      ;
  
 %%

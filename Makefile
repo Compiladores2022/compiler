@@ -46,7 +46,7 @@ TARGETS := utils \
            syntax_tree \
            npc
 
-utils: $(UTILS) $(call test, $(UTILS_PATH))
+utils: $(UTILS) $(SYNTAX_TREE) $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(TREE) $(LIST) $(call test, $(UTILS_PATH))
 list: $(LIST) $(call test, $(LIST_PATH))
 tree: $(TREE) $(call test, $(TREE_PATH))
 stack: $(STACK) $(LIST) $(call test, $(STACK_PATH))
