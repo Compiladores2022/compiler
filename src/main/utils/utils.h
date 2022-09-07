@@ -19,19 +19,19 @@ symtable_t* symbol_table(symtable_t* st);
 
 void out_msg(int status);
 
-symbol_t* add_symbol_p(void (*error)(void), symtable_t* st, char* symbol_name, type_t symbol_type);
+symbol_t* find_symbol(void (*error)(void), symtable_t* st, char* symbol_name);
 
-symbol_t* search_symbol_p(void (*error)(void), symtable_t* st, char* symbol_name);
+symbol_t* build_symbol(void (*error)(void), symtable_t* st, char* symbol_name, type_t symbol_type);
 
-tree_node_t* create_expression(char* symbol_name, tree_node_t* right, tree_node_t* left);
+tree_node_t* build_expression(char* symbol_name, tree_node_t* right, tree_node_t* left);
 
-tree_node_t* create_const(type_t symbol_type, int symbol_value);
+tree_node_t* build_const(type_t symbol_type, int symbol_value);
 
-tree_node_t* create_assignment(symbol_t* symbol, tree_node_t* right);
+tree_node_t* build_assignment(symbol_t* symbol, tree_node_t* right);
 
-tree_node_t* add_declaration(tree_node_t* left, tree_node_t* right);
+tree_node_t* build_declaration(tree_node_t* left, tree_node_t* right);
 
-tree_node_t* create_return(tree_node_t* child);
+tree_node_t* build_return(tree_node_t* child);
 
 tree_node_t* link_statements(tree_node_t* left, tree_node_t* right);
 
