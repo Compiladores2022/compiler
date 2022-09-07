@@ -8,6 +8,7 @@ typedef enum {
     RETURN_F,
     DECL_F,
     BASIC_F,
+    PROG_F,
 } flag_t;
 
 #endif

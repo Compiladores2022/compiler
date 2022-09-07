@@ -33,4 +33,8 @@ tree_node_t* build_declaration(void (*error)(void), symtable_t* st, char* symbol
 
 tree_node_t* build_return(tree_node_t* child);
 
+tree_node_t* link_statements(tree_node_t* left, tree_node_t* right);
+
+void show_tree(tree_node_t* root);
+
 #endif
