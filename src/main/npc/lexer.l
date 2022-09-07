@@ -4,8 +4,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "parser.tab.h"
 #include "../utils/utils.h"
+#include "../symbol/types.h"
+#include "parser.tab.h"
 
 void yyerror();
 
@@ -44,6 +45,7 @@ other .
 
 {type}                          {
                                    printf("TYPE : %s\n", yytext);
+                                   yylval.tval = atot(yytext);
                                    return TYPE;
                                 }
 
