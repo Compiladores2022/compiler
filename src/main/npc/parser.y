@@ -15,6 +15,7 @@ void yyerror();
 int yylex();
 
 symtable_t* st;
+tree_node_t* root;
 
 %}
 
@@ -31,6 +32,7 @@ symtable_t* st;
 %token <bval> BOOL
 %token RETURN
 
+%type <node> prog
 %type <node> statement
 %type <node> decl
 %type <node> assign
@@ -45,13 +47,13 @@ symtable_t* st;
 %%
 
 init:                           { st = symbol_table(st); }
-    prog                        { out_msg(0); }
+    prog                        { root = $2; show_tree(root); out_msg(0); }
     ;
 
 prog:
-    statement ';'
-    | decl ';' prog
-    | statement ';' prog
+    statement ';'               { $$ = $1; }
+    | decl ';' prog             { $$ = link_statements($1, $3); }
+    | statement ';' prog        { $$ = link_statements($1, $3); }
     ;
 
 statement:
