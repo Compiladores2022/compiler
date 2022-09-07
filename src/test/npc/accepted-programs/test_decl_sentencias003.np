@@ -1,7 +1,7 @@
 int  aux = 32;
 bool b1 = (false | true);
 int  x1 =2;
-bool b2 = 1 & true;
+bool b2 = (false|true) & true;
 
 b2 = (false) & true;
 return b2 | false;
@@ -9,11 +9,11 @@ return b2 | false;
 b1 = true;
 return ((b1));
 
-b1 = b1 & b2 * true;
+b1 = b1 & b2 | true;
 return ((b1));
 
 
-b1 = b1 & b2 * true;
+b1 = b1 & b2 & true;
 b1 = false;
 return b1 | false;
 
