@@ -31,6 +31,7 @@ symtable_t* st;
 %token <bval> BOOL
 %token RETURN
 
+%type <node> statement
 %type <node> decl
 %type <node> assign
 %type <node> expr
@@ -48,17 +49,19 @@ init:                           { st = symbol_table(st); }
     ;
 
 prog:
-    assign ';'
-    | RETURN expr ';' 
+    statement ';'
     | decl ';' prog
-    | assign ';' prog
-    | RETURN expr ';' prog
+    | statement ';' prog
     ;
+
+statement:
+         assign                 { $$ = $1; }
+         | RETURN expr          { $$ = create_return($2); }
 
 decl:
     TYPE ID '=' expr            {
                                     symbol_t* symbol = add_symbol_p(yyerror, st, $2, $1);
-                                    $$ = add_declaration(symbol, init_leaf_s(symbol), $4);
+                                    $$ = add_declaration(init_leaf_s(symbol), $4);
                                 }
     | TYPE ID                   { 
                                     symbol_t* symbol = add_symbol_p(yyerror, st, $2, $1);
