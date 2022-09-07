@@ -33,4 +33,8 @@ tree_node_t* add_declaration(tree_node_t* left, tree_node_t* right);
 
 tree_node_t* create_return(tree_node_t* child);
 
+tree_node_t* link_statements(tree_node_t* left, tree_node_t* right);
+
+void show_tree(tree_node_t* root);
+
 #endif

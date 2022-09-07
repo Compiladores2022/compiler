@@ -119,3 +119,25 @@ tree_node_t* create_return(tree_node_t* child) {
     printf("Creating return statement of type %d\n", ((symbol_t*)(child->value))->type);
     return init_tree_s(s, child, NULL);
 }
+
+tree_node_t* link_statements(tree_node_t* left, tree_node_t* right) {
+    symbol_t* s = create_symbol();
+    s->flag = PROG_F;
+    s->name = ";";
+    printf("Linking...\n");
+    return init_tree_s(s, left, right);
+}
+
+void show_tree(tree_node_t* root) {
+    if (!root) {
+        return;
+    }
+    symbol_t* s = (symbol_t*)(root->value);
+    if (s->name) {
+        printf("Node: %s\n", s->name);
+    } else {
+        printf("Node: %d\n", s->value);
+    }
+    show_tree(root->left);
+    show_tree(root->right);
+}
