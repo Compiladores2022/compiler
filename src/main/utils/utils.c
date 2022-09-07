@@ -166,18 +166,18 @@ void check_types(void (*error)(void), tree_node_t* root) {
         return;
     }
     if (s->flag == ASSIGN_F) {
-        check_types(root->right);
-        symbol_t* left = (symbol_t*)(root->left-value);
-        symbol_t* right = (symbol_t*)(root->right-value);
+        check_types(error, root->right);
+        symbol_t* left = (symbol_t*)(root->left->value);
+        symbol_t* right = (symbol_t*)(root->right->value);
         if (left->type != right->type) {
             (*error)();
         }
     }
     if (s->flag == OP_F) {
-        check_types(root->left);
-        check_types(root->right);
-        symbol_t* left = (symbol_t*)(root->left-value);
-        symbol_t* right = (symbol_t*)(root->right-value);
+        check_types(error, root->left);
+        check_types(error, root->right);
+        symbol_t* left = (symbol_t*)(root->left->value);
+        symbol_t* right = (symbol_t*)(root->right->value);
         if (left->type != right->type) {
             (*error)();
         }
@@ -186,18 +186,18 @@ void check_types(void (*error)(void), tree_node_t* root) {
         if (!root->right) {
             return;
         }
-        check_types(root->right);
-        symbol_t* left = (symbol_t*)(root->left-value);
-        symbol_t* right = (symbol_t*)(root->right-value);
+        check_types(error, root->right);
+        symbol_t* left = (symbol_t*)(root->left->value);
+        symbol_t* right = (symbol_t*)(root->right->value);
         if (left->type != right->type) {
             (*error)();
         }
     }
     if (s->flag == RETURN_F) {
-        check_types(root->left);
+        check_types(error, root->left);
     }
     if (s->flag == PROG_F) {
-        check_types(root->left);
-        check_types(root->right);
+        check_types(error, root->left);
+        check_types(error, root->right);
     }
 }

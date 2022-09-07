@@ -37,6 +37,6 @@ tree_node_t* link_statements(tree_node_t* left, tree_node_t* right);
 
 void show_tree(tree_node_t* root);
 
-void check_types(tree_node_t* root);
+void check_types(void (*error)(void),tree_node_t* root);
 
 #endif

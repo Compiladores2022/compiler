@@ -48,7 +48,7 @@ tree_node_t* root;
 %%
 
 init:                           { st = symbol_table(st); }
-    prog                        { root = $2; show_tree(root); out_msg(0); }
+    prog                        { root = $2; show_tree(root); check_types(yyerror, root); out_msg(0); }
     ;
 
 prog:
