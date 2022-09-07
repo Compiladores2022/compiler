@@ -33,6 +33,17 @@ int atob(char* bool) {
     exit(1);
 }
 
+type_t atot(char* type) {
+    if (!strcmp("int", type))
+        return INT_T;
+
+    if (!strcmp("bool", type))
+        return BOOL_T;
+
+    printf("Invalid type name");
+    exit(1);
+}
+
 symtable_t* symbol_table(symtable_t* st) {
     st = init_symtable();
     push_level(st);

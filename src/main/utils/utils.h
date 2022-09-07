@@ -9,11 +9,11 @@
 #include "../symbol/symbol.h"
 #include "../tree/tree-node.h"
 
-
-
 const char* extension(const char path[]);
 
 int atob(char* bool);
+
+type_t atot(char* type);
 
 symtable_t* symbol_table(symtable_t* st);
 

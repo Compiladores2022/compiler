@@ -23,11 +23,12 @@ tree_node_t* root;
     int ival;
     int bval;
     char* sval;
+    int tval;
     struct tree_node_s* node;
 }
  
 %token <sval> ID
-%token <ival> TYPE
+%token <tval> TYPE
 %token <ival> INT
 %token <bval> BOOL
 %token RETURN
