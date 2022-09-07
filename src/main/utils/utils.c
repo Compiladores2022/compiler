@@ -51,7 +51,7 @@ void out_msg(int status) {
     }
 }
 
-symbol_t* add_symbol_p(void (*f)(void), symtable_t* st, char* symbol_name, type_t symbol_type) {
+symbol_t* build_symbol(void (*f)(void), symtable_t* st, char* symbol_name, type_t symbol_type) {
     symbol_t* s;
     if (search_symbol(st, symbol_name) == NULL) {
         s = create_symbol();

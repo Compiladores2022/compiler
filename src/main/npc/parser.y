@@ -57,11 +57,11 @@ prog:
 
 decl:
     TYPE ID '=' expr            {
-                                    symbol_t* symbol = add_symbol_p(yyerror, st, $2, $1);
+                                    symbol_t* symbol = build_symbol(yyerror, st, $2, $1);
                                     $$ = add_declaration(symbol, init_leaf_s(symbol), $4);
                                 }
     | TYPE ID                   { 
-                                    symbol_t* symbol = add_symbol_p(yyerror, st, $2, $1);
+                                    symbol_t* symbol = build_symbol(yyerror, st, $2, $1);
                                     printf("Creating declaration of '%s' of type %d\n", symbol->name, $1);
                                     $$ = init_leaf_s(symbol); 
                                 }

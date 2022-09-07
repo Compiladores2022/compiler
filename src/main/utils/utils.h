@@ -19,7 +19,7 @@ symtable_t* symbol_table(symtable_t* st);
 
 void out_msg(int status);
 
-symbol_t* add_symbol_p(void (*error)(void), symtable_t* st, char* symbol_name, type_t symbol_type);
+symbol_t* build_symbol(void (*error)(void), symtable_t* st, char* symbol_name, type_t symbol_type);
 
 symbol_t* search_symbol_p(void (*error)(void), symtable_t* st, char* symbol_name);
 
