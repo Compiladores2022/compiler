@@ -51,6 +51,18 @@ void out_msg(int status) {
     }
 }
 
+
+symbol_t* find_symbol(void (*error)(void), symtable_t* st, char* symbol_name) {
+    symbol_t* s = search_symbol(st, symbol_name);
+    if (s == NULL) {
+        printf("Error - Undeclared identifier '%s'\n", symbol_name);
+        (*error)();
+    } else {
+        printf("Identifier '%s' was found\n", s->name);
+    }
+    return s;
+}
+
 symbol_t* build_symbol(void (*f)(void), symtable_t* st, char* symbol_name, type_t symbol_type) {
     symbol_t* s;
     if (search_symbol(st, symbol_name) == NULL) {
@@ -67,18 +79,7 @@ symbol_t* build_symbol(void (*f)(void), symtable_t* st, char* symbol_name, type_
     return s;
 }
 
-symbol_t* search_symbol_p(void (*error)(void), symtable_t* st, char* symbol_name) {
-    symbol_t* s = search_symbol(st, symbol_name);
-    if (s == NULL) {
-        printf("Error - Undeclared identifier '%s'\n", symbol_name);
-        (*error)();
-    } else {
-        printf("Identifier '%s' was found\n", s->name);
-    }
-    return s;
-}
-
-tree_node_t* create_expression(char* symbol_name, tree_node_t* right, tree_node_t* left) {
+tree_node_t* build_expression(char* symbol_name, tree_node_t* right, tree_node_t* left) {
     symbol_t* s = create_symbol();
     s->flag = OP_F;
     s->name = symbol_name;
@@ -86,7 +87,7 @@ tree_node_t* create_expression(char* symbol_name, tree_node_t* right, tree_node_
     return init_tree_s(s, left, right);
 }
 
-tree_node_t* create_const(type_t symbol_type, int symbol_value) {
+tree_node_t* build_const(type_t symbol_type, int symbol_value) {
     symbol_t* s = create_symbol();
     s->flag = BASIC_F;
     s->type = symbol_type;
@@ -95,7 +96,7 @@ tree_node_t* create_const(type_t symbol_type, int symbol_value) {
     return init_leaf_s(s);
 }
 
-tree_node_t* create_assignment(symbol_t* symbol, tree_node_t* right) {
+tree_node_t* build_assignment(symbol_t* symbol, tree_node_t* right) {
     tree_node_t* left = init_leaf_s(symbol);
     symbol_t* s = create_symbol();
     s->flag = ASSIGN_F;
@@ -104,7 +105,7 @@ tree_node_t* create_assignment(symbol_t* symbol, tree_node_t* right) {
     return init_tree_s(s, left, right);
 }
 
-tree_node_t* add_declaration(tree_node_t* left, tree_node_t* right) {
+tree_node_t* build_declaration(tree_node_t* left, tree_node_t* right) {
     symbol_t* s = create_symbol();
     s->flag = DECL_F;
     s->name = "=";
@@ -112,7 +113,7 @@ tree_node_t* add_declaration(tree_node_t* left, tree_node_t* right) {
     return init_tree_s(s, left, right);
 }
 
-tree_node_t* create_return(tree_node_t* child) {
+tree_node_t* build_return(tree_node_t* child) {
     symbol_t* s = create_symbol();
     s->flag = RETURN_F;
     s->name = "return";

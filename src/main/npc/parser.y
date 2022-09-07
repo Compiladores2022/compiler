@@ -56,12 +56,12 @@ prog:
 
 statement:
          assign                 { $$ = $1; }
-         | RETURN expr          { $$ = create_return($2); }
+         | RETURN expr          { $$ = build_return($2); }
 
 decl:
     TYPE ID '=' expr            {
-                                    symbol_t* symbol = add_symbol_p(yyerror, st, $2, $1);
-                                    $$ = add_declaration(init_leaf_s(symbol), $4);
+                                    symbol_t* symbol = build_symbol(yyerror, st, $2, $1);
+                                    $$ = build_declaration(init_leaf_s(symbol), $4);
                                 }
     | TYPE ID                   { 
                                     symbol_t* symbol = build_symbol(yyerror, st, $2, $1);
@@ -71,25 +71,25 @@ decl:
     ;
 
 assign: 
-ID '=' expr                     { symbol_t* s = search_symbol_p(yyerror, st, $1);
-                                  $$ = create_assignment(s, $3);
+ID '=' expr                     { symbol_t* s = find_symbol(yyerror, st, $1);
+                                  $$ = build_assignment(s, $3);
                                 }
       ;
 
 expr:
     CONST                       { $$ = $1; }
-    | ID                        { $$ = init_leaf_s(search_symbol_p(yyerror, st, $1)); }
-    | expr '+' expr             { $$ = create_expression($2, $1, $3); }
-    | expr '-' expr             { $$ = create_expression($2, $1, $3); }
-    | expr '*' expr             { $$ = create_expression($2, $1, $3); }
-    | expr '|' expr             { $$ = create_expression($2, $1, $3); }
-    | expr '&' expr             { $$ = create_expression($2, $1, $3); }
+    | ID                        { $$ = init_leaf_s(find_symbol(yyerror, st, $1)); }
+    | expr '+' expr             { $$ = build_expression($2, $1, $3); }
+    | expr '-' expr             { $$ = build_expression($2, $1, $3); }
+    | expr '*' expr             { $$ = build_expression($2, $1, $3); }
+    | expr '|' expr             { $$ = build_expression($2, $1, $3); }
+    | expr '&' expr             { $$ = build_expression($2, $1, $3); }
     | '(' expr ')'              { $$ = $2; }
     ;
 
 CONST:
-     INT                        { $$ = create_const(INT_T, $1); }
-     | BOOL                     { $$ = create_const(BOOL_T, $1); }
+     INT                        { $$ = build_const(INT_T, $1); }
+     | BOOL                     { $$ = build_const(BOOL_T, $1); }
      ;
  
 %%
