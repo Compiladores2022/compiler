@@ -33,10 +33,10 @@ tree_node_t* root;
 %token <bval> BOOL
 %token RETURN
 
-%type <node> prog
+%type <node> program
 %type <node> statement
-%type <node> decl
-%type <node> assign
+%type <node> declaration
+%type <node> assignment
 %type <node> expr
 %type <node> CONST
     
@@ -48,25 +48,25 @@ tree_node_t* root;
 %%
 
 init:                           { st = symbol_table(st); }
-    prog                        { root = $2; show_tree(root); check_types(yyerror, root); out_msg(0); }
+    program                     { root = $2; check_types(yyerror, root); out_msg(0); }
     ;
 
-prog:
-    statement ';'               { $$ = $1; }
-    | decl ';' prog             { $$ = link_statements($1, $3); }
-    | statement ';' prog        { $$ = link_statements($1, $3); }
-    ;
+program:
+       statement ';'            { $$ = $1; }
+       | declaration ';' program{ $$ = link_statements($1, $3); }
+       | statement ';' program  { $$ = link_statements($1, $3); }
+       ;
 
 statement:
-         assign                 { $$ = $1; }
+         assignment             { $$ = $1; }
          | RETURN expr          { $$ = build_return($2); }
 
-decl:
-    TYPE ID '=' expr            { $$ = build_declaration(yyerror, st, $2, $1, $4); }
-    | TYPE ID                   { $$ = build_declaration(yyerror, st, $2, $1, NULL); }
-    ;
+declaration:
+           TYPE ID '=' expr     { $$ = build_declaration(yyerror, st, $2, $1, $4); }
+           | TYPE ID            { $$ = build_declaration(yyerror, st, $2, $1, NULL); }
+           ;
 
-assign: 
+assignment: 
       ID '=' expr               { $$ = build_assignment(yyerror, st, $1, $3); }
       ;
 
