@@ -66,10 +66,10 @@ void out_msg(int status) {
 symbol_t* find_symbol(void (*error)(void), symtable_t* st, char* symbol_name) {
     symbol_t* s = search_symbol(st, symbol_name);
     if (s == NULL) {
-        printf("Error - Undeclared identifier '%s'\n", symbol_name);
+        //printf("Error - Undeclared identifier '%s'\n", symbol_name);
         (*error)();
     } else {
-        printf("Identifier '%s' was found\n", s->name);
+        //printf("Identifier '%s' was found\n", s->name);
     }
     return s;
 }
@@ -81,7 +81,7 @@ symbol_t* build_symbol(void (*f)(void), symtable_t* st, char* symbol_name, type_
         s->name = symbol_name;
         s->type = symbol_type;
         insert_symbol(st, s);
-        printf("Identifier '%s' of type %d was added\n", s->name, s->type);
+        //printf("Identifier '%s' of type %d was added\n", s->name, s->type);
     } else {
         printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);
         (*f)();
@@ -94,7 +94,7 @@ tree_node_t* build_expression(char* symbol_name, tree_node_t* right, tree_node_t
     symbol_t* s = create_symbol();
     s->flag = OP_F;
     s->name = symbol_name;
-    printf("Creating '%s' expression\n", s->name);
+    //printf("Creating '%s' expression\n", s->name);
     return init_tree_s(s, left, right);
 }
 
@@ -103,7 +103,7 @@ tree_node_t* build_const(type_t symbol_type, int symbol_value) {
     s->flag = BASIC_F;
     s->type = symbol_type;
     s->value = symbol_value;
-    printf("Creating '%d' value of type %d\n", s->value, s->type);
+    //printf("Creating '%d' value of type %d\n", s->value, s->type);
     return init_leaf_s(s);
 }
 
@@ -113,7 +113,7 @@ tree_node_t* build_assignment(void (*error)(void), symtable_t* st, char* symbol_
     symbol_t* s = create_symbol();
     s->flag = ASSIGN_F;
     s->name = "=";
-    printf("Creating assignment of type %d\n", s->type);
+    //printf("Creating assignment of type %d\n", s->type);
     return init_tree_s(s, left, right);
 }
 
@@ -123,7 +123,7 @@ tree_node_t* build_declaration(void (*error)(void), symtable_t* st, char* symbol
     symbol_t* s = create_symbol();
     s->flag = DECL_F;
     s->name = "=";
-    printf("Creating declaration of '%s'\n", ((symbol_t*)left->value)->name);
+    //printf("Creating declaration of '%s'\n", ((symbol_t*)left->value)->name);
     return init_tree_s(s, left, right);
 }
 
@@ -131,7 +131,7 @@ tree_node_t* build_return(tree_node_t* child) {
     symbol_t* s = create_symbol();
     s->flag = RETURN_F;
     s->name = "return";
-    printf("Creating return statement of type %d\n", ((symbol_t*)(child->value))->type);
+    //printf("Creating return statement of type %d\n", ((symbol_t*)(child->value))->type);
     return init_tree_s(s, child, NULL);
 }
 
@@ -139,7 +139,7 @@ tree_node_t* link_statements(tree_node_t* left, tree_node_t* right) {
     symbol_t* s = create_symbol();
     s->flag = PROG_F;
     s->name = ";";
-    printf("Linking...\n");
+    //printf("Linking...\n");
     return init_tree_s(s, left, right);
 }
 
@@ -149,9 +149,9 @@ void show_tree(tree_node_t* root) {
     }
     symbol_t* s = (symbol_t*)(root->value);
     if (s->name) {
-        printf("Node: %s\n", s->name);
+        //printf("Node: %s\n", s->name);
     } else {
-        printf("Node: %d\n", s->value);
+        //printf("Node: %d\n", s->value);
     }
     show_tree(root->left);
     show_tree(root->right);
@@ -181,6 +181,7 @@ void check_types(void (*error)(void), tree_node_t* root) {
         if (left->type != right->type) {
             (*error)();
         }
+        s->type = left->type; //is equals to right too
     }
     if (s->flag == DECL_F) {
         if (!root->right) {
