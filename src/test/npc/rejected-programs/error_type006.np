@@ -1,0 +1,3 @@
+bool p = false;
+bool q = true;
+return p + q;
