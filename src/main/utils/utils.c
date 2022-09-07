@@ -145,3 +145,48 @@ void show_tree(tree_node_t* root) {
     show_tree(root->left);
     show_tree(root->right);
 }
+
+void check_types(void (*error)(void), tree_node_t* root) {
+    if (!root) {
+        return;
+    }
+    symbol_t* s = (symbol_t*)(root->value);
+    if (s->flag == ID_F || s->flag == BASIC_F) {
+        return;
+    }
+    if (s->flag == ASSIGN_F) {
+        check_types(root->right);
+        symbol_t* left = (symbol_t*)(root->left-value);
+        symbol_t* right = (symbol_t*)(root->right-value);
+        if (left->type != right->type) {
+            (*error)();
+        }
+    }
+    if (s->flag == OP_F) {
+        check_types(root->left);
+        check_types(root->right);
+        symbol_t* left = (symbol_t*)(root->left-value);
+        symbol_t* right = (symbol_t*)(root->right-value);
+        if (left->type != right->type) {
+            (*error)();
+        }
+    }
+    if (s->flag == DECL_F) {
+        if (!root->right) {
+            return;
+        }
+        check_types(root->right);
+        symbol_t* left = (symbol_t*)(root->left-value);
+        symbol_t* right = (symbol_t*)(root->right-value);
+        if (left->type != right->type) {
+            (*error)();
+        }
+    }
+    if (s->flag == RETURN_F) {
+        check_types(root->left);
+    }
+    if (s->flag == PROG_F) {
+        check_types(root->left);
+        check_types(root->right);
+    }
+}
