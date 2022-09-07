@@ -29,7 +29,8 @@ tree_node_t* create_const(type_t symbol_type, int symbol_value);
 
 tree_node_t* create_assignment(symbol_t* symbol, tree_node_t* right);
 
-tree_node_t* add_declaration(symbol_t* symbol, tree_node_t* left, tree_node_t* right);
+tree_node_t* add_declaration(tree_node_t* left, tree_node_t* right);
 
+tree_node_t* create_return(tree_node_t* child);
 
 #endif

@@ -83,8 +83,7 @@ tree_node_t* create_expression(char* symbol_name, tree_node_t* right, tree_node_
     s->flag = OP_F;
     s->name = symbol_name;
     printf("Creating '%s' expression\n", s->name);
-    tree_node_t* node = init_tree_s(s, left, right);
-    return node;
+    return init_tree_s(s, left, right);
 }
 
 tree_node_t* create_const(type_t symbol_type, int symbol_value) {
@@ -93,8 +92,7 @@ tree_node_t* create_const(type_t symbol_type, int symbol_value) {
     s->type = symbol_type;
     s->value = symbol_value;
     printf("Creating '%d' value of type %d\n", s->value, s->type);
-    tree_node_t* node = init_leaf_s(s);
-    return node;
+    return init_leaf_s(s);
 }
 
 tree_node_t* create_assignment(symbol_t* symbol, tree_node_t* right) {
@@ -102,18 +100,22 @@ tree_node_t* create_assignment(symbol_t* symbol, tree_node_t* right) {
     symbol_t* s = create_symbol();
     s->flag = ASSIGN_F;
     s->name = "=";
-    s->type = symbol->type;
-    printf("Creating assignment of type %d\n", symbol->type);
-    tree_node_t* node = init_tree_s(s, left, right);
-    return node;
+    printf("Creating assignment of type %d\n", s->type);
+    return init_tree_s(s, left, right);
 }
 
-tree_node_t* add_declaration(symbol_t* symbol, tree_node_t* left, tree_node_t* right) {
+tree_node_t* add_declaration(tree_node_t* left, tree_node_t* right) {
     symbol_t* s = create_symbol();
     s->flag = DECL_F;
-    s->type = symbol->type;
     s->name = "=";
-    printf("Creating declaration of '%s' of type %d\n", symbol->name, symbol->type);
-    tree_node_t* node = init_tree_s(s, left, right);
-    return node;
+    printf("Creating declaration of '%s'\n", ((symbol_t*)left->value)->name);
+    return init_tree_s(s, left, right);
+}
+
+tree_node_t* create_return(tree_node_t* child) {
+    symbol_t* s = create_symbol();
+    s->flag = RETURN_F;
+    s->name = "return";
+    printf("Creating return statement of type %d\n", ((symbol_t*)(child->value))->type);
+    return init_tree_s(s, child, NULL);
 }
