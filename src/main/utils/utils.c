@@ -21,12 +21,11 @@ const char* extension(const char path[])
     return result;
 }
 
-int atob(char* bool) {
-
-    if (!strcmp("false", bool))
+int atob(char* bool_s) {
+    if (!strcmp("false", bool_s))
         return 0;
 
-    if (!strcmp("true", bool))
+    if (!strcmp("true", bool_s))
         return 1;
 
     printf("Invalid boolean value");
