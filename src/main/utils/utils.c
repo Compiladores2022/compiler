@@ -161,9 +161,9 @@ void show_tree(tree_node_t* root) {
     }
     symbol_t* s = (symbol_t*)(root->value);
     if (s->name) {
-        printf("Node: %s, type: %s\n", s->name, show_type(s->type));
+        /* printf("Node: %s, type: %s\n", s->name, show_type(s->type)); */
     } else {
-        printf("Node: %d, type: %s\n", s->value, show_type(s->type));
+        /* printf("Node: %d, type: %s\n", s->value, show_type(s->type)); */
     }
     show_tree(root->left);
     show_tree(root->right);
@@ -192,7 +192,6 @@ int valid_type(symbol_t* s, type_t left, type_t right) {
 }
 
 void check_types(void (*error)(void), tree_node_t* root) {
-    printf("IN HEREEEEE\n");
     if (!root) {
         return;
     }
@@ -209,7 +208,6 @@ void check_types(void (*error)(void), tree_node_t* root) {
         }
     }
     if (s->flag == OP_F) {
-        printf("HERE TOO\n");
         show_tree(root);
         check_types(error, root->left);
         check_types(error, root->right);
