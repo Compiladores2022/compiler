@@ -142,21 +142,57 @@ tree_node_t* link_statements(tree_node_t* left, tree_node_t* right) {
     return init_tree_s(s, left, right);
 }
 
+char* show_type(type_t type) {
+    switch (type) {
+        case INT_T:
+            return "int";
+            break;
+        case BOOL_T:
+            return "bool";
+            break;
+        default:
+            return "wrong type";
+    }
+}
+
 void show_tree(tree_node_t* root) {
     if (!root) {
         return;
     }
     symbol_t* s = (symbol_t*)(root->value);
     if (s->name) {
-        //printf("Node: %s\n", s->name);
+        printf("Node: %s, type: %s\n", s->name, show_type(s->type));
     } else {
-        //printf("Node: %d\n", s->value);
+        printf("Node: %d, type: %s\n", s->value, show_type(s->type));
     }
     show_tree(root->left);
     show_tree(root->right);
 }
 
+int valid_type(symbol_t* s, type_t left, type_t right) {
+
+    if (right != left) {
+        return 0;
+    }
+
+    type_t type = 0;
+
+    if (!strcmp(s->name, "+")) {
+        type = INT_T;
+    } else if (!strcmp(s->name, "|")) {
+        type = BOOL_T;
+    } else if (!strcmp(s->name, "&")) {
+        type = BOOL_T;
+    }
+
+    if (type == left && type == right)
+        return 1;
+
+    return 0;
+}
+
 void check_types(void (*error)(void), tree_node_t* root) {
+    printf("IN HEREEEEE\n");
     if (!root) {
         return;
     }
@@ -173,11 +209,13 @@ void check_types(void (*error)(void), tree_node_t* root) {
         }
     }
     if (s->flag == OP_F) {
+        printf("HERE TOO\n");
+        show_tree(root);
         check_types(error, root->left);
         check_types(error, root->right);
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
-        if (left->type != right->type) {
+        if (valid_type(s, left->type, right->type) == 0) {
             (*error)();
         }
         s->type = left->type; //is equals to right too
