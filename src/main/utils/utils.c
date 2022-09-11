@@ -175,14 +175,14 @@ int valid_type(symbol_t* s, type_t left, type_t right) {
         return 0;
     }
 
-    type_t type = 0;
+    type_t type;
 
-    if (!strcmp(s->name, "+")) {
+    if (!strcmp(s->name, "+") || !strcmp(s->name, "-") || !strcmp(s->name, "*")) {
         type = INT_T;
-    } else if (!strcmp(s->name, "|")) {
+    } else if (!strcmp(s->name, "|") || !strcmp(s->name, "&")) {
         type = BOOL_T;
-    } else if (!strcmp(s->name, "&")) {
-        type = BOOL_T;
+    } else {
+        return 0;
     }
 
     if (type == left && type == right)
