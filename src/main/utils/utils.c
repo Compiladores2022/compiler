@@ -51,7 +51,6 @@ symtable_t* symbol_table(symtable_t* st) {
 }
 
 void out_msg(int status) {
-
     switch (status) {
         case 0:
             printf("No errors were found!\n");
@@ -114,6 +113,7 @@ tree_node_t* build_assignment(symtable_t* st, char* symbol_name, tree_node_t* ri
     s->flag = ASSIGN_F;
     s->name = "=";
     //printf("Creating assignment of type %d\n", s->type);
+    printf("Assignment at line no.: %d\n", lineno());
     return init_tree_s(s, left, right);
 }
 
@@ -124,6 +124,7 @@ tree_node_t* build_declaration(symtable_t* st, char* symbol_name, type_t symbol_
     s->flag = DECL_F;
     s->name = "=";
     //printf("Creating declaration of '%s'\n", ((symbol_t*)left->value)->name);
+    printf("Declaration at line no.: %d\n", lineno());
     return init_tree_s(s, left, right);
 }
 
@@ -132,6 +133,7 @@ tree_node_t* build_return(tree_node_t* child) {
     s->flag = RETURN_F;
     s->name = "return";
     //printf("Creating return statement of type %d\n", ((symbol_t*)(child->value))->type);
+    printf("Return statement at line no.: %d\n", lineno());
     return init_tree_s(s, child, NULL);
 }
 

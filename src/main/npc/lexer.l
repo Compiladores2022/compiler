@@ -10,6 +10,8 @@
 
 void yyerror(const char* msg);
 
+int lineno();
+
 %}
 
 %option noyywrap
@@ -86,6 +88,10 @@ void yyerror(const char* msg) {
         printf("%s\n", msg);
     }
     exit(1);
+}
+
+int lineno() {
+    return yylineno;
 }
 
 int main(int argc,char *argv[]) {
