@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "utils.h"
+#include "../npc/parser.tab.h"
 
 const char* extension(const char path[])
 {
@@ -62,18 +63,18 @@ void out_msg(int status) {
 }
 
 
-symbol_t* find_symbol(void (*error)(void), symtable_t* st, char* symbol_name) {
+symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
     symbol_t* s = search_symbol(st, symbol_name);
     if (s == NULL) {
         //printf("Error - Undeclared identifier '%s'\n", symbol_name);
-        (*error)();
+        yyerror();
     } else {
         //printf("Identifier '%s' was found\n", s->name);
     }
     return s;
 }
 
-symbol_t* build_symbol(void (*f)(void), symtable_t* st, char* symbol_name, type_t symbol_type) {
+symbol_t* build_symbol(symtable_t* st, char* symbol_name, type_t symbol_type) {
     symbol_t* s;
     if (search_symbol(st, symbol_name) == NULL) {
         s = create_symbol();
@@ -83,7 +84,7 @@ symbol_t* build_symbol(void (*f)(void), symtable_t* st, char* symbol_name, type_
         //printf("Identifier '%s' of type %d was added\n", s->name, s->type);
     } else {
         printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);
-        (*f)();
+        yyerror();
         exit(1);
     }
     return s;
@@ -106,8 +107,8 @@ tree_node_t* build_const(type_t symbol_type, int symbol_value) {
     return init_leaf_s(s);
 }
 
-tree_node_t* build_assignment(void (*error)(void), symtable_t* st, char* symbol_name, tree_node_t* right) {
-    symbol_t* symbol = find_symbol(error, st, symbol_name);
+tree_node_t* build_assignment(symtable_t* st, char* symbol_name, tree_node_t* right) {
+    symbol_t* symbol = find_symbol(st, symbol_name);
     tree_node_t* left = init_leaf_s(symbol);
     symbol_t* s = create_symbol();
     s->flag = ASSIGN_F;
@@ -116,8 +117,8 @@ tree_node_t* build_assignment(void (*error)(void), symtable_t* st, char* symbol_
     return init_tree_s(s, left, right);
 }
 
-tree_node_t* build_declaration(void (*error)(void), symtable_t* st, char* symbol_name, type_t symbol_type, tree_node_t* right) {
-    symbol_t* symbol = build_symbol(error, st, symbol_name, symbol_type);
+tree_node_t* build_declaration(symtable_t* st, char* symbol_name, type_t symbol_type, tree_node_t* right) {
+    symbol_t* symbol = build_symbol(st, symbol_name, symbol_type);
     tree_node_t* left = init_leaf_s(symbol);
     symbol_t* s = create_symbol();
     s->flag = DECL_F;
@@ -191,7 +192,7 @@ int valid_type(symbol_t* s, type_t left, type_t right) {
     return 0;
 }
 
-void check_types(void (*error)(void), tree_node_t* root) {
+void check_types(tree_node_t* root) {
     if (!root) {
         return;
     }
@@ -200,21 +201,21 @@ void check_types(void (*error)(void), tree_node_t* root) {
         return;
     }
     if (s->flag == ASSIGN_F) {
-        check_types(error, root->right);
+        check_types(root->right);
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         if (left->type != right->type) {
-            (*error)();
+            yyerror();
         }
     }
     if (s->flag == OP_F) {
         show_tree(root);
-        check_types(error, root->left);
-        check_types(error, root->right);
+        check_types(root->left);
+        check_types(root->right);
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         if (valid_type(s, left->type, right->type) == 0) {
-            (*error)();
+            yyerror();
         }
         s->type = left->type; //is equals to right too
     }
@@ -222,18 +223,18 @@ void check_types(void (*error)(void), tree_node_t* root) {
         if (!root->right) {
             return;
         }
-        check_types(error, root->right);
+        check_types(root->right);
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         if (left->type != right->type) {
-            (*error)();
+            yyerror();
         }
     }
     if (s->flag == RETURN_F) {
-        check_types(error, root->left);
+        check_types(root->left);
     }
     if (s->flag == PROG_F) {
-        check_types(error, root->left);
-        check_types(error, root->right);
+        check_types(root->left);
+        check_types(root->right);
     }
 }

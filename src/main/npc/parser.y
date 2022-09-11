@@ -48,7 +48,7 @@ tree_node_t* root;
 %%
 
 init:                           { st = symbol_table(st); }
-    program                     { root = $2; check_types(yyerror, root); out_msg(0); }
+    program                     { root = $2; check_types(root); out_msg(0); }
     ;
 
 program:
@@ -62,17 +62,17 @@ statement:
          | RETURN expr          { $$ = build_return($2); }
 
 declaration:
-           TYPE ID '=' expr     { $$ = build_declaration(yyerror, st, $2, $1, $4); }
-           | TYPE ID            { $$ = build_declaration(yyerror, st, $2, $1, NULL); }
+           TYPE ID '=' expr     { $$ = build_declaration(st, $2, $1, $4); }
+           | TYPE ID            { $$ = build_declaration(st, $2, $1, NULL); }
            ;
 
 assignment: 
-      ID '=' expr               { $$ = build_assignment(yyerror, st, $1, $3); }
+      ID '=' expr               { $$ = build_assignment(st, $1, $3); }
       ;
 
 expr:
     CONST                       { $$ = $1; }
-    | ID                        { $$ = init_leaf_s(find_symbol(yyerror, st, $1)); }
+    | ID                        { $$ = init_leaf_s(find_symbol(st, $1)); }
     | expr '+' expr             { $$ = build_expression($2, $1, $3); }
     | expr '-' expr             { $$ = build_expression($2, $1, $3); }
     | expr '*' expr             { $$ = build_expression($2, $1, $3); }
