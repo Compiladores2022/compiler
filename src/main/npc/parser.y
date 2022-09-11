@@ -11,7 +11,7 @@
 #include "../tree/tree-node.h"
 #include "../utils/utils.h"
 
-void yyerror();
+void yyerror(const char* msg);
 int yylex();
 
 symtable_t* st;

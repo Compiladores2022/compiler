@@ -67,7 +67,7 @@ symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
     symbol_t* s = search_symbol(st, symbol_name);
     if (s == NULL) {
         //printf("Error - Undeclared identifier '%s'\n", symbol_name);
-        yyerror();
+        yyerror("Undeclared identifier");
     } else {
         //printf("Identifier '%s' was found\n", s->name);
     }
@@ -84,7 +84,7 @@ symbol_t* build_symbol(symtable_t* st, char* symbol_name, type_t symbol_type) {
         //printf("Identifier '%s' of type %d was added\n", s->name, s->type);
     } else {
         printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);
-        yyerror();
+        yyerror("Trying to re-declare an identifier");
         exit(1);
     }
     return s;
@@ -205,7 +205,7 @@ void check_types(tree_node_t* root) {
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         if (left->type != right->type) {
-            yyerror();
+            yyerror("Type error");
         }
     }
     if (s->flag == OP_F) {
@@ -215,7 +215,7 @@ void check_types(tree_node_t* root) {
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         if (valid_type(s, left->type, right->type) == 0) {
-            yyerror();
+            yyerror("Type error");
         }
         s->type = left->type; //is equals to right too
     }
@@ -227,7 +227,7 @@ void check_types(tree_node_t* root) {
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         if (left->type != right->type) {
-            yyerror();
+            yyerror("Type error");
         }
     }
     if (s->flag == RETURN_F) {

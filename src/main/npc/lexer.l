@@ -8,7 +8,7 @@
 #include "../symbol/types.h"
 #include "parser.tab.h"
 
-void yyerror();
+void yyerror(const char* msg);
 
 %}
 
@@ -75,16 +75,20 @@ other .
 
 {ignore}                         ; /* ignore some special symbols */
 
-{other}                          { yyerror(); }
+{other}                          { yyerror(NULL); }
 
 %%
 
-void yyerror(){
-	printf("%s%d\n","-> Syntax error in line: ",yylineno);
+void yyerror(const char* msg) {
+    if (!msg) {
+	    printf("%s%d\n","-> Syntax error in line: ",yylineno);
+    } else {
+        printf("%s\n", msg);
+    }
     exit(1);
 }
 
-int main(int argc,char *argv[]){
+int main(int argc,char *argv[]) {
 	++argv,--argc;
 	if (argc > 0) {
         if (strcmp(extension(argv[0]), ".np")) {

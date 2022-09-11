@@ -10,7 +10,7 @@
 #include "../tree/tree-node.h"
 #include "../npc/parser.tab.h"
 
-void yyerror();
+void yyerror(const char* msg);
 
 const char* extension(const char path[]);
 
