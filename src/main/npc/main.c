@@ -9,16 +9,16 @@ extern void yyerror(const char* msg);
 extern int lineno();
 
 int main(int argc,char *argv[]) {
-	++argv,--argc;
-	if (argc > 0) {
+    ++argv,--argc;
+    if (argc > 0) {
         if (strcmp(extension(argv[0]), ".np")) {
              printf("File extension not compatible with compiler\n");
              return 1;
         }
-		yyin = fopen(argv[0],"r");
-	} else {
-		yyin = stdin;
+    yyin = fopen(argv[0],"r");
+    } else {
+        yyin = stdin;
     }
-	yyparse();
+    yyparse();
     return 0;
 }

@@ -116,8 +116,6 @@ $(TARGETS):
 
 all: $(TARGETS)
 
-# BUILD TESTS
-
 # PHONY RULES
 
 .PHONY: clean
