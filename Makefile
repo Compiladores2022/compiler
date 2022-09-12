@@ -37,6 +37,16 @@ SYNTAX_TREE := $(call files, $(SYNTAX_TREE_PATH))
 
 # COMPILER INFRASTRUCTURE RULES
 
+LEXER := src/main/npc/lex.yy.c
+PARSER := src/main/npc/parser.tab.c src/main/npc/parser.tab.h
+MAIN := src/main/npc/main.c
+
+$(LEXER): $(LEXER_PATH)
+	flex -o $@ $^
+
+$(PARSER): $(PARSER_PATH)
+	bison -d -o $@ $^
+
 TARGETS := utils \
            list \
            stack \
@@ -46,26 +56,49 @@ TARGETS := utils \
            syntax_tree \
            npc
 
-utils: $(UTILS) $(SYNTAX_TREE) $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(TREE) $(LIST) $(call test, $(UTILS_PATH))
-list: $(LIST) $(call test, $(LIST_PATH))
-tree: $(TREE) $(call test, $(TREE_PATH))
-stack: $(STACK) $(LIST) $(call test, $(STACK_PATH))
-symbol_list: $(SYMBOL_LIST) $(LIST) $(SYMBOL) $(call test, $(SYMBOL_LIST_PATH))
-symbol_table: $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST) $(call test, $(SYMBOL_TABLE_PATH))
-syntax_tree: $(SYNTAX_TREE) $(SYMBOL) $(TREE) $(call test, $(SYNTAX_TREE_PATH))
+utils: $(LEXER) \
+       $(PARSER) \
+       $(UTILS) \
+       $(SYNTAX_TREE) \
+       $(SYMBOL_TABLE) \
+       $(SYMBOL_LIST) \
+       $(SYMBOL) \
+       $(STACK) \
+       $(TREE) \
+       $(LIST) \
+       $(call test, $(LIST_PATH))
 
-# COMPILER RULES
+list: $(LIST) \
+      $(call test, $(LIST_PATH))
 
-LEXER := src/main/npc/lex.yy.c
-PARSER := src/main/npc/parser.tab.c src/main/npc/parser.tab.h
+tree: $(TREE) \
+      $(call test, $(TREE_PATH))
 
-$(LEXER): $(LEXER_PATH)
-	flex -o $@ $^
+stack: $(STACK) \
+       $(LIST) \
+       $(call test, $(STACK_PATH))
 
-$(PARSER): $(PARSER_PATH)
-	bison -d -o $@ $^
+symbol_list: $(SYMBOL_LIST) \
+             $(LIST) \
+             $(SYMBOL) \
+             $(call test, $(SYMBOL_LIST_PATH))
 
-npc: $(LEXER) \
+symbol_table: $(SYMBOL_TABLE) \
+              $(SYMBOL_LIST) \
+              $(SYMBOL) \
+              $(STACK) \
+              $(LIST) \
+              $(call test, $(SYMBOL_TABLE_PATH))
+
+syntax_tree: $(SYNTAX_TREE) \
+             $(SYMBOL) \
+             $(TREE) \
+             $(call test, $(SYNTAX_TREE_PATH))
+
+# COMPILER RULE
+
+npc: $(MAIN) \
+     $(LEXER) \
      $(PARSER) \
      $(SYNTAX_TREE) \
      $(SYMBOL_TABLE) \
@@ -82,6 +115,8 @@ $(TARGETS):
 	$(CC) -o $@ $^
 
 all: $(TARGETS)
+
+# BUILD TESTS
 
 # PHONY RULES
 
