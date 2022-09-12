@@ -42,6 +42,26 @@ type_t atot(char* type) {
     yyerror("Invalid type name");
 }
 
+char* show_type(type_t type) {
+    switch (type) {
+        case INT_T:
+            return "int";
+            break;
+        case BOOL_T:
+            return "bool";
+            break;
+        default:
+            return "wrong type";
+    }
+}
+
+char* err_msg(int lineno, int expected_type, int given_type) {
+    char* msg = malloc(128 * sizeof(char));
+    sprintf(msg, "Type error in line %d - Expected %s but %s was found", 
+            lineno, show_type(expected_type), show_type(given_type));
+    return msg;
+}
+
 symtable_t* symbol_table(symtable_t* st) {
     st = init_symtable();
     push_level(st);
@@ -145,19 +165,6 @@ tree_node_t* link_statements(tree_node_t* left, tree_node_t* right) {
     return init_tree_s(s, left, right);
 }
 
-char* show_type(type_t type) {
-    switch (type) {
-        case INT_T:
-            return "int";
-            break;
-        case BOOL_T:
-            return "bool";
-            break;
-        default:
-            return "wrong type";
-    }
-}
-
 void show_tree(tree_node_t* root) {
     if (!root) {
         return;
@@ -202,14 +209,6 @@ void check_types(tree_node_t* root) {
     if (s->flag == ID_F || s->flag == BASIC_F) {
         return;
     }
-    if (s->flag == ASSIGN_F) {
-        check_types(root->right);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        if (left->type != right->type) {
-            yyerror("Type error");
-        }
-    }
     if (s->flag == OP_F) {
         show_tree(root);
         check_types(root->left);
@@ -221,6 +220,14 @@ void check_types(tree_node_t* root) {
         }
         s->type = left->type; //is equals to right too
     }
+    if (s->flag == ASSIGN_F) {
+        check_types(root->right);
+        symbol_t* left = (symbol_t*)(root->left->value);
+        symbol_t* right = (symbol_t*)(root->right->value);
+        if (left->type != right->type) {
+            yyerror(err_msg(s->lineno, left->type, right->type));
+        }
+    }
     if (s->flag == DECL_F) {
         if (!root->right) {
             return;
@@ -229,7 +236,7 @@ void check_types(tree_node_t* root) {
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         if (left->type != right->type) {
-            yyerror("Type error");
+            yyerror(err_msg(s->lineno, left->type, right->type));
         }
     }
     if (s->flag == RETURN_F) {
