@@ -62,6 +62,18 @@ char* err_msg(int lineno, int expected_type, int given_type) {
     return msg;
 }
 
+char* expr_type_err_msg(int lineno, type_t operation_type, type_t operand_type) {
+    char* msg = malloc(128 * sizeof(char));
+    if (operation_type == INT_T) { // Eventualy we must add FLOAT_T here
+        sprintf(msg, "Type error in line %d - Arithmetic expressions do not accept %s type operands", 
+                lineno, show_type(operand_type));
+    } else if (operation_type == BOOL_T) {
+        sprintf(msg, "Type error in line %d - Boolean expressions do not accept %s type operands", 
+                lineno, show_type(operand_type));
+    }
+    return msg;
+}
+
 symtable_t* symbol_table(symtable_t* st) {
     st = init_symtable();
     push_level(st);
@@ -179,26 +191,35 @@ void show_tree(tree_node_t* root) {
     show_tree(root->right);
 }
 
-int valid_type(symbol_t* s, type_t left, type_t right) {
-
-    if (right != left) {
-        return 0;
+void validate_arithmetic_expression(int lineno, type_t left, type_t right) {
+    if (left != INT_T) { // eventually we will add FLOAT_T
+        yyerror(expr_type_err_msg(lineno, INT_T, left));
     }
+    if (right != INT_T) {
+        yyerror(expr_type_err_msg(lineno, INT_T, right));
+    }
+}
 
+void validate_boolean_expression(int lineno, type_t left, type_t right) {
+    if (left != BOOL_T) {
+        yyerror(expr_type_err_msg(lineno, BOOL_T, left));
+    }
+    if (right != BOOL_T) {
+        yyerror(expr_type_err_msg(lineno, BOOL_T, right));
+    }
+}
+
+void validate_expression_types(symbol_t* s, type_t left, type_t right) {
     type_t type;
-
     if (!strcmp(s->name, "+") || !strcmp(s->name, "-") || !strcmp(s->name, "*")) {
-        type = INT_T;
+        validate_arithmetic_expression(s->lineno, left, right);
     } else if (!strcmp(s->name, "|") || !strcmp(s->name, "&")) {
-        type = BOOL_T;
+        validate_boolean_expression(s->lineno, left, right);
     } else {
-        return 0;
+        char* err_msg = malloc(128 * sizeof(char));
+        sprintf(err_msg, "Undefined operation '%s'", s->name);
+        yyerror(err_msg);
     }
-
-    if (type == left && type == right)
-        return 1;
-
-    return 0;
 }
 
 void check_types(tree_node_t* root) {
@@ -215,9 +236,7 @@ void check_types(tree_node_t* root) {
         check_types(root->right);
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
-        if (valid_type(s, left->type, right->type) == 0) {
-            yyerror("Type error");
-        }
+        validate_expression_types(s, left->type, right->type);
         s->type = left->type; //is equals to right too
     }
     if (s->flag == ASSIGN_F) {
