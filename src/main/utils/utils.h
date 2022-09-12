@@ -46,4 +46,6 @@ int valid_type(symbol_t* s, type_t left, type_t right);
 
 void check_types(tree_node_t* root);
 
+void evaluate(tree_node_t* root);
+
 #endif
