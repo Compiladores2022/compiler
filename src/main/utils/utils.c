@@ -29,8 +29,7 @@ int atob(char* bool_s) {
     if (!strcmp("true", bool_s))
         return 1;
 
-    printf("Invalid boolean value");
-    exit(1);
+    yyerror("Invalid boolean value");
 }
 
 type_t atot(char* type) {
@@ -40,8 +39,7 @@ type_t atot(char* type) {
     if (!strcmp("bool", type))
         return BOOL_T;
 
-    printf("Invalid type name");
-    exit(1);
+    yyerror("Invalid type name");
 }
 
 symtable_t* symbol_table(symtable_t* st) {
@@ -84,17 +82,8 @@ symbol_t* build_symbol(symtable_t* st, char* symbol_name, type_t symbol_type) {
     } else {
         printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);
         yyerror("Trying to re-declare an identifier");
-        exit(1);
     }
     return s;
-}
-
-tree_node_t* build_expression(char* symbol_name, tree_node_t* right, tree_node_t* left) {
-    symbol_t* s = create_symbol();
-    s->flag = OP_F;
-    s->name = symbol_name;
-    //printf("Creating '%s' expression\n", s->name);
-    return init_tree_s(s, left, right);
 }
 
 tree_node_t* build_const(type_t symbol_type, int symbol_value) {
@@ -106,13 +95,22 @@ tree_node_t* build_const(type_t symbol_type, int symbol_value) {
     return init_leaf_s(s);
 }
 
+tree_node_t* build_expression(char* symbol_name, tree_node_t* right, tree_node_t* left) {
+    symbol_t* s = create_symbol();
+    s->flag = OP_F;
+    s->name = symbol_name;
+    s->lineno = lineno();
+    //printf("Creating '%s' expression\n", s->name);
+    return init_tree_s(s, left, right);
+}
+
 tree_node_t* build_assignment(symtable_t* st, char* symbol_name, tree_node_t* right) {
     symbol_t* symbol = find_symbol(st, symbol_name);
     tree_node_t* left = init_leaf_s(symbol);
     symbol_t* s = create_symbol();
     s->flag = ASSIGN_F;
     s->name = "=";
-    //printf("Creating assignment of type %d\n", s->type);
+    s->lineno = lineno();
     printf("Assignment at line no.: %d\n", lineno());
     return init_tree_s(s, left, right);
 }
@@ -123,6 +121,7 @@ tree_node_t* build_declaration(symtable_t* st, char* symbol_name, type_t symbol_
     symbol_t* s = create_symbol();
     s->flag = DECL_F;
     s->name = "=";
+    s->lineno = lineno();
     //printf("Creating declaration of '%s'\n", ((symbol_t*)left->value)->name);
     printf("Declaration at line no.: %d\n", lineno());
     return init_tree_s(s, left, right);
@@ -132,6 +131,7 @@ tree_node_t* build_return(tree_node_t* child) {
     symbol_t* s = create_symbol();
     s->flag = RETURN_F;
     s->name = "return";
+    s->lineno = lineno();
     //printf("Creating return statement of type %d\n", ((symbol_t*)(child->value))->type);
     printf("Return statement at line no.: %d\n", lineno());
     return init_tree_s(s, child, NULL);
