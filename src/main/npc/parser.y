@@ -9,6 +9,9 @@
 #include "../symbol/types.h"
 #include "../syntax-tree/syntax-tree.h"
 #include "../tree/tree-node.h"
+#include "../list/list.h"
+#include "../instruction/instruction.h"
+#include "../instruction/instruction-sequence.h"
 #include "../utils/utils.h"
 #include "../typecheck/typecheck.h"
 #include "../eval/eval.h"
@@ -19,6 +22,7 @@ int yylex();
 
 symtable_t* st;
 tree_node_t* root;
+list_t* instruction_seq;
 
 %}
 
@@ -51,7 +55,13 @@ tree_node_t* root;
 %%
 
 init:                           { st = symbol_table(st); }
-    program                     { root = $2; check_types(root); evaluate(root); out_msg(0); }
+    program                     { 
+                                    root = $2; check_types(root); evaluate(root); 
+                                    instruction_seq = new_instruction_seq();
+                                    build_instruction_seq(root, instruction_seq); 
+                                    show_list(instruction_seq);
+                                    out_msg(0); 
+                                }
     ;
 
 program:
