@@ -1,7 +1,7 @@
-#include "instruction.h"
-#include "instruction-sequence.h"
-#include "../symbol/symbol.h"
-#include "../list/list.h"
+#include "../../main/instruction/instruction.h"
+#include "../../main/instruction/instruction-sequence.h"
+#include "../../main/symbol/symbol.h"
+#include "../../main/list/list.h"
 #include <stdio.h>
 
 int main() {
