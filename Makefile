@@ -80,7 +80,8 @@ COMMON := $(LEXER) \
 		  $(SYMBOL) \
 		  $(STACK) \
 		  $(TREE) \
-		  $(LIST)
+		  $(LIST) \
+		  $(INSTRUCTION)
 
 utils: $(COMMON) \
        $(call test, $(UTILS_PATH))
