@@ -5,7 +5,7 @@
 
 typedef enum inst_type_t {
     ADD,
-    RES,
+    SUB,
     MUL,
     AND,
     OR,
