@@ -13,6 +13,9 @@ endef
 # SET PATHS
 
 UTILS_PATH := src/main/utils
+TYPECHECK_PATH := src/main/typecheck
+BUILDER_PATH:= src/main/npc/builder/
+EVAL_PATH:= src/main/eval
 LIST_PATH := src/main/list
 STACK_PATH := src/main/stack
 TREE_PATH := src/main/tree
@@ -27,6 +30,9 @@ PARSER_PATH := src/main/npc/parser.y
 # FETCH FILES
 
 UTILS :=  $(call files, $(UTILS_PATH))
+TYPECHECK :=  $(call files, $(TYPECHECK_PATH))
+EVAL :=  $(call files, $(EVAL_PATH))
+BUILDER :=  $(call files, $(BUILDER_PATH))
 LIST := $(call files, $(LIST_PATH))
 STACK := $(call files, $(STACK_PATH))
 TREE := $(call files, $(TREE_PATH))
@@ -48,6 +54,9 @@ $(PARSER): $(PARSER_PATH)
 	bison -d -o $@ $^
 
 TARGETS := utils \
+		   typecheck \
+		   eval \
+		   builder \
            list \
            stack \
            tree \
@@ -59,6 +68,9 @@ TARGETS := utils \
 utils: $(LEXER) \
        $(PARSER) \
        $(UTILS) \
+	   $(TYPECHECK) \
+	   $(EVAL) \
+	   $(BUILDER) \
        $(SYNTAX_TREE) \
        $(SYMBOL_TABLE) \
        $(SYMBOL_LIST) \
@@ -66,7 +78,52 @@ utils: $(LEXER) \
        $(STACK) \
        $(TREE) \
        $(LIST) \
-       $(call test, $(LIST_PATH))
+       $(call test, $(UTILS_PATH))
+
+typecheck: $(LEXER) \
+		   $(PARSER) \
+		   $(UTILS) \
+		   $(TYPECHECK) \
+		   $(EVAL) \
+		   $(BUILDER) \
+		   $(SYNTAX_TREE) \
+		   $(SYMBOL_TABLE) \
+		   $(SYMBOL_LIST) \
+		   $(SYMBOL) \
+		   $(STACK) \
+		   $(TREE) \
+		   $(LIST) \
+		   $(call test, $(TYPECHECK_PATH))
+
+eval: $(LEXER) \
+	  $(PARSER) \
+	  $(UTILS) \
+	  $(EVAL) \
+	  $(TYPECHECK) \
+	  $(BUILDER) \
+	  $(SYNTAX_TREE) \
+	  $(SYMBOL_TABLE) \
+	  $(SYMBOL_LIST) \
+	  $(SYMBOL) \
+	  $(STACK) \
+	  $(TREE) \
+	  $(LIST) \
+	  $(call test, $(EVAL_PATH))
+
+builder: $(LEXER) \
+		 $(PARSER) \
+		 $(UTILS) \
+	     $(TYPECHECK) \
+	     $(EVAL) \
+		 $(BUILDER) \
+		 $(SYNTAX_TREE) \
+		 $(SYMBOL_TABLE) \
+		 $(SYMBOL_LIST) \
+		 $(SYMBOL) \
+		 $(STACK) \
+		 $(TREE) \
+		 $(LIST) \
+		 $(call test, $(BUILDER_PATH))
 
 list: $(LIST) \
       $(call test, $(LIST_PATH))
@@ -107,7 +164,10 @@ npc: $(MAIN) \
      $(STACK) \
      $(TREE) \
      $(LIST) \
-     $(UTILS)
+     $(UTILS) \
+     $(TYPECHECK) \
+     $(EVAL) \
+     $(BUILDER)
 
 # BUILD RULES
 

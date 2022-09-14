@@ -10,6 +10,9 @@
 #include "../syntax-tree/syntax-tree.h"
 #include "../tree/tree-node.h"
 #include "../utils/utils.h"
+#include "../typecheck/typecheck.h"
+#include "../eval/eval.h"
+#include "builder/builder.h"
 
 void yyerror(const char* msg);
 int yylex();

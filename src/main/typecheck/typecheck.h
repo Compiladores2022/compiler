@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef TYPECHECK_H
+#define TYPECHECK_H
 
 #include "../symbol-table/symbol-table.h"
 #include "../symbol-list/symbol-list.h"
@@ -12,18 +12,12 @@
 
 void yyerror(const char* msg);
 
-int lineno();
+void validate_arithmetic_expression(int lineno, type_t left, type_t right);
 
-const char* extension(const char path[]);
+void validate_boolean_expression(int lineno, type_t left, type_t right);
 
-int atob(char* bool);
+void validate_expression_types(symbol_t* s, type_t left, type_t right);
 
-type_t atot(char* type);
-
-char* show_type(type_t type);
-
-char* err_msg(int lineno, int expected_type, int given_type);
-
-void show_tree(tree_node_t* root);
+void check_types(tree_node_t* root);
 
 #endif
