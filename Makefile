@@ -23,6 +23,7 @@ SYMBOL_PATH := src/main/symbol
 SYMBOL_LIST_PATH := src/main/symbol-list
 SYMBOL_TABLE_PATH := src/main/symbol-table
 SYNTAX_TREE_PATH := src/main/syntax-tree
+INSTRUCTION_PATH := src/main/instruction
 
 LEXER_PATH := src/main/npc/lexer.l
 PARSER_PATH := src/main/npc/parser.y
@@ -40,6 +41,7 @@ SYMBOL := $(call files, $(SYMBOL_PATH))
 SYMBOL_LIST := $(call files, $(SYMBOL_LIST_PATH))
 SYMBOL_TABLE := $(call files, $(SYMBOL_TABLE_PATH))
 SYNTAX_TREE := $(call files, $(SYNTAX_TREE_PATH))
+INSTRUCTION := $(call files, $(INSTRUCTION_PATH))
 
 # COMPILER INFRASTRUCTURE RULES
 
@@ -63,6 +65,7 @@ TARGETS := utils \
            symbol_list \
            symbol_table \
            syntax_tree \
+		   instruction \
            npc
 
 COMMON := $(LEXER) \
@@ -117,6 +120,11 @@ syntax_tree: $(SYNTAX_TREE) \
              $(SYMBOL) \
              $(TREE) \
              $(call test, $(SYNTAX_TREE_PATH))
+
+instruction: $(INSTRUCTION) \
+             $(LIST) \
+             $(SYMBOL) \
+			 $(call test, $(INSTRUCTION_PATH))
 
 # COMPILER RULE
 
