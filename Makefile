@@ -14,7 +14,7 @@ endef
 
 UTILS_PATH := src/main/utils
 TYPECHECK_PATH := src/main/typecheck
-BUILDER_PATH:= src/main/npc/builder/
+BUILDER_PATH:= src/main/npc/builder
 EVAL_PATH:= src/main/eval
 LIST_PATH := src/main/list
 STACK_PATH := src/main/stack

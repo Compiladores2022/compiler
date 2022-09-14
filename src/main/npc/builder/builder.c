@@ -13,13 +13,8 @@ symtable_t* symbol_table(symtable_t* st) {
 }
 
 void out_msg(int status) {
-    switch (status) {
-        case 0:
-            printf("No errors were found!\n");
-            break;
-        default:
-            printf("There were compile-time errors!\n");
-            break;
+    if (status) {
+        printf("There were compile-time errors!\n");
     }
 }
 
@@ -55,7 +50,6 @@ tree_node_t* build_const(type_t symbol_type, int symbol_value) {
     s->flag = BASIC_F;
     s->type = symbol_type;
     s->value = symbol_value;
-    //printf("Creating '%d' value of type %d\n", s->value, s->type);
     return init_leaf_s(s);
 }
 
@@ -64,7 +58,6 @@ tree_node_t* build_expression(char* symbol_name, tree_node_t* right, tree_node_t
     s->flag = OP_F;
     s->name = symbol_name;
     s->lineno = lineno();
-    //printf("Creating '%s' expression\n", s->name);
     return init_tree_s(s, left, right);
 }
 
@@ -75,7 +68,6 @@ tree_node_t* build_assignment(symtable_t* st, char* symbol_name, tree_node_t* ri
     s->flag = ASSIGN_F;
     s->name = "=";
     s->lineno = lineno();
-    printf("Assignment at line no.: %d\n", lineno());
     return init_tree_s(s, left, right);
 }
 
@@ -86,8 +78,6 @@ tree_node_t* build_declaration(symtable_t* st, char* symbol_name, type_t symbol_
     s->flag = DECL_F;
     s->name = "=";
     s->lineno = lineno();
-    //printf("Creating declaration of '%s'\n", ((symbol_t*)left->value)->name);
-    printf("Declaration at line no.: %d\n", lineno());
     return init_tree_s(s, left, right);
 }
 
@@ -96,8 +86,6 @@ tree_node_t* build_return(tree_node_t* child) {
     s->flag = RETURN_F;
     s->name = "return";
     s->lineno = lineno();
-    //printf("Creating return statement of type %d\n", ((symbol_t*)(child->value))->type);
-    printf("Return statement at line no.: %d\n", lineno());
     return init_tree_s(s, child, NULL);
 }
 
@@ -105,6 +93,5 @@ tree_node_t* link_statements(tree_node_t* left, tree_node_t* right) {
     symbol_t* s = create_symbol();
     s->flag = PROG_F;
     s->name = ";";
-    //printf("Linking...\n");
     return init_tree_s(s, left, right);
 }

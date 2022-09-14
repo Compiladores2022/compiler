@@ -6,6 +6,7 @@
 
 extern FILE *yyin;
 extern void yyerror(const char* msg);
+extern int yyparse();
 extern int lineno();
 
 int main(int argc,char *argv[]) {

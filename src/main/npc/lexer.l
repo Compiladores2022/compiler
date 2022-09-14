@@ -34,36 +34,36 @@ other .
 %%
 
 {number}                        {
-                                   printf("INT : %d\n",atoi(yytext));
+                                   // printf("INT : %d\n",atoi(yytext));
                                    yylval.ival = atoi(yytext);
                                    return INT;
                                 }
 
 {bool}                          {
-                                   printf("BOOL : %s\n", yytext);
+                                   // printf("BOOL : %s\n", yytext);
                                    yylval.bval = atob(yytext);
                                    return BOOL;
                                 }
 
 {type}                          {
-                                   printf("TYPE : %s\n", yytext);
+                                   // printf("TYPE : %s\n", yytext);
                                    yylval.tval = atot(yytext);
                                    return TYPE;
                                 }
 
 {return}                        {
-                                   printf("RETURN : %s\n", yytext);
+                                   // printf("RETURN : %s\n", yytext);
                                    return RETURN;
                                 }
 
 {id}                            {
-                                   printf("ID : %s\n",yytext);
+                                   // printf("ID : %s\n",yytext);
                                    yylval.sval = strdup(yytext);
                                    return ID;
                                 }
 
 {operator}                      {
-                                   printf("%s\n",yytext);
+                                   // printf("%s\n",yytext);
                                    yylval.sval = strdup(yytext);
                                    return *yytext;
                                 }
