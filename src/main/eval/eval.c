@@ -45,7 +45,6 @@ void evaluate(tree_node_t* root) {
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         left->value = right->value;
-        printf("Assigning: %d\n", left->value);
     }
     if (s->flag == DECL_F) {
         if (!root->right) {
@@ -55,12 +54,11 @@ void evaluate(tree_node_t* root) {
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         left->value = right->value;
-        printf("Assigning: %d\n", left->value);
     }
     if (s->flag == RETURN_F) {
         evaluate(root->left);
         s->value = ((symbol_t*) root->left->value)->value;
-        printf("Returning: %d\n", s->value);
+        printf("%d\n", s->value);
     }
     if (s->flag == PROG_F) {
         evaluate(root->left);

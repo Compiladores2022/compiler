@@ -14,7 +14,7 @@ endef
 
 UTILS_PATH := src/main/utils
 TYPECHECK_PATH := src/main/typecheck
-BUILDER_PATH:= src/main/npc/builder/
+BUILDER_PATH:= src/main/npc/builder
 EVAL_PATH:= src/main/eval
 LIST_PATH := src/main/list
 STACK_PATH := src/main/stack
@@ -65,64 +65,30 @@ TARGETS := utils \
            syntax_tree \
            npc
 
-utils: $(LEXER) \
-       $(PARSER) \
-       $(UTILS) \
-	   $(TYPECHECK) \
-	   $(EVAL) \
-	   $(BUILDER) \
-       $(SYNTAX_TREE) \
-       $(SYMBOL_TABLE) \
-       $(SYMBOL_LIST) \
-       $(SYMBOL) \
-       $(STACK) \
-       $(TREE) \
-       $(LIST) \
+COMMON := $(LEXER) \
+		  $(PARSER) \
+		  $(UTILS) \
+		  $(TYPECHECK) \
+		  $(EVAL) \
+		  $(BUILDER) \
+		  $(SYNTAX_TREE) \
+		  $(SYMBOL_TABLE) \
+		  $(SYMBOL_LIST) \
+		  $(SYMBOL) \
+		  $(STACK) \
+		  $(TREE) \
+		  $(LIST)
+
+utils: $(COMMON) \
        $(call test, $(UTILS_PATH))
 
-typecheck: $(LEXER) \
-		   $(PARSER) \
-		   $(UTILS) \
-		   $(TYPECHECK) \
-		   $(EVAL) \
-		   $(BUILDER) \
-		   $(SYNTAX_TREE) \
-		   $(SYMBOL_TABLE) \
-		   $(SYMBOL_LIST) \
-		   $(SYMBOL) \
-		   $(STACK) \
-		   $(TREE) \
-		   $(LIST) \
+typecheck: $(COMMON) \
 		   $(call test, $(TYPECHECK_PATH))
 
-eval: $(LEXER) \
-	  $(PARSER) \
-	  $(UTILS) \
-	  $(EVAL) \
-	  $(TYPECHECK) \
-	  $(BUILDER) \
-	  $(SYNTAX_TREE) \
-	  $(SYMBOL_TABLE) \
-	  $(SYMBOL_LIST) \
-	  $(SYMBOL) \
-	  $(STACK) \
-	  $(TREE) \
-	  $(LIST) \
+eval: $(COMMON) \
 	  $(call test, $(EVAL_PATH))
 
-builder: $(LEXER) \
-		 $(PARSER) \
-		 $(UTILS) \
-	     $(TYPECHECK) \
-	     $(EVAL) \
-		 $(BUILDER) \
-		 $(SYNTAX_TREE) \
-		 $(SYMBOL_TABLE) \
-		 $(SYMBOL_LIST) \
-		 $(SYMBOL) \
-		 $(STACK) \
-		 $(TREE) \
-		 $(LIST) \
+builder: $(COMMON) \
 		 $(call test, $(BUILDER_PATH))
 
 list: $(LIST) \
@@ -154,20 +120,8 @@ syntax_tree: $(SYNTAX_TREE) \
 
 # COMPILER RULE
 
-npc: $(MAIN) \
-     $(LEXER) \
-     $(PARSER) \
-     $(SYNTAX_TREE) \
-     $(SYMBOL_TABLE) \
-     $(SYMBOL_LIST) \
-     $(SYMBOL) \
-     $(STACK) \
-     $(TREE) \
-     $(LIST) \
-     $(UTILS) \
-     $(TYPECHECK) \
-     $(EVAL) \
-     $(BUILDER)
+npc: $(COMMON) \
+     $(MAIN)
 
 # BUILD RULES
 
