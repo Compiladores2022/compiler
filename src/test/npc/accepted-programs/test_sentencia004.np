@@ -1,5 +1,5 @@
-int y = true;
+bool y = true;
 return  (false & true | true);
 // & tiene predencia sobre el | - resultado esperado = true
-int x = 3;
-return x | y;
+bool x = false;
+return x & y;

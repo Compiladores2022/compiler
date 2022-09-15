@@ -4,10 +4,13 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "parser.tab.h"
 #include "../utils/utils.h"
+#include "../symbol/types.h"
+#include "parser.tab.h"
 
-void yyerror();
+void yyerror(const char* msg);
+
+int lineno();
 
 %}
 
@@ -30,30 +33,40 @@ other .
 
 %%
 
-{number}                         {
-                                    printf("INT : %d\n",atoi(yytext));
-                                    return INT;}
+{number}                        {
+                                   // printf("INT : %d\n",atoi(yytext));
+                                   yylval.ival = atoi(yytext);
+                                   return INT;
+                                }
 
-{bool}                           {
-                                    printf("BOOL : %s\n", yytext);
-                                    return BOOL;}
+{bool}                          {
+                                   // printf("BOOL : %s\n", yytext);
+                                   yylval.bval = atob(yytext);
+                                   return BOOL;
+                                }
 
-{type}                           {
-                                    printf("TYPE : %s\n", yytext);
-                                    return TYPE;}
+{type}                          {
+                                   // printf("TYPE : %s\n", yytext);
+                                   yylval.tval = atot(yytext);
+                                   return TYPE;
+                                }
 
-{return}                         {
-                                    printf("RETURN : %s\n", yytext);
-                                    return RETURN;}
+{return}                        {
+                                   // printf("RETURN : %s\n", yytext);
+                                   return RETURN;
+                                }
 
-{id}                             {
-                                    printf("ID : %s\n",yytext);
-                                    yylval.sval = strdup(yytext);
-                                    return ID;}
+{id}                            {
+                                   // printf("ID : %s\n",yytext);
+                                   yylval.sval = strdup(yytext);
+                                   return ID;
+                                }
 
-{operator}                       {
-                                    printf("%s\n",yytext);
-                                    return *yytext;}
+{operator}                      {
+                                   // printf("%s\n",yytext);
+                                   yylval.sval = strdup(yytext);
+                                   return *yytext;
+                                }
 
 {comment}                        ; /* ignore inline comments*/
 
@@ -64,26 +77,19 @@ other .
 
 {ignore}                         ; /* ignore some special symbols */
 
-{other}                          { yyerror(); }
+{other}                          { yyerror(NULL); }
 
 %%
 
-void yyerror(){
-	printf("%s%d\n","-> Syntax error in line: ",yylineno);
+void yyerror(const char* msg) {
+    if (!msg) {
+	    printf("%s%d\n","-> Syntax error in line: ",yylineno);
+    } else {
+        printf("%s\n", msg);
+    }
     exit(1);
 }
 
-int main(int argc,char *argv[]){
-	++argv,--argc;
-	if (argc > 0) {
-        if (strcmp(extension(argv[0]), ".np")) {
-             printf("File extension not compatible with compiler\n");
-             return 1;
-        }
-		yyin = fopen(argv[0],"r");
-	} else {
-		yyin = stdin;
-    }
-	yyparse();
-    return 0;
+int lineno() {
+    return yylineno;
 }

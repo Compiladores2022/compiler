@@ -1,36 +1,29 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-// MACROS
+#include "../symbol-table/symbol-table.h"
+#include "../symbol-list/symbol-list.h"
+#include "../syntax-tree/syntax-tree.h"
+#include "../stack/stack.h"
+#include "../list/list.h"
+#include "../symbol/symbol.h"
+#include "../tree/tree-node.h"
+#include "../npc/parser.tab.h"
 
-#define SYMBOL_TABLE() {                        \
-        st = init_symtable();                   \
-        push_level(st);                         \
-    }
+void yyerror(const char* msg);
 
-#define NO_ERRORS() {                           \
-        printf("No errors were found! \n");     \
-    }
-
-#define ADD_SYMBOL(symbol_name) {                                       \
-    symbol_t* s = create_symbol();                                      \
-    s->name = symbol_name;                                              \
-    insert_symbol(st, s);                                               \
-    printf("Identifier: %s was added\n", s->name);                      \
- }
-
-#define SEARCH_SYMBOL(symbol_name) {                                    \
-    symbol_t* s = search_symbol(st, symbol_name);                       \
-    if (s == NULL) {                                                    \
-        printf("Error - Undeclared identifier: %s\n", symbol_name);     \
-        yyerror();                                                      \
-    } else {                                                            \
-        printf("Identifier found: %s\n", s->name);                      \
-    }                                                                   \
-}
-
-// FUNCTIONS
+int lineno();
 
 const char* extension(const char path[]);
+
+int atob(char* bool);
+
+type_t atot(char* type);
+
+char* show_type(type_t type);
+
+char* err_msg(int lineno, int expected_type, int given_type);
+
+void show_tree(tree_node_t* root);
 
 #endif

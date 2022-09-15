@@ -30,4 +30,6 @@ for test in src/test/npc/rejected-programs/*.np; do
     fi
 done
 
+make clean
+
 exit $exit_status

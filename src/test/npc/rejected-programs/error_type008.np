@@ -1,0 +1,4 @@
+bool p = false;
+bool q = true;
+bool r;
+r = p + q;

@@ -13,6 +13,9 @@ endef
 # SET PATHS
 
 UTILS_PATH := src/main/utils
+TYPECHECK_PATH := src/main/typecheck
+BUILDER_PATH:= src/main/npc/builder
+EVAL_PATH:= src/main/eval
 LIST_PATH := src/main/list
 STACK_PATH := src/main/stack
 TREE_PATH := src/main/tree
@@ -20,6 +23,7 @@ SYMBOL_PATH := src/main/symbol
 SYMBOL_LIST_PATH := src/main/symbol-list
 SYMBOL_TABLE_PATH := src/main/symbol-table
 SYNTAX_TREE_PATH := src/main/syntax-tree
+INSTRUCTION_PATH := src/main/instruction
 
 LEXER_PATH := src/main/npc/lexer.l
 PARSER_PATH := src/main/npc/parser.y
@@ -27,6 +31,9 @@ PARSER_PATH := src/main/npc/parser.y
 # FETCH FILES
 
 UTILS :=  $(call files, $(UTILS_PATH))
+TYPECHECK :=  $(call files, $(TYPECHECK_PATH))
+EVAL :=  $(call files, $(EVAL_PATH))
+BUILDER :=  $(call files, $(BUILDER_PATH))
 LIST := $(call files, $(LIST_PATH))
 STACK := $(call files, $(STACK_PATH))
 TREE := $(call files, $(TREE_PATH))
@@ -34,30 +41,13 @@ SYMBOL := $(call files, $(SYMBOL_PATH))
 SYMBOL_LIST := $(call files, $(SYMBOL_LIST_PATH))
 SYMBOL_TABLE := $(call files, $(SYMBOL_TABLE_PATH))
 SYNTAX_TREE := $(call files, $(SYNTAX_TREE_PATH))
+INSTRUCTION := $(call files, $(INSTRUCTION_PATH))
 
 # COMPILER INFRASTRUCTURE RULES
 
-TARGETS := utils \
-           list \
-           stack \
-           tree \
-           symbol_list \
-           symbol_table \
-           syntax_tree \
-           npc
-
-utils: $(UTILS) $(call test, $(UTILS_PATH))
-list: $(LIST) $(call test, $(LIST_PATH))
-tree: $(TREE) $(call test, $(TREE_PATH))
-stack: $(STACK) $(LIST) $(call test, $(STACK_PATH))
-symbol_list: $(SYMBOL_LIST) $(LIST) $(SYMBOL) $(call test, $(SYMBOL_LIST_PATH))
-symbol_table: $(SYMBOL_TABLE) $(SYMBOL_LIST) $(SYMBOL) $(STACK) $(LIST) $(call test, $(SYMBOL_TABLE_PATH))
-syntax_tree: $(SYNTAX_TREE) $(SYMBOL) $(TREE) $(call test, $(SYNTAX_TREE_PATH))
-
-# COMPILER RULES
-
 LEXER := src/main/npc/lex.yy.c
 PARSER := src/main/npc/parser.tab.c src/main/npc/parser.tab.h
+MAIN := src/main/npc/main.c
 
 $(LEXER): $(LEXER_PATH)
 	flex -o $@ $^
@@ -65,16 +55,82 @@ $(LEXER): $(LEXER_PATH)
 $(PARSER): $(PARSER_PATH)
 	bison -d -o $@ $^
 
-npc: $(LEXER) \
-     $(PARSER) \
-     $(SYNTAX_TREE) \
-     $(SYMBOL_TABLE) \
-     $(SYMBOL_LIST) \
-     $(SYMBOL) \
-     $(STACK) \
-     $(TREE) \
-     $(LIST) \
-     $(UTILS)
+TARGETS := utils \
+		   typecheck \
+		   eval \
+		   builder \
+           list \
+           stack \
+           tree \
+           symbol_list \
+           symbol_table \
+           syntax_tree \
+		   instruction \
+           npc
+
+COMMON := $(LEXER) \
+		  $(PARSER) \
+		  $(UTILS) \
+		  $(TYPECHECK) \
+		  $(EVAL) \
+		  $(BUILDER) \
+		  $(SYNTAX_TREE) \
+		  $(SYMBOL_TABLE) \
+		  $(SYMBOL_LIST) \
+		  $(SYMBOL) \
+		  $(STACK) \
+		  $(TREE) \
+		  $(LIST) \
+		  $(INSTRUCTION)
+
+utils: $(COMMON) \
+       $(call test, $(UTILS_PATH))
+
+typecheck: $(COMMON) \
+		   $(call test, $(TYPECHECK_PATH))
+
+eval: $(COMMON) \
+	  $(call test, $(EVAL_PATH))
+
+builder: $(COMMON) \
+		 $(call test, $(BUILDER_PATH))
+
+list: $(LIST) \
+      $(call test, $(LIST_PATH))
+
+tree: $(TREE) \
+      $(call test, $(TREE_PATH))
+
+stack: $(STACK) \
+       $(LIST) \
+       $(call test, $(STACK_PATH))
+
+symbol_list: $(SYMBOL_LIST) \
+             $(LIST) \
+             $(SYMBOL) \
+             $(call test, $(SYMBOL_LIST_PATH))
+
+symbol_table: $(SYMBOL_TABLE) \
+              $(SYMBOL_LIST) \
+              $(SYMBOL) \
+              $(STACK) \
+              $(LIST) \
+              $(call test, $(SYMBOL_TABLE_PATH))
+
+syntax_tree: $(SYNTAX_TREE) \
+             $(SYMBOL) \
+             $(TREE) \
+             $(call test, $(SYNTAX_TREE_PATH))
+
+instruction: $(INSTRUCTION) \
+             $(LIST) \
+             $(SYMBOL) \
+			 $(call test, $(INSTRUCTION_PATH))
+
+# COMPILER RULE
+
+npc: $(COMMON) \
+     $(MAIN)
 
 # BUILD RULES
 
