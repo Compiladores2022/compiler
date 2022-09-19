@@ -30,17 +30,12 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, symbol_t*, symbol_t*)
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         (*f)(s, left, right);
-        // validate_expression_types(s, left->type, right->type);
-        // s->type = left->type; //is equals to right too
     }
     if (s->flag == ASSIGN_F) {
         traverse_tree(root->right, f);
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         (*f)(s, left, right);
-        // if (left->type != right->type) {
-        //     yyerror(err_msg(s->lineno, left->type, right->type));
-        // }
     }
     if (s->flag == DECL_F) {
         if (!root->right) {
@@ -50,9 +45,6 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, symbol_t*, symbol_t*)
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         (*f)(s, left, right);
-        // if (left->type != right->type) {
-        //     yyerror(err_msg(s->lineno, left->type, right->type));
-        // }
     }
     if (s->flag == RETURN_F) {
         traverse_tree(root->left, f);
