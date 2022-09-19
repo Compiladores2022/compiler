@@ -20,8 +20,6 @@ void validate_expression_types(symbol_t* s, type_t left, type_t right);
 
 void check_types(tree_node_t* root);
 
-void build_instruction_seq(tree_node_t* root, list_t* instruction_seq);
-
 void show_list(list_t* instructions);
 
 #endif
