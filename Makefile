@@ -110,7 +110,7 @@ list: $(LIST) \
 
 tree: $(TREE) \
 	  $(SYMBOL) \
-      $(call test, $(TREE_PATH) )
+      $(call test, $(TREE_PATH))
 
 stack: $(STACK) \
        $(LIST) \
