@@ -55,7 +55,6 @@ extern list_t* instruction_seq;
  
 %%
 
-<<<<<<< HEAD
 init:                               { st = symbol_table(st); }
     program                         { 
                                         root = $2; traverse_tree(root, check_types); traverse_tree(root, evaluate); 
