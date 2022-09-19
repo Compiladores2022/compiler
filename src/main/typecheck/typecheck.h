@@ -18,7 +18,7 @@ void validate_boolean_expression(int lineno, type_t left, type_t right);
 
 void validate_expression_types(symbol_t* s, type_t left, type_t right);
 
-void check_types(tree_node_t* root);
+void check_types(symbol_t* s, symbol_t* left, symbol_t* right);
 
 void show_list(list_t* instructions);
 

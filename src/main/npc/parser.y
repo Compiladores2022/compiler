@@ -57,7 +57,7 @@ list_t* instruction_seq;
 
 init:                           { st = symbol_table(st); }
     program                     { 
-                                    root = $2; check_types(root); evaluate(root); 
+                                    root = $2; traverse_tree(root, check_types); evaluate(root); 
                                     instruction_seq = new_instruction_seq();
                                     build_instruction_seq(root, instruction_seq); 
                                     show_list(instruction_seq);
