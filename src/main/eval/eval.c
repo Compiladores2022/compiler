@@ -24,44 +24,15 @@ void evaluate_expression(symbol_t* s, symbol_t* left, symbol_t* right) { // when
     }
 }
 
-void evaluate(tree_node_t* root) {
-    if (!root) {
-        return;
-    }
-    symbol_t* s = (symbol_t*)(root->value);
-    if (s->flag == ID_F || s->flag == BASIC_F) {
-        return;
-    }
+void evaluate(symbol_t* s, symbol_t* left, symbol_t* right) {
     if (s->flag == OP_F) {
-        show_tree(root);
-        evaluate(root->left);
-        evaluate(root->right);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
         evaluate_expression(s, left, right);
     }
-    if (s->flag == ASSIGN_F) {
-        evaluate(root->right);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        left->value = right->value;
-    }
-    if (s->flag == DECL_F) {
-        if (!root->right) {
-            return;
-        }
-        evaluate(root->right);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
+    if (s->flag == ASSIGN_F || s->flag == DECL_F) {
         left->value = right->value;
     }
     if (s->flag == RETURN_F) {
-        evaluate(root->left);
-        s->value = ((symbol_t*) root->left->value)->value;
+        s->value = left->value;
         printf("%d\n", s->value);
-    }
-    if (s->flag == PROG_F) {
-        evaluate(root->left);
-        evaluate(root->right);
     }
 }
