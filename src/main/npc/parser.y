@@ -23,7 +23,7 @@ int yylex();
 
 symtable_t* st;
 tree_node_t* root;
-list_t* instruction_seq;
+extern list_t* instruction_seq;
 
 %}
 
@@ -59,7 +59,7 @@ init:                           { st = symbol_table(st); }
     program                     { 
                                     root = $2; traverse_tree(root, check_types); traverse_tree(root, evaluate); 
                                     instruction_seq = new_instruction_seq();
-                                    build_instruction_seq(root, instruction_seq); 
+                                    traverse_tree(root, build_instruction_seq);
                                     show_list(instruction_seq);
                                     out_msg(0); 
                                 }

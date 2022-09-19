@@ -5,6 +5,8 @@
 #include "../instruction/instruction.h"
 #include "../instruction/instruction-sequence.h"
 
+list_t* instruction_seq;
+
 inst_type_t op_to_inst_type(char* op) {
     if (!strcmp(op, "+")) {
         return ADD;
@@ -25,49 +27,19 @@ inst_type_t op_to_inst_type(char* op) {
     exit(1);
 }
 
-void build_instruction_seq(tree_node_t* root, list_t* instruction_seq) {
-    if (!root) {
-        return;
-    }
-    symbol_t* s = (symbol_t*)(root->value);
-    if (s->flag == ID_F || s->flag == BASIC_F) {
-        return;
-    }
+void build_instruction_seq(symbol_t* s, symbol_t* left, symbol_t* right) {
     if (s->flag == OP_F) {
-        build_instruction_seq(root->left, instruction_seq);
-        build_instruction_seq(root->right, instruction_seq);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
         inst_type_t type = op_to_inst_type(s->name);
         instruction_t* instruction = new_instruction(type, left, right, s);
         add_instruction(instruction_seq, instruction);
     }
-    if (s->flag == ASSIGN_F) {
-        build_instruction_seq(root->right, instruction_seq);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        instruction_t* instruction = new_instruction(MOV, right, NULL, left);
-        add_instruction(instruction_seq, instruction);
-    }
-    if (s->flag == DECL_F) {
-        if (!root->right) {
-            return;
-        }
-        build_instruction_seq(root->right, instruction_seq);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
+    if (s->flag == ASSIGN_F || s->flag == DECL_F) {
         instruction_t* instruction = new_instruction(MOV, right, NULL, left);
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == RETURN_F) {
-        build_instruction_seq(root->left, instruction_seq);
-        symbol_t* left = (symbol_t*)(root->left->value);
         instruction_t* instruction = new_instruction(RET, NULL, NULL, left);
         add_instruction(instruction_seq, instruction);
-    }
-    if (s->flag == PROG_F) {
-        build_instruction_seq(root->left, instruction_seq);
-        build_instruction_seq(root->right, instruction_seq);
     }
 }
 
