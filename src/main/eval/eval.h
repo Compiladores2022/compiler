@@ -10,6 +10,6 @@
 #include "../tree/tree-node.h"
 #include "../npc/parser.tab.h"
 
-void evaluate(tree_node_t* root);
+void evaluate(symbol_t* s, symbol_t* left, symbol_t* right);
 
 #endif
