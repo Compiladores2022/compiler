@@ -1,4 +1,10 @@
+OS := $(shell uname)
+
+ifeq ($(OS), Darwin)
+CC = gcc-12
+else
 CC = gcc
+endif
 
 # DEFINE FUNCTIONS
 
@@ -130,6 +136,12 @@ instruction: $(INSTRUCTION) \
              $(LIST) \
              $(SYMBOL) \
 			 $(call test, $(INSTRUCTION_PATH))
+
+code_gen: $(CODE_GEN) \
+	      $(INSTRUCTION) \
+          $(LIST) \
+          $(TREE) \
+		  $(call test, $(CODE_GEN_PATH))
 
 # COMPILER RULE
 

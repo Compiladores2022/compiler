@@ -3,7 +3,7 @@
 echo "SETTING UP COMPILER...\n"
 
 make clean
-make all
+make npc
 
 echo "RUNNING TESTS FOR VALID PROGRAMS...\n"
 
