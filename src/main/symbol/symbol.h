@@ -9,6 +9,7 @@ typedef struct {
     type_t type;
     int value;
     char* name;
+    int offset;
     int lineno;
 } symbol_t;
 
