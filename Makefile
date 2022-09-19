@@ -1,9 +1,9 @@
 OS := $(shell uname)
 
 ifeq ($(OS), Darwin)
-CC = gcc-12
+	CC = gcc-12
 else
-CC = gcc
+	CC = gcc
 endif
 
 # DEFINE FUNCTIONS
@@ -109,6 +109,7 @@ list: $(LIST) \
       $(call test, $(LIST_PATH))
 
 tree: $(TREE) \
+	  $(SYMBOL) \
       $(call test, $(TREE_PATH))
 
 stack: $(STACK) \

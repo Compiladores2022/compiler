@@ -48,46 +48,14 @@ void validate_expression_types(symbol_t* s, type_t left, type_t right) {
     }
 }
 
-void check_types(tree_node_t* root) {
-    if (!root) {
-        return;
-    }
-    symbol_t* s = (symbol_t*)(root->value);
-    if (s->flag == ID_F || s->flag == BASIC_F) {
-        return;
-    }
+void check_types(symbol_t* s, symbol_t* left, symbol_t* right) {
     if (s->flag == OP_F) {
-        check_types(root->left);
-        check_types(root->right);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
         validate_expression_types(s, left->type, right->type);
         s->type = left->type; //is equals to right too
     }
-    if (s->flag == ASSIGN_F) {
-        check_types(root->right);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
+    if (s->flag == ASSIGN_F || s->flag == DECL_F) {
         if (left->type != right->type) {
             yyerror(err_msg(s->lineno, left->type, right->type));
         }
-    }
-    if (s->flag == DECL_F) {
-        if (!root->right) {
-            return;
-        }
-        check_types(root->right);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        if (left->type != right->type) {
-            yyerror(err_msg(s->lineno, left->type, right->type));
-        }
-    }
-    if (s->flag == RETURN_F) {
-        check_types(root->left);
-    }
-    if (s->flag == PROG_F) {
-        check_types(root->left);
-        check_types(root->right);
     }
 }

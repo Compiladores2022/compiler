@@ -16,7 +16,7 @@ symtable_t* symbol_table(symtable_t* st);
 
 symbol_t* find_symbol(symtable_t* st, char* symbol_name);
 
-symbol_t* build_symbol(symtable_t* st, char* symbol_name, type_t symbol_type);
+symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type);
 
 tree_node_t* build_expression(char* symbol_name, tree_node_t* left, tree_node_t* right);
 

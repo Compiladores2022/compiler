@@ -6,6 +6,10 @@
 #include "builder.h"
 #include "../parser.tab.h"
 
+#define MEM_OFFSET 8
+
+int glob_offset = -2;
+
 symtable_t* symbol_table(symtable_t* st) {
     st = init_symtable();
     push_level(st);
@@ -22,20 +26,19 @@ void out_msg(int status) {
 symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
     symbol_t* s = search_symbol(st, symbol_name);
     if (s == NULL) {
-        //printf("Error - Undeclared identifier '%s'\n", symbol_name);
         yyerror("Undeclared identifier");
-    } else {
-        //printf("Identifier '%s' was found\n", s->name);
     }
     return s;
 }
 
-symbol_t* build_symbol(symtable_t* st, char* symbol_name, type_t symbol_type) {
+symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type) {
     symbol_t* s;
     if (search_symbol(st, symbol_name) == NULL) {
         s = create_symbol();
         s->name = symbol_name;
         s->type = symbol_type;
+        s->offset = (glob_offset--) * MEM_OFFSET;
+        printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
         insert_symbol(st, s);
         //printf("Identifier '%s' of type %d was added\n", s->name, s->type);
     } else {
@@ -58,6 +61,8 @@ tree_node_t* build_expression(char* symbol_name, tree_node_t* left, tree_node_t*
     s->flag = OP_F;
     s->name = symbol_name;
     s->lineno = lineno();
+    s->offset = (glob_offset--) * MEM_OFFSET;
+    printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
     return init_tree_s(s, left, right);
 }
 
@@ -72,7 +77,7 @@ tree_node_t* build_assignment(symtable_t* st, char* symbol_name, tree_node_t* ri
 }
 
 tree_node_t* build_declaration(symtable_t* st, char* symbol_name, type_t symbol_type, tree_node_t* right) {
-    symbol_t* symbol = build_symbol(st, symbol_name, symbol_type);
+    symbol_t* symbol = build_id(st, symbol_name, symbol_type);
     tree_node_t* left = init_leaf_s(symbol);
     symbol_t* s = create_symbol();
     s->flag = DECL_F;

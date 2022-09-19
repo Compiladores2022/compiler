@@ -23,7 +23,7 @@ int yylex();
 
 symtable_t* st;
 tree_node_t* root;
-list_t* instruction_seq;
+extern list_t* instruction_seq;
 
 %}
 
@@ -55,49 +55,50 @@ list_t* instruction_seq;
  
 %%
 
-init:                           { st = symbol_table(st); }
-    program                     { 
-                                    root = $2; check_types(root); evaluate(root); 
-                                    instruction_seq = new_instruction_seq();
-                                    build_instruction_seq(root, instruction_seq); 
-                                    show_list(instruction_seq);
-                                    out_msg(0); 
-                                }
+<<<<<<< HEAD
+init:                               { st = symbol_table(st); }
+    program                         { 
+                                        root = $2; traverse_tree(root, check_types); traverse_tree(root, evaluate); 
+                                        instruction_seq = new_instruction_seq();
+                                        traverse_tree(root, build_instruction_seq);
+                                        show_list(instruction_seq);
+                                        out_msg(0); 
+                                    }
     ;
 
 program:
-       statement ';'            { $$ = $1; }
-       | declaration ';' program{ $$ = link_statements($1, $3); }
-       | statement ';' program  { $$ = link_statements($1, $3); }
+       statement ';'                { $$ = $1; }
+       | declaration ';' program    { $$ = link_statements($1, $3); }
+       | statement ';' program      { $$ = link_statements($1, $3); }
        ;
 
 statement:
-         assignment             { $$ = $1; }
-         | RETURN expr          { $$ = build_return($2); }
+         assignment                 { $$ = $1; }
+         | RETURN expr              { $$ = build_return($2); }
 
 declaration:
-           TYPE ID '=' expr     { $$ = build_declaration(st, $2, $1, $4); }
-           | TYPE ID            { $$ = build_declaration(st, $2, $1, NULL); }
+           TYPE ID '=' expr         { $$ = build_declaration(st, $2, $1, $4); }
+           | TYPE ID                { $$ = build_declaration(st, $2, $1, NULL); }
            ;
 
 assignment: 
-      ID '=' expr               { $$ = build_assignment(st, $1, $3); }
+      ID '=' expr                   { $$ = build_assignment(st, $1, $3); }
       ;
 
 expr:
-    CONST                       { $$ = $1; }
-    | ID                        { $$ = init_leaf_s(find_symbol(st, $1)); }
-    | expr '+' expr             { $$ = build_expression($2, $1, $3); }
-    | expr '-' expr             { $$ = build_expression($2, $1, $3); }
-    | expr '*' expr             { $$ = build_expression($2, $1, $3); }
-    | expr '|' expr             { $$ = build_expression($2, $1, $3); }
-    | expr '&' expr             { $$ = build_expression($2, $1, $3); }
-    | '(' expr ')'              { $$ = $2; }
+    CONST                           { $$ = $1; }
+    | ID                            { $$ = init_leaf_s(find_symbol(st, $1)); }
+    | expr '+' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '-' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '*' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '|' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '&' expr                 { $$ = build_expression($2, $1, $3); }
+    | '(' expr ')'                  { $$ = $2; }
     ;
 
 CONST:
-     INT                        { $$ = build_const(INT_T, $1); }
-     | BOOL                     { $$ = build_const(BOOL_T, $1); }
+     INT                            { $$ = build_const(INT_T, $1); }
+     | BOOL                         { $$ = build_const(BOOL_T, $1); }
      ;
  
 %%

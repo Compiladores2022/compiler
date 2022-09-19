@@ -4,12 +4,13 @@
 #include "../symbol/symbol.h"
 
 typedef enum inst_type_t {
+    MOV,
     ADD,
     SUB,
     MUL,
     AND,
     OR,
-    MOV
+    RET
 } inst_type_t;
 
 typedef struct instruction_t {
