@@ -1,5 +1,5 @@
-#ifndef CODE_GEN_H
-#define CODE_GEN_H
+#ifndef INSTR_SEQ_GEN_H
+#define INSTR_SEQ_GEN_H
 
 #include "../tree/tree-node.h"
 #include "../list/list.h"

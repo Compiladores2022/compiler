@@ -15,7 +15,7 @@
 #include "../utils/utils.h"
 #include "../typecheck/typecheck.h"
 #include "../eval/eval.h"
-#include "../code-gen/code-gen.h"
+#include "../code-gen/instr-seq-gen.h"
 #include "builder/builder.h"
 
 void yyerror(const char* msg);
