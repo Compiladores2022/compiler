@@ -2,7 +2,8 @@
 #define ASM_GEN
 
 #include "../instruction/instruction.h"
+#include "../list/list.h"
 
-char* create_asm_instruction(instruction_t* instruction);
+void create_asm(char* filename, list_t* instruction_seq);
 
 #endif

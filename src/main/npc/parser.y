@@ -16,6 +16,7 @@
 #include "../typecheck/typecheck.h"
 #include "../eval/eval.h"
 #include "../code-gen/instr-seq-gen.h"
+#include "../code-gen/asm-gen.h"
 #include "builder/builder.h"
 
 void yyerror(const char* msg);
@@ -61,6 +62,7 @@ init:                               { st = symbol_table(st); }
                                         instruction_seq = new_instruction_seq();
                                         traverse_tree(root, build_instruction_seq);
                                         show_list(instruction_seq);
+                                        create_asm("prog.s", instruction_seq);
                                         out_msg(0); 
                                     }
     ;
