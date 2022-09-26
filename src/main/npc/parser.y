@@ -69,14 +69,13 @@ init:                               { st = symbol_table(st); }
     ;
 
 program:
-       statement ';'                { $$ = $1; }
-       | declaration ';' program    { $$ = link_statements($1, $3); }
+       RETURN expr ';'              { $$ = build_return($2); }
        | statement ';' program      { $$ = link_statements($1, $3); }
        ;
 
 statement:
          assignment                 { $$ = $1; }
-         | RETURN expr              { $$ = build_return($2); }
+         | declaration              { $$ = $1; }
 
 declaration:
            TYPE ID '=' expr         { $$ = build_declaration(st, $2, $1, $4); }
