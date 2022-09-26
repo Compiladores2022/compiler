@@ -6,7 +6,5 @@ bool b2 = false & true;
 b2 = (false);
 return b2;
 
-x1 = x1 * aux + 1;
-return ((x1));
-
-
+// x1 = x1 * aux + 1;
+// return ((x1));

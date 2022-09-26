@@ -5,7 +5,7 @@
 #include "../instruction/instruction.h"
 
 char* create_mov_instruction(instruction_t* instruction) {
-    char* mov = (char*) malloc(25 * sizeof(char));
+    char* mov = (char*) malloc(100 * sizeof(char));
     if (instruction->s1->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
     } else if (instruction->s1->flag == OP_F) {
@@ -18,7 +18,7 @@ char* create_mov_instruction(instruction_t* instruction) {
 }
 
 char* get_mov_operand(symbol_t* s, char* reg) {
-    char* mov = (char*) malloc(25 * sizeof(char));
+    char* mov = (char*) malloc(100 * sizeof(char));
     if (s->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %%%s", s->value, reg);
     } else if (s->flag == OP_F || s->flag == ID_F) {
@@ -78,7 +78,7 @@ char* create_or_instruction(instruction_t* instruction) {
 }
 
 char* create_ret_instruction(instruction_t* instruction) {
-    char* mov_eax = (char*) malloc(25 * sizeof(char));
+    char* mov_eax = (char*) malloc(100 * sizeof(char));
     sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
     return mov_eax;
 }
