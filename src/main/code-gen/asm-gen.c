@@ -17,66 +17,62 @@ char* create_mov_instruction(instruction_t* instruction) {
     return mov;
 }
 
+char* get_mov_operand(symbol_t* s, char* reg) {
+    char* mov = (char*) malloc(25 * sizeof(char));
+    if (s->flag == BASIC_F) {
+        sprintf(mov, "\tmovl    $%d, %%%s", s->value, reg);
+    } else if (s->flag == OP_F || s->flag == ID_F) {
+        sprintf(mov, "\tmovl    %d(%%rbp), %%%s", s->offset, reg);
+    }
+    return mov;
+}
+
 char* create_add_instruction(instruction_t* instruction) {
-    char* mov_edx = (char*) malloc(25 * sizeof(char));
-    char* mov_eax = (char*) malloc(50 * sizeof(char));
+    char* mov_edx = get_mov_operand(instruction->s1, "edx");
+    char* mov_eax = get_mov_operand(instruction->s2, "eax");
     char* add = (char*) malloc(75 * sizeof(char));
-    char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_edx, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_eax, "%s\n\tmovl    %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
-    sprintf(add, "%s\n\taddl    %%edx, %%eax", mov_eax);
+    char* mov_res = (char*) malloc(100 * sizeof(char)); 
+    sprintf(add, "%s\n%s\n\taddl    %%edx, %%eax", mov_edx, mov_eax);
     sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", add, instruction->s3->offset);
     return mov_res;
 }
 
 char* create_sub_instruction(instruction_t* instruction) {
-    char* mov_edx = (char*) malloc(25 * sizeof(char));
-    char* mov_eax = (char*) malloc(50 * sizeof(char));
+    char* mov_edx = get_mov_operand(instruction->s1, "edx");
+    char* mov_eax = get_mov_operand(instruction->s2, "eax");
     char* sub = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_edx, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_eax, "%s\n\tmovl    %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
-    sprintf(sub, "%s\n\tsubl    %%edx, %%eax", mov_eax);
+    sprintf(sub, "%s\n%s\n\tsubl    %%edx, %%eax", mov_edx, mov_eax);
     sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", sub, instruction->s3->offset);
     return mov_res;
 }
 
 char* create_mul_instruction(instruction_t* instruction) {
-    char* mov_edx = (char*) malloc(25 * sizeof(char));
-    char* mov_eax = (char*) malloc(50 * sizeof(char));
+    char* mov_edx = get_mov_operand(instruction->s1, "edx");
+    char* mov_eax = get_mov_operand(instruction->s2, "eax");
     char* mul = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_edx, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_eax, "%s\n\tmovl    %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
-    sprintf(mul, "%s\n\timull   %%edx, %%eax", mov_eax);
+    sprintf(mul, "%s\n%s\n\timull   %%edx, %%eax", mov_edx, mov_eax);
     sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", mul, instruction->s3->offset);
     return mov_res;
 }
 
 char* create_and_instruction(instruction_t* instruction) {
-    char* mov_bl = (char*) malloc(25 * sizeof(char));
-    char* mov_al = (char*) malloc(50 * sizeof(char));
+    char* mov_bl = get_mov_operand(instruction->s1, "edx");
+    char* mov_al = get_mov_operand(instruction->s2, "eax");
     char* and = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    if (instruction->s1->flag == BASIC_F) {
-        // If it's a basic type, move its value to a register since it doesnt have an offset
-        // An example of how it breaks is test_sentencia_004.np
-    }
-    sprintf(mov_bl, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_al, "%s\n\tmovl    %d(%%rbp), %%eax", mov_bl, instruction->s2->offset);
-    sprintf(and, "%s\n\tandl    %%edx, %%eax", mov_al);
+    sprintf(and, "%s\n%s\n\tandl    %%edx, %%eax", mov_bl, mov_al);
     sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", and, instruction->s3->offset);
     return mov_res;
 }
 
 char* create_or_instruction(instruction_t* instruction) {
-    char* mov_bl = (char*) malloc(25 * sizeof(char));
-    char* mov_al = (char*) malloc(50 * sizeof(char));
+    char* mov_bl = get_mov_operand(instruction->s1, "edx");
+    char* mov_al = get_mov_operand(instruction->s2, "eax");
     char* or = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_bl, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_al, "%s\n\tmovl    %d(%%rbp), %%eax", mov_bl, instruction->s2->offset);
-    sprintf(or, "%s\n\torl     %%edx, %%eax", mov_al);
+    sprintf(or, "%s\n%s\n\torl     %%edx, %%eax", mov_bl, mov_al);
     sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", or, instruction->s3->offset);
     return mov_res;
 }
