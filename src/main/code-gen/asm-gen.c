@@ -6,7 +6,14 @@
 
 char* create_mov_instruction(instruction_t* instruction) {
     char* mov = (char*) malloc(25 * sizeof(char));
-    sprintf(mov, "    movl $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
+    if (instruction->s1->flag == BASIC_F) {
+        sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
+    } else if (instruction->s1->flag == OP_F) {
+        sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
+        sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
+    } else {
+        printf("Error while attempting to create the asm file");
+    }
     return mov;
 }
 
@@ -15,10 +22,10 @@ char* create_add_instruction(instruction_t* instruction) {
     char* mov_eax = (char*) malloc(50 * sizeof(char));
     char* add = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_edx, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_eax, "%s\n    movl %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
-    sprintf(add, "%s\n    addl %%edx, %%eax", mov_eax);
-    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", add, instruction->s3->offset);
+    sprintf(mov_edx, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_eax, "%s\n\tmovl    %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
+    sprintf(add, "%s\n\taddl    %%edx, %%eax", mov_eax);
+    sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", add, instruction->s3->offset);
     return mov_res;
 }
 
@@ -27,10 +34,10 @@ char* create_sub_instruction(instruction_t* instruction) {
     char* mov_eax = (char*) malloc(50 * sizeof(char));
     char* sub = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_edx, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_eax, "%s\n    movl %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
-    sprintf(sub, "%s\n    subl %%edx, %%eax", mov_eax);
-    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", sub, instruction->s3->offset);
+    sprintf(mov_edx, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_eax, "%s\n\tmovl    %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
+    sprintf(sub, "%s\n\tsubl    %%edx, %%eax", mov_eax);
+    sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", sub, instruction->s3->offset);
     return mov_res;
 }
 
@@ -39,10 +46,10 @@ char* create_mul_instruction(instruction_t* instruction) {
     char* mov_eax = (char*) malloc(50 * sizeof(char));
     char* mul = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_edx, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_eax, "%s\n    movl %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
-    sprintf(mul, "%s\n    imull %%edx, %%eax", mov_eax);
-    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", mul, instruction->s3->offset);
+    sprintf(mov_edx, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_eax, "%s\n\tmovl    %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
+    sprintf(mul, "%s\n\timull   %%edx, %%eax", mov_eax);
+    sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", mul, instruction->s3->offset);
     return mov_res;
 }
 
@@ -55,10 +62,10 @@ char* create_and_instruction(instruction_t* instruction) {
         // If it's a basic type, move its value to a register since it doesnt have an offset
         // An example of how it breaks is test_sentencia_004.np
     }
-    sprintf(mov_bl, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_al, "%s\n    movl %d(%%rbp), %%eax", mov_bl, instruction->s2->offset);
-    sprintf(and, "%s\n    andl %%edx, %%eax", mov_al);
-    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", and, instruction->s3->offset);
+    sprintf(mov_bl, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_al, "%s\n\tmovl    %d(%%rbp), %%eax", mov_bl, instruction->s2->offset);
+    sprintf(and, "%s\n\tandl    %%edx, %%eax", mov_al);
+    sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", and, instruction->s3->offset);
     return mov_res;
 }
 
@@ -67,16 +74,16 @@ char* create_or_instruction(instruction_t* instruction) {
     char* mov_al = (char*) malloc(50 * sizeof(char));
     char* or = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_bl, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
-    sprintf(mov_al, "%s\n    movl %d(%%rbp), %%eax", mov_bl, instruction->s2->offset);
-    sprintf(or, "%s\n    orl %%edx, %%eax", mov_al);
-    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", or, instruction->s3->offset);
+    sprintf(mov_bl, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_al, "%s\n\tmovl    %d(%%rbp), %%eax", mov_bl, instruction->s2->offset);
+    sprintf(or, "%s\n\torl     %%edx, %%eax", mov_al);
+    sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", or, instruction->s3->offset);
     return mov_res;
 }
 
 char* create_ret_instruction(instruction_t* instruction) {
     char* mov_eax = (char*) malloc(25 * sizeof(char));
-    sprintf(mov_eax, "    movl %d(%%rbp), %%eax", instruction->s3->offset);
+    sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
     return mov_eax;
 }
 
