@@ -70,6 +70,7 @@ init:                               { st = symbol_table(st); }
 
 program:
        RETURN expr ';'              { $$ = build_return($2); }
+       | statement ';'              { $$ = $1 }
        | statement ';' program      { $$ = link_statements($1, $3); }
        ;
 
