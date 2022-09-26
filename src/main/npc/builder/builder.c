@@ -6,7 +6,7 @@
 #include "builder.h"
 #include "../parser.tab.h"
 
-#define MEM_OFFSET 8
+#define MEM_OFFSET 4
 
 int glob_offset = -1;
 
