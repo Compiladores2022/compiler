@@ -16,6 +16,8 @@ int lineno();
 
 const char* extension(const char path[]);
 
+char* asm_filename(char* filename);
+
 int atob(char* bool);
 
 type_t atot(char* type);

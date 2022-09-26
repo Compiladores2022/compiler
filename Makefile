@@ -161,4 +161,6 @@ all: $(TARGETS)
 .PHONY: clean
 
 clean:
-	rm -f $(LEXER) $(PARSER) $(TARGETS)
+	rm -f $(LEXER) $(PARSER) $(TARGETS) *.s *.out & \
+    find . -type f -name '*.s' -delete & \
+    find . -type f -name '*.out' -delete & \

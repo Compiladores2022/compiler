@@ -6,9 +6,9 @@
 #include "builder.h"
 #include "../parser.tab.h"
 
-#define MEM_OFFSET 8
+#define MEM_OFFSET 4
 
-int glob_offset = -2;
+int glob_offset = -1;
 
 symtable_t* symbol_table(symtable_t* st) {
     st = init_symtable();
@@ -32,7 +32,7 @@ symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
 }
 
 symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type) {
-    symbol_t* s;
+    symbol_t* s = NULL;
     if (search_symbol(st, symbol_name) == NULL) {
         s = create_symbol();
         s->name = symbol_name;
@@ -40,7 +40,6 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type) {
         s->offset = (glob_offset--) * MEM_OFFSET;
         printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
         insert_symbol(st, s);
-        //printf("Identifier '%s' of type %d was added\n", s->name, s->type);
     } else {
         printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);
         yyerror("Trying to re-declare an identifier");

@@ -25,6 +25,7 @@ int yylex();
 symtable_t* st;
 tree_node_t* root;
 extern list_t* instruction_seq;
+extern char* filename;
 
 %}
 
@@ -62,7 +63,7 @@ init:                               { st = symbol_table(st); }
                                         instruction_seq = new_instruction_seq();
                                         traverse_tree(root, build_instruction_seq);
                                         show_list(instruction_seq);
-                                        create_asm("prog.s", instruction_seq);
+                                        create_asm(asm_filename(filename), instruction_seq);
                                         out_msg(0); 
                                     }
     ;

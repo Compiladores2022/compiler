@@ -9,10 +9,13 @@ extern void yyerror(const char* msg);
 extern int yyparse();
 extern int lineno();
 
+char* filename;
+
 int main(int argc,char *argv[]) {
     ++argv,--argc;
     if (argc > 0) {
-        if (strcmp(extension(argv[0]), ".np")) {
+        filename = argv[0];
+        if (strcmp(extension(filename), ".np")) {
              printf("File extension not compatible with compiler\n");
              return 1;
         }

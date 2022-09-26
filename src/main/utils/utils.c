@@ -22,6 +22,16 @@ const char* extension(const char path[])
     return result;
 }
 
+char* asm_filename(char* filename) {
+    int len = strlen(filename);
+    char* asm_filename = (char*) malloc(len * sizeof(char));
+    char* res = (char*) malloc(len * sizeof(char));
+    memcpy(asm_filename, filename, len-3);
+    asm_filename[len - 3] = 0;
+    sprintf(res, "%s.s", asm_filename);
+    return res;
+}
+
 int atob(char* bool_s) {
     if (!strcmp("false", bool_s))
         return 0;

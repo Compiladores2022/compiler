@@ -5,31 +5,79 @@
 #include "../instruction/instruction.h"
 
 char* create_mov_instruction(instruction_t* instruction) {
-    return "Operation MOV";
+    char* mov = (char*) malloc(25 * sizeof(char));
+    sprintf(mov, "    movl $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
+    return mov;
 }
 
 char* create_add_instruction(instruction_t* instruction) {
-    return "Operation ADD";
+    char* mov_edx = (char*) malloc(25 * sizeof(char));
+    char* mov_eax = (char*) malloc(50 * sizeof(char));
+    char* add = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(mov_edx, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_eax, "%s\n    movl %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
+    sprintf(add, "%s\n    addl %%edx, %%eax", mov_eax);
+    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", add, instruction->s3->offset);
+    return mov_res;
 }
 
 char* create_sub_instruction(instruction_t* instruction) {
-    return "Operation SUB";
+    char* mov_edx = (char*) malloc(25 * sizeof(char));
+    char* mov_eax = (char*) malloc(50 * sizeof(char));
+    char* sub = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(mov_edx, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_eax, "%s\n    movl %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
+    sprintf(sub, "%s\n    subl %%edx, %%eax", mov_eax);
+    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", sub, instruction->s3->offset);
+    return mov_res;
 }
 
 char* create_mul_instruction(instruction_t* instruction) {
-    return "Operation MUL";
+    char* mov_edx = (char*) malloc(25 * sizeof(char));
+    char* mov_eax = (char*) malloc(50 * sizeof(char));
+    char* mul = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(mov_edx, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_eax, "%s\n    movl %d(%%rbp), %%eax", mov_edx, instruction->s2->offset);
+    sprintf(mul, "%s\n    imull %%edx, %%eax", mov_eax);
+    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", mul, instruction->s3->offset);
+    return mov_res;
 }
 
 char* create_and_instruction(instruction_t* instruction) {
-    return "Operation AND";
+    char* mov_bl = (char*) malloc(25 * sizeof(char));
+    char* mov_al = (char*) malloc(50 * sizeof(char));
+    char* and = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    if (instruction->s1->flag == BASIC_F) {
+        // If it's a basic type, move its value to a register since it doesnt have an offset
+        // An example of how it breaks is test_sentencia_004.np
+    }
+    sprintf(mov_bl, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_al, "%s\n    movl %d(%%rbp), %%eax", mov_bl, instruction->s2->offset);
+    sprintf(and, "%s\n    andl %%edx, %%eax", mov_al);
+    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", and, instruction->s3->offset);
+    return mov_res;
 }
 
 char* create_or_instruction(instruction_t* instruction) {
-    return "Operation OR";
+    char* mov_bl = (char*) malloc(25 * sizeof(char));
+    char* mov_al = (char*) malloc(50 * sizeof(char));
+    char* or = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(mov_bl, "    movl %d(%%rbp), %%edx", instruction->s1->offset);
+    sprintf(mov_al, "%s\n    movl %d(%%rbp), %%eax", mov_bl, instruction->s2->offset);
+    sprintf(or, "%s\n    orl %%edx, %%eax", mov_al);
+    sprintf(mov_res, "%s\n    movl %%eax, %d(%%rbp)", or, instruction->s3->offset);
+    return mov_res;
 }
 
 char* create_ret_instruction(instruction_t* instruction) {
-    return "Operation RET";
+    char* mov_eax = (char*) malloc(25 * sizeof(char));
+    sprintf(mov_eax, "    movl %d(%%rbp), %%eax", instruction->s3->offset);
+    return mov_eax;
 }
 
 char* create_asm_instruction(instruction_t* instruction) {
@@ -72,7 +120,7 @@ char* epilogue() {
 void create_asm(char* filename, list_t* instruction_seq) {
     FILE* f = fopen(filename, "w+");
     if (f == NULL) {
-        printf("Error while tried to create the asm file\n");
+        printf("Error while attempting to create the asm file\n");
         exit(1);
     }
     
