@@ -17,7 +17,7 @@ for test in src/test/npc/accepted-programs/*.np; do
        echo "In test: $test \nSYNTAX ERROR:\n"
        cat /tmp/out
     fi
-    gcc ${test//.np/.s} -o ${test//.np/}
+    gcc ${test//.np/.s} lib.c -o ${test//.np/}
 done
 
 echo "RUNNING TESTS FOR INVALID PROGRAMS...\n"

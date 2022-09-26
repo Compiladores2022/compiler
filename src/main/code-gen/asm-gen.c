@@ -79,7 +79,7 @@ char* create_or_instruction(instruction_t* instruction) {
 
 char* create_ret_instruction(instruction_t* instruction) {
     char* mov_eax = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
+    sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
     return mov_eax;
 }
 
