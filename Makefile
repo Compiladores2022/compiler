@@ -163,4 +163,4 @@ all: $(TARGETS)
 clean:
 	rm -f $(LEXER) $(PARSER) $(TARGETS) *.s *.out & \
     find . -type f -name '*.s' -delete & \
-    find . -type f -name '*.out' -delete & \
+    find src/ -type f ! -name '*.*' -delete

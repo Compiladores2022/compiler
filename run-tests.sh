@@ -17,6 +17,7 @@ for test in src/test/npc/accepted-programs/*.np; do
        echo "In test: $test \nSYNTAX ERROR:\n"
        cat /tmp/out
     fi
+    as ${test//.np/.s} -o ${test//.np/}
 done
 
 echo "RUNNING TESTS FOR INVALID PROGRAMS...\n"
@@ -30,6 +31,5 @@ for test in src/test/npc/rejected-programs/*.np; do
     fi
 done
 
-make clean
 
 exit $exit_status
