@@ -48,11 +48,11 @@ char* create_sub_instruction(instruction_t* instruction) {
 }
 
 char* create_mul_instruction(instruction_t* instruction) {
-    char* mov_edx = get_mov_operand(instruction->s1, "edx");
+    char* mov_edx = get_mov_operand(instruction->s1, "ecx");
     char* mov_eax = get_mov_operand(instruction->s2, "eax");
     char* mul = (char*) malloc(75 * sizeof(char));
     char* mov_res = (char*) malloc(100 * sizeof(char));
-    sprintf(mul, "%s\n%s\n\timull   %%edx, %%eax", mov_edx, mov_eax);
+    sprintf(mul, "%s\n%s\n\timull   %%ecx, %%eax", mov_edx, mov_eax);
     sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", mul, instruction->s3->offset);
     return mov_res;
 }
@@ -79,7 +79,7 @@ char* create_or_instruction(instruction_t* instruction) {
 
 char* create_ret_instruction(instruction_t* instruction) {
     char* mov_eax = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
+    sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
     return mov_eax;
 }
 
