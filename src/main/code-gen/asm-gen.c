@@ -109,14 +109,14 @@ char* prologue() {
     return 
         "\t.globl main\n"
         "main:\n"
-        "\tpushq   \%rbp\n"
-        "\tmovq    \%rsp, \%rbp";
+        "\tpushq   %rbp\n"
+        "\tmovq    %rsp, %rbp";
 }
 
 char* epilogue() {
     return
-        "\tmovq    \%rsp, \%rbp\n"
-        "\tpopq    \%rbp\n"
+        "\tmovq    %rsp, %rbp\n"
+        "\tpopq    %rbp\n"
         "\tret";
 }
 
