@@ -18,6 +18,7 @@ for test in src/test/npc/accepted-programs/*.np; do
        cat /tmp/out
     fi
     gcc ${test//.np/.s} lib.c -o ${test//.np/}
+    ./${test//.np/}
 done
 
 echo "RUNNING TESTS FOR INVALID PROGRAMS...\n"

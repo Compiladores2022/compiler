@@ -43,7 +43,7 @@ int atob(char* bool_s) {
 }
 
 type_t atot(char* type) {
-    if (!strcmp("int", type))
+    if (!strcmp("integer", type))
         return INT_T;
 
     if (!strcmp("bool", type))

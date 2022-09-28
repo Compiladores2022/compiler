@@ -39,9 +39,11 @@ extern char* filename;
  
 %token <sval> ID
 %token <tval> TYPE
-%token <ival> INT
+%token <ival> INTEGER
 %token <bval> BOOL
 %token RETURN
+%token PROG
+%token EXTERN
 
 %type <node> program
 %type <node> statement
@@ -99,7 +101,7 @@ expr:
     ;
 
 CONST:
-     INT                            { $$ = build_const(INT_T, $1); }
+     INTEGER                        { $$ = build_const(INT_T, $1); }
      | BOOL                         { $$ = build_const(BOOL_T, $1); }
      ;
  

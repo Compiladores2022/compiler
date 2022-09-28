@@ -21,10 +21,16 @@ char [a-zA-Z]
 lower_char [a-z]
 number [0-9]+
 bool "true"|"false"
-type "int"|"bool"
+type "integer"|"bool"
+extern "extern"
+program "program"
+if "if"
+then "then"
+else "else"
+while "while"
 return "return"
 id {lower_char}({char}|{number})*
-operator [&|+\-*;()=]
+operator [&|+\-*;()=!]
 comment "//".*\n
 ignore \n|" "
 other .
@@ -33,10 +39,20 @@ other .
 
 %%
 
+{program}                       {
+                                   // printf("INT : %d\n",atoi(yytext));
+                                   return PROG;
+                                }
+
+{extern}                        {
+                                   // printf("INT : %d\n",atoi(yytext));
+                                   return EXTERN;
+                                }
+
 {number}                        {
                                    // printf("INT : %d\n",atoi(yytext));
                                    yylval.ival = atoi(yytext);
-                                   return INT;
+                                   return INTEGER;
                                 }
 
 {bool}                          {

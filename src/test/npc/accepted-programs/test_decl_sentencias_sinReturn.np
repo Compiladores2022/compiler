@@ -1,6 +1,6 @@
-int  aux = 32;
+integer  aux = 32;
 bool b1 = (false | true);
-int  x1 =2;
+integer  x1 =2;
 bool b2 = b1 & true;
 
 b2 = (false) & true;

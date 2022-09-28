@@ -1,4 +1,4 @@
-int y = 5;
+integer y = 5;
 return  (false & true | true);
 /* & tiene predencia sobre el | - resultado esperado = true */
 // int x = 3;
