@@ -39,7 +39,7 @@ void validate_expression_types(symbol_t* s, type_t left, type_t right) {
     type_t type;
     if (!strcmp(s->name, "+") || !strcmp(s->name, "-") || !strcmp(s->name, "*")) {
         validate_arithmetic_expression(s->lineno, left, right);
-    } else if (!strcmp(s->name, "|") || !strcmp(s->name, "&")) {
+    } else if (!strcmp(s->name, "||") || !strcmp(s->name, "&&")) {
         validate_boolean_expression(s->lineno, left, right);
     } else {
         char* err_msg = malloc(128 * sizeof(char));

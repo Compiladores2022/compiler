@@ -37,10 +37,10 @@ extern char* filename;
     struct tree_node_s* node;
 }
  
-%token <sval> ID
 %token <tval> TYPE
 %token <ival> INTEGER
 %token <bval> BOOL
+%token <sval> ID
 %token RETURN
 %token PROG
 %token EXTERN
@@ -50,12 +50,12 @@ extern char* filename;
 %type <node> declaration
 %type <node> assignment
 %type <node> expr
-%type <node> CONST
+%type <node> LITERAL
     
 %left <sval> '+' '-'
 %left <sval> '*'
-%left <sval> '|'
-%left <sval> '&'
+%left <sval> '||'
+%left <sval> '&&'
  
 %%
 
@@ -90,19 +90,19 @@ assignment:
       ;
 
 expr:
-    CONST                           { $$ = $1; }
+    LITERAL                         { $$ = $1; }
     | ID                            { $$ = init_leaf_s(find_symbol(st, $1)); }
     | expr '+' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '-' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '*' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '|' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '&' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '||' expr                { $$ = build_expression($2, $1, $3); }
+    | expr '&&' expr                { $$ = build_expression($2, $1, $3); }
     | '(' expr ')'                  { $$ = $2; }
     ;
 
-CONST:
-     INTEGER                        { $$ = build_const(INT_T, $1); }
-     | BOOL                         { $$ = build_const(BOOL_T, $1); }
-     ;
+LITERAL:
+       INTEGER                        { $$ = build_const(INT_T, $1); }
+       | BOOL                         { $$ = build_const(BOOL_T, $1); }
+       ;
  
 %%

@@ -16,9 +16,9 @@ void evaluate_expression(symbol_t* s, symbol_t* left, symbol_t* right) { // when
             s->value = left->value - right->value;
         }
     } else if (s->type == BOOL_T) {
-        if (!strcmp(s->name, "&")) {
+        if (!strcmp(s->name, "&&")) {
             s->value = left->value && right->value;
-        } else if (!strcmp(s->name, "|")) {
+        } else if (!strcmp(s->name, "||")) {
             s->value = left->value || right->value;
         }
     }

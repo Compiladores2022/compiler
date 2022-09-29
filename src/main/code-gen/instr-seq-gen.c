@@ -17,13 +17,13 @@ inst_type_t op_to_inst_type(char* op) {
     if (!strcmp(op, "*")) {
         return MUL;
     }
-    if (!strcmp(op, "&")) {
+    if (!strcmp(op, "&&")) {
         return AND;
     }
-    if (!strcmp(op, "|")) {
+    if (!strcmp(op, "||")) {
         return OR;
     }
-    printf("Error - Unknown operation: %s\n", op);
+    printf("Error while generating 3D instruction - Unknown operation: %s\n", op);
     exit(1);
 }
 
