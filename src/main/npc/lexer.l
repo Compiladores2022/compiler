@@ -26,7 +26,8 @@ type "integer"|"bool"
 id {alpha}{alpha_num}*
 arith_op [+\-*/%]
 logic_op "&&"|"||"
-relat_op [<>]|"=="
+relat_op [<>]
+eq_op "=="
 bin_op {arith_op}|{logic_op}|{relat_op}
 assignment "="
 eol ";"
@@ -85,7 +86,15 @@ other .
 
 {assignment}                    {
                                     printf("ASSIGNMENT : %s\n", yytext);
-                                    return *yytext;
+                                    yylval.sval = strdup(yytext);
+                                    return ASSIGNMENT;
+                                }
+
+{eq_op}                         {
+                                    printf("BIN_OP : %s\n", yytext);
+                                    yylval.sval = strdup(yytext);
+                                    return EQ;
+
                                 }
 
 {bin_op}                        {
