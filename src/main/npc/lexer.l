@@ -30,6 +30,7 @@ relat_op [<>]
 eq_op "=="
 bin_op {arith_op}|{logic_op}|{relat_op}
 assignment "="
+parenthesis [()]
 eol ";"
 program "program"
 extern "extern"
@@ -90,10 +91,14 @@ other .
                                     return ASSIGNMENT;
                                 }
 
+{parenthesis}                   {
+                                    return *yytext;
+                                }
+
 {eq_op}                         {
                                     printf("BIN_OP : %s\n", yytext);
                                     yylval.sval = strdup(yytext);
-                                    return EQ;
+                                    return EQT;
 
                                 }
 

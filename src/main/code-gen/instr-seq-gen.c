@@ -23,6 +23,15 @@ inst_type_t op_to_inst_type(char* op) {
     if (!strcmp(op, "||")) {
         return OR;
     }
+    if (!strcmp(op, "==")) {
+        return EQ;
+    }
+    if (!strcmp(op, ">")) {
+        return GT;
+    }
+    if (!strcmp(op, "<")) {
+        return LT;
+    }
     printf("Error while generating 3D instruction - Unknown operation: %s\n", op);
     exit(1);
 }
@@ -58,6 +67,15 @@ char* type_to_str(inst_type_t type) {
     }
     if (type == OR) {
         return "OR";
+    }
+    if (type == EQ) {
+        return "EQ";
+    }
+    if (type == GT) {
+        return "GT";
+    }
+    if (type == LT) {
+        return "LT";
     }
     if (type == MOV) {
         return "MOV";

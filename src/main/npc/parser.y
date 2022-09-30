@@ -44,7 +44,7 @@ extern char* filename;
 %token PROG
 %token EXTERN
 %token ASSIGNMENT
-%token EQ
+%token EQT
 %token RETURN
 
 %type <node> program
@@ -57,7 +57,7 @@ extern char* filename;
 %left <sval> '||'
 %left <sval> '&&'
 %left <sval> '<' '>'
-%left <sval> EQ
+%left <sval> EQT
 %left <sval> '+' '-'
 %left <sval> '*' '/' '%'
  
@@ -98,7 +98,7 @@ expr:
     | ID                            { $$ = init_leaf_s(find_symbol(st, $1)); }
     | expr '||' expr                { $$ = build_expression($2, $1, $3); }
     | expr '&&' expr                { $$ = build_expression($2, $1, $3); }
-    | expr EQ expr                  { $$ = build_expression($2, $1, $3); }
+    | expr EQT expr                 { $$ = build_expression($2, $1, $3); }
     | expr '<' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '>' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '+' expr                 { $$ = build_expression($2, $1, $3); }

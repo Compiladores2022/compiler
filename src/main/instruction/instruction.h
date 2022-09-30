@@ -10,6 +10,9 @@ typedef enum inst_type_t {
     MUL,
     AND,
     OR,
+    EQ,
+    GT,
+    LT,
     RET
 } inst_type_t;
 
