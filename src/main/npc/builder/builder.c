@@ -37,7 +37,7 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type) {
         s = create_symbol();
         s->name = symbol_name;
         s->type = symbol_type;
-        s->type = 0; // Default value
+        s->value = 0; // Default value
         s->offset = (glob_offset--) * MEM_OFFSET;
         printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
         insert_symbol(st, s);
