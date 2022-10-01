@@ -55,7 +55,7 @@ type_t atot(char* type) {
 char* show_type(type_t type) {
     switch (type) {
         case INT_T:
-            return "int";
+            return "integer";
             break;
         case BOOL_T:
             return "bool";

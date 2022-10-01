@@ -37,31 +37,35 @@ extern char* filename;
     struct tree_node_s* node;
 }
  
-%token <sval> ID
 %token <tval> TYPE
 %token <ival> INTEGER
 %token <bval> BOOL
-%token RETURN
+%token <sval> ID
 %token PROG
 %token EXTERN
+%token ASSIGNMENT
+%token EQT
+%token RETURN
 
 %type <node> program
 %type <node> statement
 %type <node> declaration
 %type <node> assignment
 %type <node> expr
-%type <node> CONST
+%type <node> LITERAL
     
+%left <sval> '||'
+%left <sval> '&&'
+%left <sval> '<' '>'
+%left <sval> EQT
 %left <sval> '+' '-'
-%left <sval> '*'
-%left <sval> '|'
-%left <sval> '&'
+%left <sval> '*' '/' '%'
  
 %%
 
 init:                               { st = symbol_table(st); }
     program                         { 
-                                        root = $2; traverse_tree(root, check_types); traverse_tree(root, evaluate); 
+                                        root = $2; traverse_tree(root, check_types); 
                                         instruction_seq = new_instruction_seq();
                                         traverse_tree(root, build_instruction_seq);
                                         show_list(instruction_seq);
@@ -81,28 +85,33 @@ statement:
          | declaration              { $$ = $1; }
 
 declaration:
-           TYPE ID '=' expr         { $$ = build_declaration(st, $2, $1, $4); }
+           TYPE ID ASSIGNMENT expr         { $$ = build_declaration(st, $2, $1, $4); }
            | TYPE ID                { $$ = build_declaration(st, $2, $1, NULL); }
            ;
 
 assignment: 
-      ID '=' expr                   { $$ = build_assignment(st, $1, $3); }
+      ID ASSIGNMENT expr                   { $$ = build_assignment(st, $1, $3); }
       ;
 
 expr:
-    CONST                           { $$ = $1; }
+    LITERAL                         { $$ = $1; }
     | ID                            { $$ = init_leaf_s(find_symbol(st, $1)); }
+    | expr '||' expr                { $$ = build_expression($2, $1, $3); }
+    | expr '&&' expr                { $$ = build_expression($2, $1, $3); }
+    | expr EQT expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '<' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '>' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '+' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '-' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '*' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '|' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '&' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '/' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '%' expr                 { $$ = build_expression($2, $1, $3); }
     | '(' expr ')'                  { $$ = $2; }
     ;
 
-CONST:
-     INTEGER                        { $$ = build_const(INT_T, $1); }
-     | BOOL                         { $$ = build_const(BOOL_T, $1); }
-     ;
+LITERAL:
+       INTEGER                        { $$ = build_const(INT_T, $1); }
+       | BOOL                         { $$ = build_const(BOOL_T, $1); }
+       ;
  
 %%
