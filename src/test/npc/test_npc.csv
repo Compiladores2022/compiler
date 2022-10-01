@@ -1,0 +1,11 @@
+program,expected_output
+test_decl_sentencia1,1764
+test_decl_sentencias001,0
+test_decl_sentencias002,0
+test_decl_sentencias003,0
+test_operations001,4
+test_operations002,21
+test_sentencia001,29
+test_sentencia003,1
+test_sentencia004,1
+test_sentencia005,1
