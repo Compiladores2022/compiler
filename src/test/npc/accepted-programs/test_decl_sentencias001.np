@@ -1,7 +1,7 @@
 integer  aux = 32;
-bool b1 = (false | true);
+bool b1 = (false || true);
 integer  x1 =2;
-bool b2 = false & true;
+bool b2 = false && true;
 
 b2 = (false);
 return b2;
