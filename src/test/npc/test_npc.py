@@ -13,8 +13,8 @@ def load_csv(path):
 pff.add_loader(".csv", load_csv)
 
 
-def prefix_np(filename):
-    return f"src/test/npc/accepted-programs/{filename}.np"
+def prefix_np(filename, program_class):
+    return f"src/test/npc/{program_class}-programs/{filename}.np"
 
 
 def prefix_asm(filename):
@@ -26,7 +26,8 @@ def exec_filename(filename):
 
 
 def compile_program(filename):
-    subprocess.run(["./npc", filename, ">", "/tmp/out"], stdout=subprocess.DEVNULL)
+    status = subprocess.run(["./npc", filename], stdout=subprocess.DEVNULL)
+    return status.returncode
 
 
 def run_program(asm_filename, exec_filename):
@@ -34,9 +35,15 @@ def run_program(asm_filename, exec_filename):
     subprocess.call([exec_filename])
 
 
-@pff.parametrize
+@pff.parametrize("test_npc.csv")
 def test_program(capfd, program, expected_output):
-    compile_program(prefix_np(program))
+    compile_program(prefix_np(program, "accepted"))
     run_program(prefix_asm(program), exec_filename(program))
     out, err = capfd.readouterr()
     assert out == expected_output
+
+
+@pff.parametrize("test_npc_neg.csv")
+def test_program_neg(program, expected_output):
+    out = compile_program(prefix_np(program, "rejected"))
+    assert out == int(expected_output)

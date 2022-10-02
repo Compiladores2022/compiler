@@ -1,4 +1,4 @@
-int  nombreVar1=4;
+integer  nombreVar1=4;
 bool b1= true;
 int x2 = 2;
 
