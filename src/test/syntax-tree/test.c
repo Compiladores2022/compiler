@@ -23,10 +23,10 @@ int main() {
     tree_node_t* leaf2 = init_leaf_s(s2);
     tree_node_t* leaf3 = init_leaf_s(s3);
 
-    tree_node_t* sub_tree0 = init_tree_s(s4, leaf0, leaf1);
-    tree_node_t* sub_tree1 = init_tree_s(s5, leaf2, leaf3);
+    tree_node_t* sub_tree0 = init_binary_tree_s(s4, leaf0, leaf1);
+    tree_node_t* sub_tree1 = init_binary_tree_s(s5, leaf2, leaf3);
 
-    tree_node_t* root = init_tree_s(s6, sub_tree0, sub_tree1);
+    tree_node_t* root = init_binary_tree_s(s6, sub_tree0, sub_tree1);
 
     printf("%s\n", get_symbol(root)->name);
     printf("%s\n", get_symbol(root->left)->name);
