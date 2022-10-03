@@ -25,10 +25,12 @@ integer_literal {digit}+
 type "integer"|"bool"
 id {alpha}{alpha_num}*
 arith_op [+\-*/%]
-logic_op "&&"|"||"|"!"
+or "||"
+and "&&"
+neg "!"
 relat_op [<>]
 eq_op "=="
-bin_op {arith_op}|{logic_op}|{relat_op}
+bin_op {arith_op}|{neg}|{relat_op}
 assignment "="
 parenthesis [()]
 eol ";"
@@ -100,6 +102,16 @@ other .
                                     yylval.sval = strdup(yytext);
                                     return EQT;
 
+                                }
+
+{or}                            {
+                                    yylval.sval = strdup(yytext);
+                                    return ORT;
+                                }
+
+{and}                            {
+                                    yylval.sval = strdup(yytext);
+                                    return ANDT;
                                 }
 
 {bin_op}                        {
