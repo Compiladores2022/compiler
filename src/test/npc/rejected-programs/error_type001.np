@@ -1,2 +1,2 @@
-int x = bool;
+integer x = bool;
 return x;

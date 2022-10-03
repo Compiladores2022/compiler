@@ -1,4 +1,4 @@
-int  nombreVar1 = 5;
+integer  nombreVar1 = 5;
 
 nombreVar1 = %true;
 return nombreVar1;
