@@ -1,5 +1,5 @@
-int x = 3;
-int y = 7;
-int z;
+integer x = 3;
+integer y = 7;
+integer z;
 z = x * y;
 return z;

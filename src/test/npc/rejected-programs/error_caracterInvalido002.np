@@ -1,5 +1,5 @@
-int  nombreVar1 = 5;
+integer  nombreVar1 = 5;
 bool b1 = true;
 
 nombreVar1 = 55;
-return nombreVar1 <  nombreVar1 + 1;
+return nombreVar1 <  nombreVar1 + 1

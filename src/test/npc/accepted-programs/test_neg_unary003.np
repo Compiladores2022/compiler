@@ -1,0 +1,5 @@
+bool x = true;
+bool y = false;
+bool z = !(x || y);
+bool w = !x && !y;
+return z == w;

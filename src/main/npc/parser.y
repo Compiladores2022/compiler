@@ -15,7 +15,8 @@
 #include "../utils/utils.h"
 #include "../typecheck/typecheck.h"
 #include "../eval/eval.h"
-#include "../code-gen/code-gen.h"
+#include "../code-gen/instr-seq-gen.h"
+#include "../code-gen/asm-gen.h"
 #include "builder/builder.h"
 
 void yyerror(const char* msg);
@@ -24,6 +25,7 @@ int yylex();
 symtable_t* st;
 tree_node_t* root;
 extern list_t* instruction_seq;
+extern char* filename;
 
 %}
 
@@ -35,10 +37,14 @@ extern list_t* instruction_seq;
     struct tree_node_s* node;
 }
  
-%token <sval> ID
 %token <tval> TYPE
-%token <ival> INT
+%token <ival> INTEGER
 %token <bval> BOOL
+%token <sval> ID
+%token PROG
+%token EXTERN
+%token ASSIGNMENT
+%token EQT
 %token RETURN
 
 %type <node> program
@@ -46,58 +52,69 @@ extern list_t* instruction_seq;
 %type <node> declaration
 %type <node> assignment
 %type <node> expr
-%type <node> CONST
+%type <node> LITERAL
     
+%left <sval> '||'
+%left <sval> '&&'
+%left <sval> EQT
+%left <sval> '<' '>'
 %left <sval> '+' '-'
-%left <sval> '*'
-%left <sval> '|'
-%left <sval> '&'
+%left <sval> '*' '/' '%'
+%right <sval> '!' // I dont know if this is necessary, maybe %type <sval> '!' should work
  
 %%
 
 init:                               { st = symbol_table(st); }
     program                         { 
-                                        root = $2; traverse_tree(root, check_types); traverse_tree(root, evaluate); 
+                                        root = $2; traverse_tree(root, check_types); 
                                         instruction_seq = new_instruction_seq();
                                         traverse_tree(root, build_instruction_seq);
                                         show_list(instruction_seq);
+                                        create_asm(asm_filename(filename), instruction_seq);
                                         out_msg(0); 
                                     }
     ;
 
 program:
-       statement ';'                { $$ = $1; }
-       | declaration ';' program    { $$ = link_statements($1, $3); }
+       RETURN expr ';'              { $$ = build_return($2); }
+       | statement ';'              { $$ = $1; }
        | statement ';' program      { $$ = link_statements($1, $3); }
        ;
 
 statement:
          assignment                 { $$ = $1; }
-         | RETURN expr              { $$ = build_return($2); }
+         | declaration              { $$ = $1; }
 
 declaration:
-           TYPE ID '=' expr         { $$ = build_declaration(st, $2, $1, $4); }
+           TYPE ID ASSIGNMENT expr         { $$ = build_declaration(st, $2, $1, $4); }
            | TYPE ID                { $$ = build_declaration(st, $2, $1, NULL); }
            ;
 
 assignment: 
-      ID '=' expr                   { $$ = build_assignment(st, $1, $3); }
+      ID ASSIGNMENT expr                   { $$ = build_assignment(st, $1, $3); }
       ;
 
 expr:
-    CONST                           { $$ = $1; }
+    LITERAL                         { $$ = $1; }
     | ID                            { $$ = init_leaf_s(find_symbol(st, $1)); }
-    | expr '+' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '-' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '*' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '|' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '&' expr                 { $$ = build_expression($2, $1, $3); }
+    | expr '||' expr                { $$ = build_binary_expr($2, $1, $3); }
+    | expr '&&' expr                { $$ = build_binary_expr($2, $1, $3); }
+    | expr EQT expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '<' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '>' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '+' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '-' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '*' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '/' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '%' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | '!' expr                      { $$ = build_unary_expr($1, $2); }
+    | '-' expr %prec '!'            { $$ = build_unary_expr($1, $2); }        
     | '(' expr ')'                  { $$ = $2; }
     ;
 
-CONST:
-     INT                            { $$ = build_const(INT_T, $1); }
-     | BOOL                         { $$ = build_const(BOOL_T, $1); }
-     ;
+LITERAL:
+       INTEGER                        { $$ = build_const(INT_T, $1); }
+       | BOOL                         { $$ = build_const(BOOL_T, $1); }
+       ;
  
 %%

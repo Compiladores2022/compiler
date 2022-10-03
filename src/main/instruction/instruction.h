@@ -3,23 +3,28 @@
 
 #include "../symbol/symbol.h"
 
-typedef enum inst_type_t {
+typedef enum instr_type_t {
     MOV,
     ADD,
     SUB,
     MUL,
     AND,
     OR,
+    EQ,
+    GT,
+    LT,
+    MIN,
+    NEG,
     RET
-} inst_type_t;
+} instr_type_t;
 
 typedef struct instruction_t {
-    inst_type_t type;
+    instr_type_t type;
     symbol_t* s1;
     symbol_t* s2;
     symbol_t* s3;
 } instruction_t;
 
-instruction_t* new_instruction(inst_type_t type, symbol_t* s1, symbol_t* s2, symbol_t* s3);
+instruction_t* new_instruction(instr_type_t type, symbol_t* s1, symbol_t* s2, symbol_t* s3);
 
 #endif

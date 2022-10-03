@@ -158,7 +158,13 @@ all: $(TARGETS)
 
 # PHONY RULES
 
-.PHONY: clean
+.PHONY: clean test
+
+test: clean npc
+	pytest src/test/npc/test_npc.py
+	make clean
 
 clean:
-	rm -f $(LEXER) $(PARSER) $(TARGETS)
+	rm -f $(LEXER) $(PARSER) $(TARGETS) *.s *.out & \
+    find . -type f -name '*.s' -delete & \
+    find src/ -type f ! -name '*.*' -delete

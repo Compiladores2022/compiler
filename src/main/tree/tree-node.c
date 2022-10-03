@@ -5,18 +5,27 @@
 #include "../symbol/symbol.h"
 
 tree_node_t* init_leaf(void* value) {
-    return init_tree(value, NULL, NULL);
-}
-
-tree_node_t* init_tree(void* value, tree_node_t* left_child, tree_node_t* right_child) {
     tree_node_t* node = (tree_node_t*) malloc(sizeof(tree_node_t));
     node->value = value;
-    node->left  = left_child;
-    node->right = right_child;
     return node;
 }
 
-void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, symbol_t*, symbol_t*) ) {
+tree_node_t* init_unary_tree(void* value, tree_node_t* middle) {
+    tree_node_t* node = (tree_node_t*) malloc(sizeof(tree_node_t));
+    node->value = value;
+    node->middle = middle;
+    return node;
+}
+
+tree_node_t* init_binary_tree(void* value, tree_node_t* left, tree_node_t* right) {
+    tree_node_t* node = (tree_node_t*) malloc(sizeof(tree_node_t));
+    node->value = value;
+    node->left  = left;
+    node->right = right;
+    return node;
+}
+
+void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
     if (!root) {
         return;
     }
@@ -24,32 +33,29 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, symbol_t*, symbol_t*)
     if (s->flag == ID_F || s->flag == BASIC_F) {
         return;
     }
-    if (s->flag == OP_F) {
+    if (s->flag == BIN_OP_F) {
         traverse_tree(root->left, f);
         traverse_tree(root->right, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        (*f)(s, left, right);
+        (*f)(s, root);
+    }
+    if (s->flag == UN_OP_F) {
+        traverse_tree(root->middle, f);
+        (*f)(s, root);
     }
     if (s->flag == ASSIGN_F) {
         traverse_tree(root->right, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        (*f)(s, left, right);
+        (*f)(s, root);
     }
     if (s->flag == DECL_F) {
         if (!root->right) {
             return;
         }
         traverse_tree(root->right, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        (*f)(s, left, right);
+        (*f)(s, root);
     }
     if (s->flag == RETURN_F) {
-        traverse_tree(root->left, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        (*f)(s, left, NULL);
+        traverse_tree(root->middle, f);
+        (*f)(s, root);
     }
     if (s->flag == PROG_F) {
         traverse_tree(root->left, f);

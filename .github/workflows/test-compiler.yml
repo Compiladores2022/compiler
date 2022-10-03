@@ -16,6 +16,9 @@ jobs:
         run: |
          sudo apt-get install -y flex
          sudo apt-get install -y bison
+         sudo apt-get install -y python3-pip
+         sudo pip3 install pytest
+         sudo pip3 install parametrize_from_file
       -
-        name: Compile
-        run: sh run-tests.sh
+        name: Test
+        run: make test

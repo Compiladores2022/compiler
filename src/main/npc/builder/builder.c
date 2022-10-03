@@ -6,9 +6,9 @@
 #include "builder.h"
 #include "../parser.tab.h"
 
-#define MEM_OFFSET 8
+#define MEM_OFFSET 4
 
-int glob_offset = -2;
+int glob_offset = -1;
 
 symtable_t* symbol_table(symtable_t* st) {
     st = init_symtable();
@@ -22,7 +22,6 @@ void out_msg(int status) {
     }
 }
 
-
 symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
     symbol_t* s = search_symbol(st, symbol_name);
     if (s == NULL) {
@@ -32,15 +31,16 @@ symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
 }
 
 symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type) {
-    symbol_t* s;
+    symbol_t* s = NULL;
     if (search_symbol(st, symbol_name) == NULL) {
         s = create_symbol();
         s->name = symbol_name;
+        s->flag = ID_F;
         s->type = symbol_type;
+        s->value = 0; // Default value
         s->offset = (glob_offset--) * MEM_OFFSET;
         printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
         insert_symbol(st, s);
-        //printf("Identifier '%s' of type %d was added\n", s->name, s->type);
     } else {
         printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);
         yyerror("Trying to re-declare an identifier");
@@ -56,14 +56,24 @@ tree_node_t* build_const(type_t symbol_type, int symbol_value) {
     return init_leaf_s(s);
 }
 
-tree_node_t* build_expression(char* symbol_name, tree_node_t* left, tree_node_t* right) {
+tree_node_t* build_unary_expr(char* symbol_name, tree_node_t* middle) {
     symbol_t* s = create_symbol();
-    s->flag = OP_F;
+    s->flag = UN_OP_F;
     s->name = symbol_name;
     s->lineno = lineno();
     s->offset = (glob_offset--) * MEM_OFFSET;
     printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
-    return init_tree_s(s, left, right);
+    return init_unary_tree_s(s, middle);
+}
+
+tree_node_t* build_binary_expr(char* symbol_name, tree_node_t* left, tree_node_t* right) {
+    symbol_t* s = create_symbol();
+    s->flag = BIN_OP_F;
+    s->name = symbol_name;
+    s->lineno = lineno();
+    s->offset = (glob_offset--) * MEM_OFFSET;
+    printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
+    return init_binary_tree_s(s, left, right);
 }
 
 tree_node_t* build_assignment(symtable_t* st, char* symbol_name, tree_node_t* right) {
@@ -73,7 +83,7 @@ tree_node_t* build_assignment(symtable_t* st, char* symbol_name, tree_node_t* ri
     s->flag = ASSIGN_F;
     s->name = "=";
     s->lineno = lineno();
-    return init_tree_s(s, left, right);
+    return init_binary_tree_s(s, left, right);
 }
 
 tree_node_t* build_declaration(symtable_t* st, char* symbol_name, type_t symbol_type, tree_node_t* right) {
@@ -83,7 +93,7 @@ tree_node_t* build_declaration(symtable_t* st, char* symbol_name, type_t symbol_
     s->flag = DECL_F;
     s->name = "=";
     s->lineno = lineno();
-    return init_tree_s(s, left, right);
+    return init_binary_tree_s(s, left, right);
 }
 
 tree_node_t* build_return(tree_node_t* child) {
@@ -91,12 +101,12 @@ tree_node_t* build_return(tree_node_t* child) {
     s->flag = RETURN_F;
     s->name = "return";
     s->lineno = lineno();
-    return init_tree_s(s, child, NULL);
+    return init_unary_tree_s(s, child);
 }
 
 tree_node_t* link_statements(tree_node_t* left, tree_node_t* right) {
     symbol_t* s = create_symbol();
     s->flag = PROG_F;
     s->name = ";";
-    return init_tree_s(s, left, right);
+    return init_binary_tree_s(s, left, right);
 }

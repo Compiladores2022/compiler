@@ -15,10 +15,10 @@ int main() {
     tree_node_t* leaf2 = init_leaf(&var2);
     tree_node_t* leaf3 = init_leaf(&var3);
 
-    tree_node_t* sub_tree0 = init_tree(&var4, leaf0, leaf1);
-    tree_node_t* sub_tree1 = init_tree(&var5, leaf2, leaf3);
+    tree_node_t* sub_tree0 = init_binary_tree(&var4, leaf0, leaf1);
+    tree_node_t* sub_tree1 = init_binary_tree(&var5, leaf2, leaf3);
 
-    tree_node_t* root = init_tree(&var6, sub_tree0, sub_tree1);
+    tree_node_t* root = init_binary_tree(&var6, sub_tree0, sub_tree1);
 
     printf("%d\n", *((int*) root->value));
     printf("%d\n", *((int*) root->left->value));

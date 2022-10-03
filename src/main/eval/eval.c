@@ -16,16 +16,16 @@ void evaluate_expression(symbol_t* s, symbol_t* left, symbol_t* right) { // when
             s->value = left->value - right->value;
         }
     } else if (s->type == BOOL_T) {
-        if (!strcmp(s->name, "&")) {
+        if (!strcmp(s->name, "&&")) {
             s->value = left->value && right->value;
-        } else if (!strcmp(s->name, "|")) {
+        } else if (!strcmp(s->name, "||")) {
             s->value = left->value || right->value;
         }
     }
 }
 
 void evaluate(symbol_t* s, symbol_t* left, symbol_t* right) {
-    if (s->flag == OP_F) {
+    if (s->flag == BIN_OP_F) {
         evaluate_expression(s, left, right);
     }
     if (s->flag == ASSIGN_F || s->flag == DECL_F) {
