@@ -47,22 +47,28 @@ instr_type_t un_op_to_instr_type(char* op) {
     exit(1);
 }
 
-void build_instruction_seq(symbol_t* s, symbol_t* left, symbol_t* right) {
+void build_instruction_seq(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
+        symbol_t* left = (symbol_t*) node->left->value;
+        symbol_t* right = (symbol_t*) node->right->value;
         instr_type_t type = bin_op_to_instr_type(s->name);
         instruction_t* instruction = new_instruction(type, left, right, s);
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == UN_OP_F) {
+        symbol_t* left = (symbol_t*) node->left->value;
         instr_type_t type = un_op_to_instr_type(s->name);
         instruction_t* instruction = new_instruction(type, left, NULL, s);
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == ASSIGN_F || s->flag == DECL_F) {
+        symbol_t* left = (symbol_t*) node->left->value;
+        symbol_t* right = (symbol_t*) node->right->value;
         instruction_t* instruction = new_instruction(MOV, right, NULL, left);
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == RETURN_F) {
+        symbol_t* left = (symbol_t*) node->left->value;
         instruction_t* instruction = new_instruction(RET, NULL, NULL, left);
         add_instruction(instruction_seq, instruction);
     }

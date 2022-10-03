@@ -16,7 +16,7 @@ tree_node_t* init_tree(void* value, tree_node_t* left_child, tree_node_t* right_
     return node;
 }
 
-void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, symbol_t*, symbol_t*) ) {
+void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
     if (!root) {
         return;
     }
@@ -27,34 +27,26 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, symbol_t*, symbol_t*)
     if (s->flag == BIN_OP_F) {
         traverse_tree(root->left, f);
         traverse_tree(root->right, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        (*f)(s, left, right);
+        (*f)(s, root);
     }
     if (s->flag == UN_OP_F) {
         traverse_tree(root->left, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        (*f)(s, left, NULL);
+        (*f)(s, root);
     }
     if (s->flag == ASSIGN_F) {
         traverse_tree(root->right, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        (*f)(s, left, right);
+        (*f)(s, root);
     }
     if (s->flag == DECL_F) {
         if (!root->right) {
             return;
         }
         traverse_tree(root->right, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        symbol_t* right = (symbol_t*)(root->right->value);
-        (*f)(s, left, right);
+        (*f)(s, root);
     }
     if (s->flag == RETURN_F) {
         traverse_tree(root->left, f);
-        symbol_t* left = (symbol_t*)(root->left->value);
-        (*f)(s, left, NULL);
+        (*f)(s, root);
     }
     if (s->flag == PROG_F) {
         traverse_tree(root->left, f);

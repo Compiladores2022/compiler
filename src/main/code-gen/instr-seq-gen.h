@@ -4,6 +4,6 @@
 #include "../tree/tree-node.h"
 #include "../list/list.h"
 
-void build_instruction_seq(symbol_t* s, symbol_t* left, symbol_t* right);
+void build_instruction_seq(symbol_t* s, tree_node_t* node);
 
 #endif

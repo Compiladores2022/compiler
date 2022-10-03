@@ -12,7 +12,8 @@ char* create_mov_instruction(instruction_t* instruction) {
         sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
         sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
     } else {
-        printf("Error while attempting to create the asm file");
+        printf("%s %d %d\n", instruction->s1->name, instruction->s1->value, instruction->s1->flag);
+        printf("Error while attempting to create the asm file\n");
     }
     return mov;
 }

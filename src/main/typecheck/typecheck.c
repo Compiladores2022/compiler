@@ -97,14 +97,19 @@ type_t validate_unary_expr(symbol_t* s, type_t operand) {
     }
 }
 
-void check_types(symbol_t* s, symbol_t* left, symbol_t* right) {
+void check_types(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
+        symbol_t* left = (symbol_t*) node->left->value;
+        symbol_t* right = (symbol_t*) node->right->value;
         s->type = validate_binary_expr(s, left->type, right->type);
     }
     if (s->flag == UN_OP_F) {
+        symbol_t* left = (symbol_t*) node->left->value;
         s->type = validate_unary_expr(s, left->type); // ASSUME that the left operand es the non-null symbol
     }
     if (s->flag == ASSIGN_F || s->flag == DECL_F) {
+        symbol_t* left = (symbol_t*) node->left->value;
+        symbol_t* right = (symbol_t*) node->right->value;
         if (left->type != right->type) {
             yyerror(err_msg(s->lineno, left->type, right->type));
         }

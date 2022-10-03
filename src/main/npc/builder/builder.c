@@ -36,6 +36,7 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type) {
     if (search_symbol(st, symbol_name) == NULL) {
         s = create_symbol();
         s->name = symbol_name;
+        s->flag = ID_F;
         s->type = symbol_type;
         s->value = 0; // Default value
         s->offset = (glob_offset--) * MEM_OFFSET;
@@ -61,7 +62,6 @@ tree_node_t* build_expression(char* symbol_name, tree_node_t* left, tree_node_t*
     if (left != NULL && right != NULL) {
         s->flag = BIN_OP_F;
     } else if (left != NULL ^ right != NULL) {
-        printf("Creating a unary expression symbol\n");
         s->flag = UN_OP_F;
     } else {
         yyerror("Invalid arity of expression");
