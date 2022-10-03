@@ -25,7 +25,7 @@ integer_literal {digit}+
 type "integer"|"bool"
 id {alpha}{alpha_num}*
 arith_op [+\-*/%]
-logic_op "&&"|"||"
+logic_op "&&"|"||"|"!"
 relat_op [<>]
 eq_op "=="
 bin_op {arith_op}|{logic_op}|{relat_op}
@@ -103,7 +103,7 @@ other .
                                 }
 
 {bin_op}                        {
-                                    printf("BIN_OP : %s\n",yytext);
+                                    printf("OP : %s\n",yytext);
                                     yylval.sval = strdup(yytext);
                                     return *yytext;
                                 }

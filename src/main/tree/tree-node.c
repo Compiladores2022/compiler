@@ -24,12 +24,17 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, symbol_t*, symbol_t*)
     if (s->flag == ID_F || s->flag == BASIC_F) {
         return;
     }
-    if (s->flag == OP_F) {
+    if (s->flag == BIN_OP_F) {
         traverse_tree(root->left, f);
         traverse_tree(root->right, f);
         symbol_t* left = (symbol_t*)(root->left->value);
         symbol_t* right = (symbol_t*)(root->right->value);
         (*f)(s, left, right);
+    }
+    if (s->flag == UN_OP_F) {
+        traverse_tree(root->left, f);
+        symbol_t* left = (symbol_t*)(root->left->value);
+        (*f)(s, left, NULL);
     }
     if (s->flag == ASSIGN_F) {
         traverse_tree(root->right, f);

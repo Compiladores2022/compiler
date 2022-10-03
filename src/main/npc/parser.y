@@ -56,10 +56,11 @@ extern char* filename;
     
 %left <sval> '||'
 %left <sval> '&&'
-%left <sval> '<' '>'
 %left <sval> EQT
+%left <sval> '<' '>'
 %left <sval> '+' '-'
 %left <sval> '*' '/' '%'
+%right <sval> '!' // I dont know if this is necessary, maybe %type <sval> '!' should work
  
 %%
 
@@ -106,6 +107,8 @@ expr:
     | expr '*' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '/' expr                 { $$ = build_expression($2, $1, $3); }
     | expr '%' expr                 { $$ = build_expression($2, $1, $3); }
+    | '!' expr                      { $$ = build_expression($1, $2, NULL); }
+    | '-' expr %prec '!'            { $$ = build_expression($1, $2, NULL); }        
     | '(' expr ')'                  { $$ = $2; }
     ;
 

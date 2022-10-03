@@ -7,7 +7,7 @@
 
 list_t* instruction_seq;
 
-inst_type_t op_to_inst_type(char* op) {
+instr_type_t bin_op_to_instr_type(char* op) {
     if (!strcmp(op, "+")) {
         return ADD;
     }
@@ -36,10 +36,26 @@ inst_type_t op_to_inst_type(char* op) {
     exit(1);
 }
 
+instr_type_t un_op_to_instr_type(char* op) {
+    if (!strcmp(op, "-")) {
+        return MIN;
+    }
+    if (!strcmp(op, "!")) {
+        return NEG;
+    }
+    printf("Error while generating 3D instruction - Unknown operation: %s\n", op);
+    exit(1);
+}
+
 void build_instruction_seq(symbol_t* s, symbol_t* left, symbol_t* right) {
-    if (s->flag == OP_F) {
-        inst_type_t type = op_to_inst_type(s->name);
+    if (s->flag == BIN_OP_F) {
+        instr_type_t type = bin_op_to_instr_type(s->name);
         instruction_t* instruction = new_instruction(type, left, right, s);
+        add_instruction(instruction_seq, instruction);
+    }
+    if (s->flag == UN_OP_F) {
+        instr_type_t type = un_op_to_instr_type(s->name);
+        instruction_t* instruction = new_instruction(type, left, NULL, s);
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == ASSIGN_F || s->flag == DECL_F) {
@@ -52,7 +68,7 @@ void build_instruction_seq(symbol_t* s, symbol_t* left, symbol_t* right) {
     }
 }
 
-char* type_to_str(inst_type_t type) {
+char* type_to_str(instr_type_t type) {
     if (type == ADD) {
         return "ADD";
     }
@@ -77,6 +93,12 @@ char* type_to_str(inst_type_t type) {
     if (type == LT) {
         return "LT";
     }
+    if (type == MIN) {
+        return "MIN";
+    }
+    if (type == NEG) {
+        return "NEG";
+    }
     if (type == MOV) {
         return "MOV";
     }
@@ -95,7 +117,7 @@ void show_list(list_t* instructions) {
         if (instruction->type != RET) {
             printf("left operand name:  %s\n", instruction->s1->name);
             printf("left operand value:  %d\n", instruction->s1->value);
-            if (instruction->type != MOV) {
+            if (instruction->type != MOV && instruction->type != MIN && instruction->type != NEG) {
                 printf("right operand name: %s\n", instruction->s2->name);
                 printf("right operand value: %d\n", instruction->s2->value);
             }

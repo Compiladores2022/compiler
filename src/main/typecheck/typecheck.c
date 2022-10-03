@@ -59,16 +59,37 @@ void validate_gt_lt_comparison(int lineno, char* op, type_t left, type_t right) 
     }
 }
 
-void validate_expression_types(symbol_t* s, type_t left, type_t right) {
-    type_t type;
+type_t validate_binary_expr(symbol_t* s, type_t left, type_t right) {
     if (!strcmp(s->name, "+") || !strcmp(s->name, "-") || !strcmp(s->name, "*")) {
         validate_arithmetic_expression(s->lineno, left, right);
+        return INT_T;
     } else if (!strcmp(s->name, "||") || !strcmp(s->name, "&&")) {
         validate_boolean_expression(s->lineno, left, right);
+        return BOOL_T;
     } else if (!strcmp(s->name, "==")) {
         validate_eq_comparison(s->lineno, left, right);
+        return BOOL_T;
     } else if (!strcmp(s->name, "<") || !strcmp(s->name, ">")) {
         validate_gt_lt_comparison(s->lineno, s->name, left, right);
+        return BOOL_T;
+    } else {
+        char* err_msg = malloc(128 * sizeof(char));
+        sprintf(err_msg, "Undefined operation '%s'", s->name);
+        yyerror(err_msg);
+    }
+}
+
+type_t validate_unary_expr(symbol_t* s, type_t operand) {
+    if (!strcmp(s->name, "-")) {
+        if (operand != INT_T) {
+            yyerror(expr_type_err_msg(s->lineno, INT_T, operand));
+        }
+        return INT_T;
+    } else if (!strcmp(s->name, "!")) {
+        if (operand != BOOL_T) {
+            yyerror(expr_type_err_msg(s->lineno, BOOL_T, operand));
+        }
+        return BOOL_T;
     } else {
         char* err_msg = malloc(128 * sizeof(char));
         sprintf(err_msg, "Undefined operation '%s'", s->name);
@@ -77,13 +98,11 @@ void validate_expression_types(symbol_t* s, type_t left, type_t right) {
 }
 
 void check_types(symbol_t* s, symbol_t* left, symbol_t* right) {
-    if (s->flag == OP_F) {
-        validate_expression_types(s, left->type, right->type);
-        if (!strcmp(s->name, "==") || !strcmp(s->name, "<") || !strcmp(s->name, ">")) {
-            s->type = BOOL_T;
-        } else {
-            s->type = left->type; //is equals to right too
-        }
+    if (s->flag == BIN_OP_F) {
+        s->type = validate_binary_expr(s, left->type, right->type);
+    }
+    if (s->flag == UN_OP_F) {
+        s->type = validate_unary_expr(s, left->type); // ASSUME that the left operand es the non-null symbol
     }
     if (s->flag == ASSIGN_F || s->flag == DECL_F) {
         if (left->type != right->type) {

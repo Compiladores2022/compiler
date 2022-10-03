@@ -3,7 +3,8 @@
 
 typedef enum {
     ID_F,
-    OP_F,
+    BIN_OP_F,
+    UN_OP_F,
     ASSIGN_F,
     RETURN_F,
     DECL_F,

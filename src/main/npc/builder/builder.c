@@ -58,7 +58,14 @@ tree_node_t* build_const(type_t symbol_type, int symbol_value) {
 
 tree_node_t* build_expression(char* symbol_name, tree_node_t* left, tree_node_t* right) {
     symbol_t* s = create_symbol();
-    s->flag = OP_F;
+    if (left != NULL && right != NULL) {
+        s->flag = BIN_OP_F;
+    } else if (left != NULL ^ right != NULL) {
+        printf("Creating a unary expression symbol\n");
+        s->flag = UN_OP_F;
+    } else {
+        yyerror("Invalid arity of expression");
+    }
     s->name = symbol_name;
     s->lineno = lineno();
     s->offset = (glob_offset--) * MEM_OFFSET;
