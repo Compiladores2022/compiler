@@ -8,7 +8,7 @@ char* create_mov_instruction(instruction_t* instruction) {
     char* mov = (char*) malloc(100 * sizeof(char));
     if (instruction->s1->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
-    } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F) {
+    } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F || instruction->s1->flag == ID_F) {
         sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
         sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
     } else {
