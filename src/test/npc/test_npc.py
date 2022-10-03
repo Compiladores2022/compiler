@@ -25,8 +25,13 @@ def exec_filename(filename):
     return f"src/test/npc/accepted-programs/{filename}"
 
 
-def compile_program(filename):
+def compile_program_no_output(filename):
     status = subprocess.run(["./npc", filename], stdout=subprocess.DEVNULL)
+    return status.returncode
+
+
+def compile_program_with_output(filename):
+    status = subprocess.run(["./npc", filename])
     return status.returncode
 
 
@@ -36,14 +41,27 @@ def run_program(asm_filename, exec_filename):
 
 
 @pff.parametrize("test_npc.csv")
-def test_program(capfd, program, expected_output):
-    compile_program(prefix_np(program, "accepted"))
+def test_compile_success(program, expected_output):
+    exit_status = compile_program_no_output(prefix_np(program, "accepted"))
+    assert exit_status == 0
+
+
+@pff.parametrize("test_npc_neg.csv")
+def test_compile_failure(program, expected_output):
+    exit_status = compile_program_no_output(prefix_np(program, "rejected"))
+    assert exit_status == 1
+
+
+@pff.parametrize("test_npc.csv")
+def test_program_output(capfd, program, expected_output):
+    compile_program_no_output(prefix_np(program, "accepted"))
     run_program(prefix_asm(program), exec_filename(program))
     out, err = capfd.readouterr()
     assert out == expected_output
 
 
 @pff.parametrize("test_npc_neg.csv")
-def test_program_neg(program, expected_output):
-    out = compile_program(prefix_np(program, "rejected"))
-    assert out == int(expected_output)
+def test_error_message(capfd, program, expected_output):
+    compile_program_with_output(prefix_np(program, "rejected"))
+    out, err = capfd.readouterr()
+    assert expected_output in out
