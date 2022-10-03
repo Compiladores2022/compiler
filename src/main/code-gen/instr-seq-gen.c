@@ -56,9 +56,9 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == UN_OP_F) {
-        symbol_t* left = (symbol_t*) node->left->value;
+        symbol_t* middle = (symbol_t*) node->middle->value;
         instr_type_t type = un_op_to_instr_type(s->name);
-        instruction_t* instruction = new_instruction(type, left, NULL, s);
+        instruction_t* instruction = new_instruction(type, middle, NULL, s);
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == ASSIGN_F || s->flag == DECL_F) {
@@ -68,8 +68,8 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == RETURN_F) {
-        symbol_t* left = (symbol_t*) node->left->value;
-        instruction_t* instruction = new_instruction(RET, NULL, NULL, left);
+        symbol_t* middle = (symbol_t*) node->middle->value;
+        instruction_t* instruction = new_instruction(RET, NULL, NULL, middle);
         add_instruction(instruction_seq, instruction);
     }
 }

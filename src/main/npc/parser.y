@@ -97,18 +97,18 @@ assignment:
 expr:
     LITERAL                         { $$ = $1; }
     | ID                            { $$ = init_leaf_s(find_symbol(st, $1)); }
-    | expr '||' expr                { $$ = build_expression($2, $1, $3); }
-    | expr '&&' expr                { $$ = build_expression($2, $1, $3); }
-    | expr EQT expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '<' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '>' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '+' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '-' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '*' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '/' expr                 { $$ = build_expression($2, $1, $3); }
-    | expr '%' expr                 { $$ = build_expression($2, $1, $3); }
-    | '!' expr                      { $$ = build_expression($1, $2, NULL); }
-    | '-' expr %prec '!'            { $$ = build_expression($1, $2, NULL); }        
+    | expr '||' expr                { $$ = build_binary_expr($2, $1, $3); }
+    | expr '&&' expr                { $$ = build_binary_expr($2, $1, $3); }
+    | expr EQT expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '<' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '>' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '+' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '-' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '*' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '/' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | expr '%' expr                 { $$ = build_binary_expr($2, $1, $3); }
+    | '!' expr                      { $$ = build_unary_expr($1, $2); }
+    | '-' expr %prec '!'            { $$ = build_unary_expr($1, $2); }        
     | '(' expr ')'                  { $$ = $2; }
     ;
 

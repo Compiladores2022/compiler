@@ -18,7 +18,9 @@ symbol_t* find_symbol(symtable_t* st, char* symbol_name);
 
 symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type);
 
-tree_node_t* build_expression(char* symbol_name, tree_node_t* left, tree_node_t* right);
+tree_node_t* build_unary_expr(char* symbol_name, tree_node_t* middle);
+
+tree_node_t* build_binary_expr(char* symbol_name, tree_node_t* left, tree_node_t* right);
 
 tree_node_t* build_const(type_t symbol_type, int symbol_value);
 

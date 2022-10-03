@@ -104,8 +104,8 @@ void check_types(symbol_t* s, tree_node_t* node) {
         s->type = validate_binary_expr(s, left->type, right->type);
     }
     if (s->flag == UN_OP_F) {
-        symbol_t* left = (symbol_t*) node->left->value;
-        s->type = validate_unary_expr(s, left->type); // ASSUME that the left operand es the non-null symbol
+        symbol_t* middle = (symbol_t*) node->middle->value;
+        s->type = validate_unary_expr(s, middle->type); // ASSUME that the left operand es the non-null symbol
     }
     if (s->flag == ASSIGN_F || s->flag == DECL_F) {
         symbol_t* left = (symbol_t*) node->left->value;

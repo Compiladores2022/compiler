@@ -9,3 +9,8 @@ test_sentencia001,29
 test_sentencia003,1
 test_sentencia004,1
 test_sentencia005,1
+test_neg_unary001,1
+test_neg_unary002,1
+test_neg_unary003,1
+test_neg_unary004,0
+test_complex_expr001,50
