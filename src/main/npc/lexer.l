@@ -23,6 +23,7 @@ alpha_num {alpha}|{digit}|_
 bool_literal    "true"|"false"
 integer_literal {digit}+
 type "integer"|"bool"
+void "void"
 id {alpha}{alpha_num}*
 arith_op [+\-*/%]
 or "||"
@@ -33,7 +34,9 @@ eq_op "=="
 bin_op {arith_op}|{neg}|{relat_op}
 assignment "="
 parenthesis [()]
+brackets [\{\}]
 eol ";"
+comma ","
 program "program"
 extern "extern"
 if "if"
@@ -50,45 +53,60 @@ other .
 %%
 
 {eol}                           {
-                                    // printf("EOL : %s\n", yytext);
+                                    printf("EOL : %s\n", yytext);
+                                    return *yytext;
+                                }
+
+{comma}                         {
+                                    printf("COMMA : %s\n", yytext);
+                                    return *yytext;
+                                }
+
+{brackets}                      {
+                                    printf("BRACKET : %s\n", yytext);
                                     return *yytext;
                                 }
 
 {program}                       {
-                                    // printf("PROG : %d\n",atoi(yytext));
+                                    printf("PROG : %s\n",yytext);
                                     return PROG;
                                 }
 
 {extern}                        {
-                                    // printf("EXTERN : %d\n",atoi(yytext));
+                                    printf("EXTERN : %d\n",atoi(yytext));
                                     return EXTERN;
                                 }
 
 {integer_literal}               {
-                                    // printf("INTEGER : %d\n",atoi(yytext));
+                                    printf("INTEGER : %d\n",atoi(yytext));
                                     yylval.ival = atoi(yytext);
                                     return INTEGER;
                                 }
 
 {bool_literal}                  {
-                                    // printf("BOOL : %s\n", yytext);
+                                    printf("BOOL : %s\n", yytext);
                                     yylval.bval = atob(yytext);
                                     return BOOL;
                                 }
 
 {type}                          {
-                                    // printf("TYPE : %s\n", yytext);
+                                    printf("TYPE : %s\n", yytext);
                                     yylval.tval = atot(yytext);
                                     return TYPE;
                                 }
 
+{void}                          {
+                                    printf("VOID : %s\n", yytext);
+                                    return VOID;
+                                }
+
 {return}                        {
-                                    // printf("RETURN : %s\n", yytext);
+                                    printf("RETURN : %s\n", yytext);
                                     return RETURN;
                                 }
 
 {assignment}                    {
-                                    // printf("ASSIGNMENT : %s\n", yytext);
+                                    printf("ASSIGNMENT : %s\n", yytext);
                                     yylval.sval = strdup(yytext);
                                     return ASSIGNMENT;
                                 }
@@ -98,7 +116,7 @@ other .
                                 }
 
 {eq_op}                         {
-                                    // printf("BIN_OP : %s\n", yytext);
+                                    printf("BIN_OP : %s\n", yytext);
                                     yylval.sval = strdup(yytext);
                                     return EQT;
 
@@ -115,16 +133,37 @@ other .
                                 }
 
 {bin_op}                        {
-                                    // printf("OP : %s\n",yytext);
+                                    printf("OP : %s\n",yytext);
                                     yylval.sval = strdup(yytext);
                                     return *yytext;
                                 }
 
+{if}                            {
+                                    printf("IF : %s\n",yytext);
+                                    return IF;
+                                }
+
+{then}                          {
+                                    printf("THEN : %s\n",yytext);
+                                    return THEN;
+                                }
+
+{else}                          {
+                                    printf("ELSE : %s\n",yytext);
+                                    return ELSE;
+                                }
+
+{while}                         {
+                                    printf("WHILE : %s\n",yytext);
+                                    return WHILE;
+                                }
+
 {id}                            {
-                                    // printf("ID : %s\n",yytext);
+                                    printf("ID : %s\n",yytext);
                                     yylval.sval = strdup(yytext);
                                     return ID;
                                 }
+
 
 {comment}                        ; /* ignore inline comments*/
 
