@@ -95,12 +95,12 @@ methods:
 method:
       TYPE ID '(' params ')' block
       | VOID ID '(' params ')' block
-      | TYPE ID '(' params ')' block EXTERN
-      | VOID ID '(' params ')' block EXTERN
+      | TYPE ID '(' params ')' EXTERN ';'
+      | VOID ID '(' params ')' EXTERN ';'
       | TYPE ID '(' ')' block
       | VOID ID '(' ')' block
-      | TYPE ID '(' ')' block EXTERN
-      | VOID ID '(' ')' block EXTERN
+      | TYPE ID '(' ')' EXTERN ';'
+      | VOID ID '(' ')' EXTERN ';'
       ;
 
 params:

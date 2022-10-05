@@ -73,7 +73,7 @@ other .
                                 }
 
 {extern}                        {
-                                    printf("EXTERN : %d\n",atoi(yytext));
+                                    printf("EXTERN : %s\n",yytext);
                                     return EXTERN;
                                 }
 
