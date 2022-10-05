@@ -129,9 +129,9 @@ statement:
          ;
 
 conditional:
-    IF '(' expr ')' THEN block
-    | IF '(' expr ')' THEN block ELSE block
-    ;
+           IF '(' expr ')' THEN block
+           | IF '(' expr ')' THEN block ELSE block
+           ;
 
 while:
      WHILE '(' expr ')' block
@@ -143,8 +143,8 @@ declaration:
            ;
 
 assignment: 
-      ID ASSIGNMENT expr ';'                   //{ $$ = build_assignment(st, $1, $3); }
-      ;
+          ID ASSIGNMENT expr ';'                   //{ $$ = build_assignment(st, $1, $3); }
+          ;
 
 method_call:
            ID '(' ')'
