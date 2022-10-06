@@ -128,8 +128,8 @@ statement:
          ;
 
 return:
-      | RETURN expr ';'                     { $$ = $1; }
-      | RETURN ';'                          { $$ = $1; }
+      | RETURN expr ';'                     { $$ = build_return($1); }
+      | RETURN ';'                          { $$ = build_return(NULL); }
       ;
 
 conditional:
