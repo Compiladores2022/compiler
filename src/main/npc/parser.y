@@ -53,12 +53,12 @@ extern char* filename;
 %token WHILE
 
 
-/* %type <node> program */
-/* %type <node> statement */
-/* %type <node> declaration */
-/* %type <node> assignment */
-/* %type <node> expr */
-/* %type <node> LITERAL */
+%type <node> program 
+%type <node> statement
+%type <node> declaration
+%type <node> assignment
+%type <node> expr
+%type <node> LITERAL
     
 %left <sval> ORT
 %left <sval> ANDT
@@ -70,120 +70,124 @@ extern char* filename;
  
 %%
 
-/* init:                               { st = symbol_table(st); } */
-/*     program                         {  */
-/*                                         root = $2; traverse_tree(root, check_types);  */
-/*                                         instruction_seq = new_instruction_seq(); */
-/*                                         traverse_tree(root, build_instruction_seq); */
-/*                                         show_list(instruction_seq); */
-/*                                         create_asm(asm_filename(filename), instruction_seq); */
-/*                                         out_msg(0);  */
-/*                                     } */
-/*     ; */
+init:                               { st = symbol_table(st); }
+    program                         {
+                                        root = $2; traverse_tree(root, check_types);
+                                        instruction_seq = new_instruction_seq();
+                                        traverse_tree(root, build_instruction_seq);
+                                        show_list(instruction_seq);
+                                        create_asm(asm_filename(filename), instruction_seq);
+                                        out_msg(0);
+                                    }
+    ;
 
 program:
-       PROG '{' '}'
-       | PROG '{' methods '}'
-       | PROG '{' declarations methods '}'
+       PROG '{' '}'                             { $$ = build_prog(NULL, NULL); }
+       | PROG '{' procedures '}'                { $$ = build_prog(NULL, $3); }
+       | PROG '{' declarations procedures '}'   { $$ = build_prog($3, $4); }
        ;
 
-methods:
-       method
-       | methods method
+procedures:
+       procedure                                { $$ = $1; }
+       | procedure procedures                   { $$ = link($1, $2); }
        ;
 
-method:
-      TYPE ID '(' params ')' block
-      | VOID ID '(' params ')' block
-      | TYPE ID '(' params ')' EXTERN ';'
-      | VOID ID '(' params ')' EXTERN ';'
-      | TYPE ID '(' ')' block
-      | VOID ID '(' ')' block
-      | TYPE ID '(' ')' EXTERN ';'
-      | VOID ID '(' ')' EXTERN ';'
+procedure:
+      TYPE ID '(' params ')' block          { $$ = create_procedure(st, $1, $2, $4, $6); }
+      | VOID ID '(' params ')' block        { $$ = create_procedure(st, $1, $2, $4, $6); }
+      | TYPE ID '(' params ')' EXTERN ';'   { $$ = create_procedure(st, $1, $2, $4, NULL); }
+      | VOID ID '(' params ')' EXTERN ';'   { $$ = create_procedure(st, $1, $2, $4, NULL); }
+      | TYPE ID '(' ')' block               { $$ = create_procedure(st, $1, $2, NULL, $6); }
+      | VOID ID '(' ')' block               { $$ = create_procedure(st, $1, $2, NULL, $6); }
+      | TYPE ID '(' ')' EXTERN ';'          { $$ = create_procedure(st, $1, $2, NULL, NULL); }
+      | VOID ID '(' ')' EXTERN ';'          { $$ = create_procedure(st, $1, $2, NULL, NULL); }
       ;
 
 params:
-      TYPE ID
-      | params ',' TYPE ID
+      TYPE ID                               { $$ = $1; }
+      | params ',' TYPE ID                  { $$ = $1; }
       ;
 
 statements:
-          statement
-          | statements statement
+          statement                         { $$ = $1; }
+          | statement statements            { $$ = link($1, $2); }
           ;
 
 declarations:
-            declaration
-            | declarations declaration
+            declaration                     { $$ = $1; }
+            | declaration declarations      { $$ = link($1, $2); }
             ;
 
 statement:
-         assignment                 //{ $$ = $1; }
-         | method_call
-         | conditional
-         | while
-         | RETURN expr ';'
-         | RETURN ';'
-         | block
+         assignment                         { $$ = $1; }
+         | procedure_call                   { $$ = $1; }
+         | conditional                      { $$ = $1; }
+         | while                            { $$ = $1; }
+         | block                            { $$ = $1; }
+         | return                           { $$ = $1; }
          ;
 
+return:
+      | RETURN expr ';'                     { $$ = $1; }
+      | RETURN ';'                          { $$ = $1; }
+      ;
+
 conditional:
-           IF '(' expr ')' THEN block
-           | IF '(' expr ')' THEN block ELSE block
+           IF '(' expr ')' THEN block                   { $$ = build_if($3, $5, NULL); }
+           | IF '(' expr ')' THEN block ELSE block      { $$ = build_if($3, $5, $7); }
            ;
 
 while:
-     WHILE '(' expr ')' block
+     WHILE '(' expr ')' block               { $$ = build_while($3, $5); }
      ;
 
 declaration:
-           TYPE ID ASSIGNMENT expr ';'        //{ $$ = build_declaration(st, $2, $1, $4); }
-           | TYPE ID ';'                //{ $$ = build_declaration(st, $2, $1, NULL); }
+           TYPE ID ASSIGNMENT expr ';'      { $$ = build_declaration(st, $1, $2, $4); }
+           | TYPE ID ';'                    { $$ = build_declaration(st, $1, $2, NULL); }
            ;
 
 assignment: 
-          ID ASSIGNMENT expr ';'                   //{ $$ = build_assignment(st, $1, $3); }
+          ID ASSIGNMENT expr ';'            { $$ = build_assignment(st, $1, $3); }
           ;
 
-method_call:
-           ID '(' ')'
-           | ID '(' exprs ')'
+procedure_call:
+           ID '(' ')'                       { $$ = $1; }
+           | ID '(' exprs ')'               { $$ = $1; }
            ;
 
 block:
-     '{' '}'
-     | '{' statements '}'
-     | '{' declarations statements '}'
+     '{' '}'                                { $$ = build_block(NULL, NULL); }
+     | '{' statements '}'                   { $$ = build_block(NULL, $1); }
+     | '{' declarations statements '}'      { $$ = build_block($1, $2); }
      ;
 
 exprs:
-     expr
-     | exprs ',' expr
+     expr                                   { $$ = $1; }
+     | expr ',' exprs                       { $$ = link($1, $3); }
      ;
 
 expr:
-    LITERAL                         //{ $$ = $1; }
-    | ID                            //{ $$ = init_leaf_s(find_symbol(st, $1)); }
-    | method_call
-    | expr ORT expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr ANDT expr                //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr EQT expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr '<' expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr '>' expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr '+' expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr '-' expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr '*' expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr '/' expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | expr '%' expr                 //{ $$ = build_binary_expr($2, $1, $3); }
-    | '!' expr                      //{ $$ = build_unary_expr($1, $2); }
-    | '-' expr %prec '!'            //{ $$ = build_unary_expr($1, $2); }
-    | '(' expr ')'                  //{ $$ = $2; }
+    LITERAL                                 { $$ = $1; }
+    | ID                                    { $$ = init_leaf_s(find_symbol(st, $1)); }
+    | procedure_call                        { $$ = $1; }
+    | expr ORT expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | expr ANDT expr                        { $$ = build_binary_expr($2, $1, $3); }
+    | expr EQT expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | expr '<' expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | expr '>' expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | expr '+' expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | expr '-' expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | expr '*' expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | expr '/' expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | expr '%' expr                         { $$ = build_binary_expr($2, $1, $3); }
+    | '!' expr                              { $$ = build_unary_expr($1, $2); }
+    | '-' expr %prec '!'                    { $$ = build_unary_expr($1, $2); }
+    | '(' expr ')'                          { $$ = $2; }
     ;
 
 LITERAL:
-       INTEGER                        //{ $$ = build_const(INT_T, $1); }
-       | BOOL                         //{ $$ = build_const(BOOL_T, $1); }
+       INTEGER                              { $$ = build_const(INT_T, $1); }
+       | BOOL                               { $$ = build_const(BOOL_T, $1); }
        ;
  
 %%
