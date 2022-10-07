@@ -32,4 +32,19 @@ tree_node_t* build_return(tree_node_t* child);
 
 tree_node_t* link(tree_node_t* left, tree_node_t* right);
 
+tree_node_t* build_block(tree_node_t* declarations, tree_node_t* statements);
+
+tree_node_t* build_if(tree_node_t* expression, tree_node_t* then_block, tree_node_t* else_block);
+
+tree_node_t* build_while(tree_node_t* expression, tree_node_t* while_block);
+
+tree_node_t* build_params(symtable_t* st, type_t param_type, char* param_name);
+
+tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, tree_node_t* params, tree_node_t* proc_block);
+
+tree_node_t* build_call(char* proc_name, tree_node_t* arguments);
+
+tree_node_t* build_prog(tree_node_t* declarations, tree_node_t* procedures);
+
+
 #endif

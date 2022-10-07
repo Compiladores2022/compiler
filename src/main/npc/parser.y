@@ -111,8 +111,8 @@ procedure:
       ;
 
 params:
-      TYPE ID                               { $$ = $1; }
-      | params ',' TYPE ID                  { $$ = $1; }
+      TYPE ID                               { $$ = build_params(st, $1, $2); }
+      | params ',' TYPE ID                  { $$ = link($1, build_params(st, $3, $4)); }
       ;
 
 statements:
@@ -158,8 +158,8 @@ assignment:
           ;
 
 procedure_call:
-           ID '(' ')'                       { $$ = $1; }
-           | ID '(' exprs ')'               { $$ = $1; }
+           ID '(' ')'                       { $$ = build_call($1, NULL); }
+           | ID '(' exprs ')'               { $$ = build_call($1, $3); }
            ;
 
 block:
