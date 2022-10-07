@@ -22,8 +22,7 @@ digit [0-9]
 alpha_num {alpha}|{digit}|_
 bool_literal    "true"|"false"
 integer_literal {digit}+
-type "integer"|"bool"
-void "void"
+type "integer"|"bool"|"void"
 id {alpha}{alpha_num}*
 arith_op [+\-*/%]
 or "||"
@@ -93,11 +92,6 @@ other .
                                     printf("TYPE : %s\n", yytext);
                                     yylval.tval = atot(yytext);
                                     return TYPE;
-                                }
-
-{void}                          {
-                                    printf("VOID : %s\n", yytext);
-                                    return VOID;
                                 }
 
 {return}                        {

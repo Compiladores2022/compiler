@@ -55,11 +55,22 @@ extern char* filename;
 
 %type <node> program 
 %type <node> statement
+%type <node> statements
 %type <node> declaration
+%type <node> declarations
 %type <node> assignment
 %type <node> expr
+%type <node> exprs
+%type <node> procedure
+%type <node> procedures
+%type <node> procedure_call
+%type <node> while
+%type <node> conditional
+%type <node> return
+%type <node> params
+%type <node> block
 %type <node> LITERAL
-    
+
 %left <sval> ORT
 %left <sval> ANDT
 %left <sval> EQT
@@ -93,14 +104,10 @@ procedures:
        ;
 
 procedure:
-      TYPE ID '(' params ')' block          { $$ = create_procedure(st, $1, $2, $4, $6); }
-      | VOID ID '(' params ')' block        { $$ = create_procedure(st, $1, $2, $4, $6); }
-      | TYPE ID '(' params ')' EXTERN ';'   { $$ = create_procedure(st, $1, $2, $4, NULL); }
-      | VOID ID '(' params ')' EXTERN ';'   { $$ = create_procedure(st, $1, $2, $4, NULL); }
-      | TYPE ID '(' ')' block               { $$ = create_procedure(st, $1, $2, NULL, $6); }
-      | VOID ID '(' ')' block               { $$ = create_procedure(st, $1, $2, NULL, $6); }
-      | TYPE ID '(' ')' EXTERN ';'          { $$ = create_procedure(st, $1, $2, NULL, NULL); }
-      | VOID ID '(' ')' EXTERN ';'          { $$ = create_procedure(st, $1, $2, NULL, NULL); }
+      TYPE ID '(' params ')' block          { $$ = build_procedure(st, $1, $2, $4, $6); }
+      | TYPE ID '(' params ')' EXTERN ';'   { $$ = build_procedure(st, $1, $2, $4, NULL); }
+      | TYPE ID '(' ')' block               { $$ = build_procedure(st, $1, $2, NULL, $5); }
+      | TYPE ID '(' ')' EXTERN ';'          { $$ = build_procedure(st, $1, $2, NULL, NULL); }
       ;
 
 params:
@@ -128,13 +135,13 @@ statement:
          ;
 
 return:
-      | RETURN expr ';'                     { $$ = build_return($1); }
+      RETURN expr ';'                       { $$ = build_return($2); }
       | RETURN ';'                          { $$ = build_return(NULL); }
       ;
 
 conditional:
-           IF '(' expr ')' THEN block                   { $$ = build_if($3, $5, NULL); }
-           | IF '(' expr ')' THEN block ELSE block      { $$ = build_if($3, $5, $7); }
+           IF '(' expr ')' THEN block                   { $$ = build_if($3, $6, NULL); }
+           | IF '(' expr ')' THEN block ELSE block      { $$ = build_if($3, $6, $8); }
            ;
 
 while:
@@ -157,8 +164,8 @@ procedure_call:
 
 block:
      '{' '}'                                { $$ = build_block(NULL, NULL); }
-     | '{' statements '}'                   { $$ = build_block(NULL, $1); }
-     | '{' declarations statements '}'      { $$ = build_block($1, $2); }
+     | '{' statements '}'                   { $$ = build_block(NULL, $2); }
+     | '{' declarations statements '}'      { $$ = build_block($2, $3); }
      ;
 
 exprs:

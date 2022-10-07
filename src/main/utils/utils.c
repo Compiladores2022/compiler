@@ -49,6 +49,9 @@ type_t atot(char* type) {
     if (!strcmp("bool", type))
         return BOOL_T;
 
+    if (!strcmp("void", type))
+        return VOID_T;
+
     yyerror("Invalid type name");
 }
 
@@ -59,6 +62,9 @@ char* show_type(type_t type) {
             break;
         case BOOL_T:
             return "bool";
+            break;
+        case VOID_T:
+            return "void";
             break;
         default:
             return "wrong type";
