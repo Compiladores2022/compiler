@@ -89,7 +89,7 @@ program:
 
 procedures:
        procedure                                { $$ = $1; }
-       | procedure procedures                   { $$ = link($1, $2); }
+       | procedures procedure                   { $$ = link($1, $2); }
        ;
 
 procedure:
@@ -110,12 +110,12 @@ params:
 
 statements:
           statement                         { $$ = $1; }
-          | statement statements            { $$ = link($1, $2); }
+          | statements statement            { $$ = link($1, $2); }
           ;
 
 declarations:
             declaration                     { $$ = $1; }
-            | declaration declarations      { $$ = link($1, $2); }
+            | declarations declaration      { $$ = link($1, $2); }
             ;
 
 statement:
@@ -163,7 +163,7 @@ block:
 
 exprs:
      expr                                   { $$ = $1; }
-     | expr ',' exprs                       { $$ = link($1, $3); }
+     | exprs ',' expr                       { $$ = link($1, $3); }
      ;
 
 expr:
