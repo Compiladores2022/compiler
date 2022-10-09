@@ -111,8 +111,8 @@ procedure:
       ;
 
 params:
-      TYPE ID                               { $$ = build_params(st, $1, $2); }
-      | params ',' TYPE ID                  { $$ = link($1, build_params(st, $3, $4)); }
+      TYPE ID                               { $$ = build_param(st, $1, $2); }
+      | params ',' TYPE ID                  { $$ = link($1, build_param(st, $3, $4)); }
       ;
 
 statements:

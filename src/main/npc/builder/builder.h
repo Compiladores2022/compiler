@@ -16,7 +16,7 @@ symtable_t* symbol_table(symtable_t* st);
 
 symbol_t* find_symbol(symtable_t* st, char* symbol_name);
 
-symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type);
+symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t flag);
 
 tree_node_t* build_unary_expr(char* symbol_name, tree_node_t* middle);
 
@@ -38,7 +38,7 @@ tree_node_t* build_if(tree_node_t* expression, tree_node_t* then_block, tree_nod
 
 tree_node_t* build_while(tree_node_t* expression, tree_node_t* while_block);
 
-tree_node_t* build_params(symtable_t* st, type_t param_type, char* param_name);
+tree_node_t* build_param(symtable_t* st, type_t param_type, char* param_name);
 
 tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, tree_node_t* params, tree_node_t* proc_block);
 
