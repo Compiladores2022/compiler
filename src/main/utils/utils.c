@@ -78,16 +78,38 @@ char* err_msg(int lineno, int expected_type, int given_type) {
     return msg;
 }
 
+list_t* enlist(tree_node_t* root, list_t* params) {
+    if (root == NULL) {
+        return params;
+    }
+    symbol_t* s = (symbol_t*)(root->value);
+    if (s->flag == PARAM_F) {
+        add(params, s);
+    }
+    enlist(root->left, params);
+    enlist(root->right, params);
+}
+
 void show_tree(tree_node_t* root) {
+
     if (!root) {
         return;
     }
     symbol_t* s = (symbol_t*)(root->value);
     if (s->name) {
-        /* printf("Node: %s, type: %s\n", s->name, show_type(s->type)); */
+        printf("Node: %s, type: %s\n", s->name, show_type(s->type));
     } else {
-        /* printf("Node: %d, type: %s\n", s->value, show_type(s->type)); */
+        printf("Node: %d, type: %s\n", s->value, show_type(s->type));
     }
     show_tree(root->left);
     show_tree(root->right);
+}
+
+void show_params(list_t* params) {
+    node_t* cursor = params->head->next;
+    while(cursor) {
+        symbol_t* s = (symbol_t*)cursor->value;
+        printf("PARAM: %s\n", s->name);
+        cursor = cursor->next;
+    }
 }
