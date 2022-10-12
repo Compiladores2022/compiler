@@ -1,5 +1,9 @@
-return  (false && true || true);
+program {
 
-          
+    bool main() {
+        return  (false && true || true);
+    }
+
+} 
 
 // & tiene predencia sobre el | - resultado esperado = true

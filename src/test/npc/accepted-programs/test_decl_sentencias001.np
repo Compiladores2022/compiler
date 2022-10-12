@@ -1,10 +1,16 @@
-integer  aux = 32;
-bool b1 = (false || true);
-integer  x1 =2;
-bool b2 = false && true;
+program {
 
-b2 = (false);
-return b2;
+    integer  aux = 32;
+    bool b1 = (false || true);
+    integer  x1 =2;
+    bool b2 = false && true;
 
-// x1 = x1 * aux + 1;
-// return ((x1));
+    bool main() {
+        b2 = (false);
+        return b2;
+
+        // x1 = x1 * aux + 1;
+        // return ((x1));
+    }
+
+}

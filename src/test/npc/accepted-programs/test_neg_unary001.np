@@ -1,3 +1,10 @@
-bool y;
-bool x = !y;
-return x;
+program {
+
+    bool y;
+    bool x = !y;
+
+    bool main() {
+        return x;
+    }
+
+}

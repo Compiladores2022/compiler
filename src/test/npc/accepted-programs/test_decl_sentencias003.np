@@ -1,10 +1,16 @@
-integer  aux = 32;
-bool b1 = (false || true);
-integer  x1 =2;
-bool b2 = (false||true) && true;
+program {
 
-b2 = (false) && true;
-return b2 || false;
+    integer  aux = 32;
+    bool b1 = (false || true);
+    integer  x1 =2;
+    bool b2 = (false||true) && true;
+
+    bool main() {
+        b2 = (false) && true;
+        return b2 || false;
+    }
+
+}
 
 // b1 = true;
 // return ((b1));
