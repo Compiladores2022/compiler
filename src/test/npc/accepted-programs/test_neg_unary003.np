@@ -1,5 +1,12 @@
-bool x = true;
-bool y = false;
-bool z = !(x || y);
-bool w = !x && !y;
-return z == w;
+program {
+
+    bool x = true;
+    bool y = false;
+    bool z = !(x || y);
+    bool w = !x && !y;
+
+    bool main() {
+        return z == w;
+    }
+
+}

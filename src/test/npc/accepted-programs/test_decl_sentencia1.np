@@ -1,5 +1,11 @@
-integer  x1 = 0;
-integer  x2 = 42;
-bool x3 = true;
+program {
 
-return x1 + (x2 * x2);
+    integer  x1 = 0;
+    integer  x2 = 42;
+    bool x3 = true;
+
+    integer main() {
+        return x1 + (x2 * x2);
+    }
+
+}

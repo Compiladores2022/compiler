@@ -1,5 +1,10 @@
-bool y = true;
-return  (false && true || true);
-// & tiene predencia sobre el | - resultado esperado = true
-// bool x = false;
-// return x & y;
+program {
+    bool y = true;
+
+    bool main() {
+        return  (false && true || true);
+        // & tiene predencia sobre el | - resultado esperado = true
+        // bool x = false;
+        // return x & y;
+    }
+}
