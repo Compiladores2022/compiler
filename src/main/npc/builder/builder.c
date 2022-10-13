@@ -39,7 +39,7 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t
         s->type = symbol_type;
         s->value = 0; // Default value
         s->offset = (glob_offset--) * MEM_OFFSET;
-        printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
+        /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */
         insert_symbol(st, s);
     } else {
         printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);
@@ -62,7 +62,7 @@ tree_node_t* build_unary_expr(char* symbol_name, tree_node_t* middle) {
     s->name = symbol_name;
     s->lineno = lineno();
     s->offset = (glob_offset--) * MEM_OFFSET;
-    printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
+    /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */
     return init_unary_tree_s(s, middle);
 }
 
@@ -72,7 +72,7 @@ tree_node_t* build_binary_expr(char* symbol_name, tree_node_t* left, tree_node_t
     s->name = symbol_name;
     s->lineno = lineno();
     s->offset = (glob_offset--) * MEM_OFFSET;
-    printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
+    /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */
     return init_binary_tree_s(s, left, right);
 }
 
@@ -139,6 +139,9 @@ tree_node_t* build_param(symtable_t* st, type_t param_type, char* param_name) {
 
 tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, tree_node_t* params, tree_node_t* proc_block) {
     symbol_t* symbol = build_id(st, proc_name, proc_type, PROC_F);
+    list_t* params_list = init_list();
+    symbol->params = enlist(params, params_list);
+    show_params(symbol->params);
     return init_binary_tree_s(symbol, params, proc_block);
 }
 

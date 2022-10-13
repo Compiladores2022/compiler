@@ -3,6 +3,7 @@
 
 #include "flags.h"
 #include "types.h"
+#include "../list/list.h"
 
 typedef struct {
     flag_t flag;
@@ -11,6 +12,7 @@ typedef struct {
     char* name;
     int offset;
     int lineno;
+    list_t* params;
 } symbol_t;
 
 symbol_t* create_symbol(void);
