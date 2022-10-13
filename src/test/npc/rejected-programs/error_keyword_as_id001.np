@@ -1,4 +1,10 @@
-bool var1 = true;
-integer bool = 3 + 943;
+program {
 
-return var1;
+    bool var1 = true;
+    integer bool = 3 + 943;
+
+    bool main() {
+        return var1;
+    }
+
+}

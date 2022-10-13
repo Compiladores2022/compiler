@@ -1,3 +1,10 @@
-integer var0 = 3;
-bool var1 = true;
-return var0 + var1;
+program {
+
+    integer var0 = 3;
+    bool var1 = true;
+
+    integer main() {
+        return var0 + var1;
+    }
+
+}

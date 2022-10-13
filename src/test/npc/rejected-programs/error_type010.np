@@ -1,5 +1,12 @@
-bool p = false;
-bool q = true;
-bool r;
-r = p * q;
-return r;
+program {
+
+    bool p = false;
+    bool q = true;
+    bool r;
+
+    integer main() {
+        r = p * q;
+        return r;
+    }
+
+}

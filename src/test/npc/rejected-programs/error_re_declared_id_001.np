@@ -1,3 +1,10 @@
-integer x = 3;
-bool x = false;
-return x;
+program {
+
+    integer x = 3;
+    bool x = false;
+
+    bool main() {
+        return x;
+    }
+
+}

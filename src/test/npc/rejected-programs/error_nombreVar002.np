@@ -1,6 +1,10 @@
-integer  NOMBREvar1 = (false | true);
+program {
 
-b1 = (false);
-return b1;
+    integer  _NOMBREvar1 = (false | true);
 
+    bool main() {
+        b1 = (false);
+        return b1;
+    }
 
+}

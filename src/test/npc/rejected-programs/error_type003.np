@@ -1,2 +1,9 @@
-bool p;
-p = 77;
+program {
+
+    bool p;
+
+    void main() {
+        p = 77;
+    }
+
+}

@@ -1,6 +1,10 @@
-integer nombreVar1 = 5;
+program {
 
-nombreVar1 = %55;
-return nombreVar1;
+    integer nombreVar1 = 5;
 
+    integer main() {
+        nombreVar1 = %55;
+        return nombreVar1;
+    }
 
+}

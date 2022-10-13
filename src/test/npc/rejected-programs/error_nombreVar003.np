@@ -1,6 +1,10 @@
-integer  nombre!var1 = 45;
+program {
 
-b1 = (false);
-return b1;
+    integer  nombre!var1 = 45;
 
+    bool main() {
+        b1 = (false);
+        return b1;
+    }
 
+}
