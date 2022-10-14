@@ -115,15 +115,21 @@ params:
       | params ',' TYPE ID                  { $$ = link($1, build_param(st, $3, $4)); }
       ;
 
-statements:
-          statement                         { $$ = $1; }
-          | statements statement            { $$ = link($1, $2); }
-          ;
 
 declarations:
             declaration                     { $$ = $1; }
             | declarations declaration      { $$ = link($1, $2); }
             ;
+
+declaration:
+           TYPE ID ASSIGNMENT expr ';'      { $$ = build_declaration(st, $1, $2, $4); }
+           | TYPE ID ';'                    { $$ = build_declaration(st, $1, $2, NULL); }
+           ;
+
+statements:
+          statement                         { $$ = $1; }
+          | statements statement            { $$ = link($1, $2); }
+          ;
 
 statement:
          assignment                         { $$ = $1; }
@@ -148,10 +154,6 @@ while:
      WHILE '(' expr ')' block               { $$ = build_while($3, $5); }
      ;
 
-declaration:
-           TYPE ID ASSIGNMENT expr ';'      { $$ = build_declaration(st, $1, $2, $4); }
-           | TYPE ID ';'                    { $$ = build_declaration(st, $1, $2, NULL); }
-           ;
 
 assignment: 
           ID ASSIGNMENT expr ';'            { $$ = build_assignment(st, $1, $3); }

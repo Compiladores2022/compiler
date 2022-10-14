@@ -66,7 +66,26 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
         traverse_tree(root->middle, f);
         (*f)(s, root);
     }
-    if (s->flag == PROG_F || s->flag == PROC_F || s->flag == BLOCK_F || s->flag == LINK_F) {
+    if (s->flag == WHILE_F) {
+        traverse_tree(root->left, f);
+        traverse_tree(root->right, f);
+        (*f)(s, root);
+    }
+    if (s->flag == IF_F) {
+        traverse_tree(root->middle, f);
+        traverse_tree(root->left, f);
+        traverse_tree(root->right, f);
+        (*f)(s, root);
+    }
+    if (s->flag == BLOCK_F) {
+        traverse_tree(root->left, f);
+        traverse_tree(root->right, f);
+    }
+    if (s->flag == PROC_F) {
+        traverse_tree(root->left, f);
+        traverse_tree(root->right, f);
+    }
+    if (s->flag == PROG_F) {
         traverse_tree(root->left, f);
         traverse_tree(root->right, f);
     }

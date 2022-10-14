@@ -114,4 +114,23 @@ void check_types(symbol_t* s, tree_node_t* node) {
             yyerror(err_msg(s->lineno, left->type, right->type));
         }
     }
+    if (s->flag == IF_F) {
+        symbol_t* cond = (symbol_t*) node->middle->value;
+        if (cond->type != BOOL_T) {
+            yyerror(err_msg(cond->lineno, BOOL_T, cond->type));
+        }
+    }
+    if (s->flag == WHILE_F) {
+        symbol_t* cond = (symbol_t*) node->left->value;
+        if (cond->type != BOOL_T) {
+            yyerror(err_msg(cond->lineno, BOOL_T, cond->type));
+        }
+    }
+    if (s->flag == PROC_F) {
+
+        // traverse_tree()
+        // search for returns inside the procedure's tree and check their type == procedure type
+        // first check types for the block(s), and lastly check the type of the return statements against the proc type
+
+    }
 }
