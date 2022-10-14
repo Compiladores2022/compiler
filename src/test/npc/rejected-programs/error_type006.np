@@ -1,3 +1,10 @@
-bool p = false;
-bool q = true;
-return p + q;
+program {
+    
+    bool p = false;
+    bool q = true;
+
+    integer main() {
+        return p + q;
+    }
+
+}

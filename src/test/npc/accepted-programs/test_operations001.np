@@ -1,5 +1,12 @@
-integer x = 3;
-integer y = 7;
-integer z;
-z = x - y;
-return z;
+program {
+
+    integer x = 3;
+    integer y = 7;
+    integer z;
+
+    integer main() {
+        z = x - y;
+        return z;
+    }
+
+}

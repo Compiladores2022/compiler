@@ -28,4 +28,8 @@ char* err_msg(int lineno, int expected_type, int given_type);
 
 void show_tree(tree_node_t* root);
 
+list_t* enlist(tree_node_t* root, list_t* params);
+
+void show_params(list_t* params);
+
 #endif

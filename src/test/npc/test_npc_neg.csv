@@ -6,7 +6,7 @@ error_keyword_as_id001,syntax error
 error_keyword_as_id002,Undeclared identifier
 error_keyword_as_id003,syntax error
 error_nombreVar001,syntax error
-error_nombreVar002,-> Syntax error in line: 1
+error_nombreVar002,-> Syntax error in line:
 error_nombreVar003,syntax error
 error_re_declared_id_001,Error - Identifier 'x' is trying to be re-declared
 error_sintactico001,syntax error
@@ -16,15 +16,15 @@ error_sintactico005,syntax error
 error_sintactico006,syntax error
 error_sintactico007,syntax error
 error_type001,syntax error
-error_type002,Type error in line 3 - Arithmetic expressions do not accept bool type operands
-error_type003,Type error in line 2 - Expected bool but integer was found
-error_type004,-> Syntax error in line: 3
-error_type005,-> Syntax error in line: 3
-error_type006,Type error in line 3 - Arithmetic expressions do not accept bool type operands
-error_type007,Type error in line 3 - Arithmetic expressions do not accept bool type operands
-error_type008,Type error in line 4 - Arithmetic expressions do not accept bool type operands
-error_type009,Type error in line 4 - Arithmetic expressions do not accept bool type operands
-error_type010,Type error in line 4 - Arithmetic expressions do not accept bool type operands
+error_type002,Arithmetic expressions do not accept bool type operands
+error_type003,Expected bool but integer was found
+error_type004,-> Syntax error in line:
+error_type005,-> Syntax error in line:
+error_type006,Arithmetic expressions do not accept bool type operands
+error_type007,Arithmetic expressions do not accept bool type operands
+error_type008,Arithmetic expressions do not accept bool type operands
+error_type009,Arithmetic expressions do not accept bool type operands
+error_type010,Arithmetic expressions do not accept bool type operands
 error_undeclared_id_001,Undeclared identifier
 error_undeclared_id_002,Undeclared identifier
 error_undeclared_id_003,Undeclared identifier

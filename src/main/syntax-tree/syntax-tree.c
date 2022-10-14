@@ -12,6 +12,10 @@ tree_node_t* init_binary_tree_s(symbol_t* s, tree_node_t* left, tree_node_t* rig
     return init_binary_tree(s, left, right);
 }
 
+tree_node_t* init_ternary_tree_s(symbol_t* s, tree_node_t* left, tree_node_t* middle, tree_node_t* right) {
+    return init_ternary_tree(s, left, middle, right);
+}
+
 symbol_t* get_symbol(tree_node_t* node) {
     return (symbol_t*) node->value;
 }

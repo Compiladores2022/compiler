@@ -1,5 +1,12 @@
-integer w = 3; // 3
-integer x = 5 + w; // 8
-integer y = 7 * x; // 56
-integer z = -1 * y; // -56
-return -z-6; // 50
+program {
+
+    integer w = 3; // 3
+    integer x = 5 + w; // 8
+    integer y = 7 * x; // 56
+    integer z = -1 * y; // -56
+
+    integer main() {
+        return -z-6; // 50
+    }
+
+}
