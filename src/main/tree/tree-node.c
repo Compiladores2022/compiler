@@ -84,6 +84,7 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
     if (s->flag == PROC_F) {
         traverse_tree(root->left, f);
         traverse_tree(root->right, f);
+        (*f)(s, root);
     }
     if (s->flag == PROG_F) {
         traverse_tree(root->left, f);
