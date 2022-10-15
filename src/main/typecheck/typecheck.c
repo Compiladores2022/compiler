@@ -98,6 +98,23 @@ type_t validate_unary_expr(symbol_t* s, type_t operand) {
     }
 }
 
+void validate_proc(symbol_t* s, tree_node_t* node) {
+    if (node == NULL) {
+        return;
+    }
+    symbol_t* node_sym = (symbol_t*) node->value;
+    if (node_sym->flag == RETURN_F) {
+        type_t expected_type = s->type;
+        type_t given_type = node_sym->type;
+        if (expected_type != given_type) {
+            yyerror(err_msg(node_sym->lineno, expected_type, given_type));
+        }
+    }
+    validate_proc(s, node->left);
+    validate_proc(s, node->middle);
+    validate_proc(s, node->right);
+}
+
 void check_types(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -115,6 +132,13 @@ void check_types(symbol_t* s, tree_node_t* node) {
             yyerror(err_msg(s->lineno, left->type, right->type));
         }
     }
+    if (s->flag == RETURN_F) {
+        if (node->middle != NULL) {
+            s->type = ((symbol_t*) node->middle->value)->type;
+        } else {
+            s->type = VOID_T; // If a return has no a expression the returns void;
+        }
+    }
     if (s->flag == IF_F) {
         symbol_t* cond = (symbol_t*) node->middle->value;
         if (cond->type != BOOL_T) {
@@ -128,10 +152,6 @@ void check_types(symbol_t* s, tree_node_t* node) {
         }
     }
     if (s->flag == PROC_F) {
-
-        // traverse_tree()
-        // search for returns inside the procedure's tree and check their type == procedure type
-        // first check types for the block(s), and lastly check the type of the return statements against the proc type
-
+        validate_proc(s, node->right); // Right because is the block
     }
 }

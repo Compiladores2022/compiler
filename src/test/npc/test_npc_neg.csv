@@ -30,3 +30,7 @@ error_undeclared_id_002,Undeclared identifier
 error_undeclared_id_003,Undeclared identifier
 error_cond_type001,Expected bool but integer was found
 error_cond_type002,Expected bool but integer was found
+error_return_proc_error_type001,Expected integer but bool was found
+error_return_proc_error_type002,Expected bool but integer was found
+error_return_proc_error_type003,Expected void but bool was found
+error_return_proc_error_type004,Expected integer but void was found

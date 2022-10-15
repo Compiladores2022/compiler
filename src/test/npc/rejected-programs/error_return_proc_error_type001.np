@@ -1,0 +1,9 @@
+program {
+    
+    bool x = true;
+    
+    integer main() {
+       return x;
+    }
+
+}
