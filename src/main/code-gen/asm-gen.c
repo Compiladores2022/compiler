@@ -58,6 +58,26 @@ char* create_mul_instruction(instruction_t* instruction) {
     return mov_res;
 }
 
+char* create_div_instruction(instruction_t* instruction) {
+    char* mov_eax = mov_operand(instruction->s1, "eax");
+    char* mov_ebx = mov_operand(instruction->s2, "ebx");
+    char* div = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(div, "%s\n%s\n\tcltd\n\tidivl   %%ebx", mov_eax, mov_ebx);
+    sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", div, instruction->s3->offset);
+    return mov_res;
+}
+
+char* create_mod_instruction(instruction_t* instruction) {
+    char* mov_eax = mov_operand(instruction->s1, "eax");
+    char* mov_ebx = mov_operand(instruction->s2, "ebx");
+    char* mod = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(mod, "%s\n%s\n\tcltd\n\tidivl   %%ebx", mov_eax, mov_ebx);
+    sprintf(mov_res, "%s\n\tmovl    %%edx, %d(%%rbp)", mod, instruction->s3->offset);
+    return mov_res;
+}
+
 char* create_and_instruction(instruction_t* instruction) {
     char* mov_eax = mov_operand(instruction->s1, "eax");
     char* mov_edx = mov_operand(instruction->s2, "edx");
@@ -144,6 +164,10 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_sub_instruction(instruction);
         case MUL:
             return create_mul_instruction(instruction);
+        case DIV:
+            return create_div_instruction(instruction);
+        case MOD:
+            return create_mod_instruction(instruction);
         case AND:
             return create_and_instruction(instruction);
         case OR:

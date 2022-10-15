@@ -1,0 +1,10 @@
+program {
+
+    integer x = 12;
+    integer y = 3;
+
+    integer main() {
+        return x % y;
+    }
+
+}

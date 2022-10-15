@@ -8,6 +8,8 @@ typedef enum instr_type_t {
     ADD,
     SUB,
     MUL,
+    DIV,
+    MOD,
     AND,
     OR,
     EQ,

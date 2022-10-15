@@ -14,3 +14,6 @@ test_neg_unary002,1
 test_neg_unary003,1
 test_neg_unary004,0
 test_complex_expr001,50
+test_mod001,1
+test_mod002,0
+test_div001,17

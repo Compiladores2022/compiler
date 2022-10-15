@@ -17,6 +17,12 @@ instr_type_t bin_op_to_instr_type(char* op) {
     if (!strcmp(op, "*")) {
         return MUL;
     }
+    if (!strcmp(op, "/")) {
+        return DIV;
+    }
+    if (!strcmp(op, "%")) {
+        return MOD;
+    }
     if (!strcmp(op, "&&")) {
         return AND;
     }
@@ -83,6 +89,12 @@ char* type_to_str(instr_type_t type) {
     }
     if (type == MUL) {
         return "MUL";
+    }
+    if (type == DIV) {
+        return "DIV";
+    }
+    if (type == MOD) {
+        return "MOD";
     }
     if (type == AND) {
         return "AND";
