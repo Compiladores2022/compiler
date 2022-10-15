@@ -62,18 +62,22 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
         traverse_tree(root->right, f);
         (*f)(s, root);
     }
+    if (s->flag == LINK_F) {
+        traverse_tree(root->left, f);
+        traverse_tree(root->right, f);
+    }
     if (s->flag == RETURN_F) {
         traverse_tree(root->middle, f);
         (*f)(s, root);
     }
-    if (s->flag == WHILE_F) {
+    if (s->flag == IF_F) {
+        traverse_tree(root->middle, f); // We process the cond first
         traverse_tree(root->left, f);
         traverse_tree(root->right, f);
         (*f)(s, root);
     }
-    if (s->flag == IF_F) {
-        traverse_tree(root->middle, f);
-        traverse_tree(root->left, f);
+    if (s->flag == WHILE_F) {
+        traverse_tree(root->left, f); // We process the cond first
         traverse_tree(root->right, f);
         (*f)(s, root);
     }
