@@ -28,3 +28,5 @@ error_type010,Arithmetic expressions do not accept bool type operands
 error_undeclared_id_001,Undeclared identifier
 error_undeclared_id_002,Undeclared identifier
 error_undeclared_id_003,Undeclared identifier
+error_cond_type001,Expected bool but integer was found
+error_cond_type002,Expected bool but integer was found
