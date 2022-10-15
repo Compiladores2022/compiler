@@ -60,7 +60,8 @@ void validate_gt_lt_comparison(int lineno, char* op, type_t left, type_t right) 
 }
 
 type_t validate_binary_expr(symbol_t* s, type_t left, type_t right) {
-    if (!strcmp(s->name, "+") || !strcmp(s->name, "-") || !strcmp(s->name, "*")) {
+    if (!strcmp(s->name, "+") || !strcmp(s->name, "-") || !strcmp(s->name, "*") 
+            || !strcmp(s->name, "/") || !strcmp(s->name, "%")) {
         validate_arithmetic_expression(s->lineno, left, right);
         return INT_T;
     } else if (!strcmp(s->name, "||") || !strcmp(s->name, "&&")) {
