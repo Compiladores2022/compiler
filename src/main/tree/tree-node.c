@@ -90,6 +90,10 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
         traverse_tree(root->right, f);
         (*f)(s, root);
     }
+    if (s->flag == CALL_F) {
+        traverse_tree(root->middle, f);
+        (*f)(s, root);
+    }
     if (s->flag == PROG_F) {
         traverse_tree(root->left, f);
         traverse_tree(root->right, f);

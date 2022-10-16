@@ -74,9 +74,11 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == RETURN_F) {
-        symbol_t* middle = (symbol_t*) node->middle->value;
-        instruction_t* instruction = new_instruction(RET, NULL, NULL, middle);
-        add_instruction(instruction_seq, instruction);
+        if (node->middle) {
+            symbol_t* middle = (symbol_t*) node->middle->value;
+            instruction_t* instruction = new_instruction(RET, NULL, NULL, middle);
+            add_instruction(instruction_seq, instruction);
+        }
     }
 }
 
