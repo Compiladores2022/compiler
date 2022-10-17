@@ -35,3 +35,7 @@ error_return_proc_error_type002,Expected bool but integer was found
 error_return_proc_error_type003,Expected void but bool was found
 error_return_proc_error_type004,Expected integer but void was found
 error_call_undeclared_proc,Undeclared identifier
+error_arguments_type001,Expected bool but integer was found for sum in the 1th parameter
+error_arguments_type002,Expected integer but bool was found for sum in the 2th parameter
+error_too_many_arguments001,Too many arguments for sum
+error_arguments_missing001,Arguments missing for sum

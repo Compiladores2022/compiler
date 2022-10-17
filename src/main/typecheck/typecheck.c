@@ -29,6 +29,23 @@ char* gt_lt_cmp_type_err_msg(int lineno, char* op) {
     return msg;
 }
 
+char* diff_param_arg_type_err_msg(type_t param_type, type_t arg_type, char* proc_name, int lineno, int param_index) {
+    char* msg = (char*) malloc(100 * sizeof(char));
+    sprintf(msg, "%s for %s in the %dth parameter", err_msg(lineno, param_type, arg_type), proc_name, param_index);
+    return msg;
+}
+
+char* diff_size_of_params_args(node_t* params_cursor, node_t* args_cursor, char* proc_name, int lineno) {
+    char* msg = (char*) malloc(100 * sizeof(char));
+    if (params_cursor) {
+        sprintf(msg, "Arguments missing for %s in line %d", proc_name, lineno);
+    }
+    if (args_cursor) {
+        sprintf(msg, "Too many arguments for %s in line %d", proc_name, lineno);
+    }
+    return msg;
+}
+
 void validate_arithmetic_expression(int lineno, type_t left, type_t right) {
     if (left != INT_T) {
         yyerror(expr_type_err_msg(lineno, INT_T, left));
@@ -115,6 +132,28 @@ void validate_proc(symbol_t* s, tree_node_t* node) {
     validate_proc(s, node->right);
 }
 
+void validate_params(symbol_t* s, tree_node_t* args) {
+    list_t* params_list = s->params;
+    list_t* args_list = init_list();
+    args_list = enlist(args, args_list);
+    node_t* params_cursor = params_list->head->next;
+    node_t* args_cursor = args_list->head->next;
+    int param_index = 1;
+    while(params_cursor && args_cursor) {
+        symbol_t* param = (symbol_t*) params_cursor->value;
+        symbol_t* arg = (symbol_t*) args_cursor->value;
+        if (param->type != arg->type) {
+            yyerror(diff_param_arg_type_err_msg(param->type, arg->type, s->name, s->lineno, param_index));
+        }
+        params_cursor = params_cursor->next;
+        args_cursor = args_cursor->next;
+        param_index++;
+    }
+    if (params_cursor || args_cursor) {
+        yyerror(diff_size_of_params_args(params_cursor, args_cursor, s->name, s->lineno));
+    }
+}
+
 void check_types(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -152,6 +191,9 @@ void check_types(symbol_t* s, tree_node_t* node) {
         }
     }
     if (s->flag == PROC_F) {
-        validate_proc(s, node->right); // Right because is the block
+        validate_proc(s, node->right); // node->right because there is the block
+    }
+    if (s->flag == CALL_F) {
+        validate_params(s, node->middle);
     }
 }
