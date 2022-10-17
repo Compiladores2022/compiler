@@ -145,8 +145,9 @@ tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, 
     return init_binary_tree_s(symbol, params, proc_block);
 }
 
-tree_node_t* build_call(char* proc_name, tree_node_t* arguments) {
+tree_node_t* build_call(symtable_t* st, char* proc_name, tree_node_t* arguments) {
     symbol_t* s = create_symbol();
+    find_symbol(st, proc_name);
     s->flag = CALL_F;
     s->name = proc_name;
     s->lineno = lineno();

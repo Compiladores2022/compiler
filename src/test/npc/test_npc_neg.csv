@@ -34,3 +34,4 @@ error_return_proc_error_type001,Expected integer but bool was found
 error_return_proc_error_type002,Expected bool but integer was found
 error_return_proc_error_type003,Expected void but bool was found
 error_return_proc_error_type004,Expected integer but void was found
+error_call_undeclared_proc,Undeclared identifier

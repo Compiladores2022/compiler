@@ -160,8 +160,8 @@ assignment:
           ;
 
 procedure_call:
-           ID '(' ')'                       { $$ = build_call($1, NULL); }
-           | ID '(' exprs ')'               { $$ = build_call($1, $3); }
+           ID '(' ')'                       { $$ = build_call(st, $1, NULL); }
+           | ID '(' exprs ')'               { $$ = build_call(st, $1, $3); }
            ;
 
 block:
