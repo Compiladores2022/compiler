@@ -78,18 +78,6 @@ char* err_msg(int lineno, int expected_type, int given_type) {
     return msg;
 }
 
-list_t* enlist(tree_node_t* root, list_t* params) {
-    if (root == NULL) {
-        return params;
-    }
-    symbol_t* s = (symbol_t*)(root->value);
-    if (s->flag == PARAM_F) {
-        add(params, s);
-    }
-    enlist(root->left, params);
-    enlist(root->right, params);
-}
-
 void show_tree(tree_node_t* root) {
 
     if (!root) {
@@ -112,4 +100,16 @@ void show_params(list_t* params) {
         printf("PARAM: %s\n", s->name);
         cursor = cursor->next;
     }
+}
+
+list_t* enlist(tree_node_t* root, list_t* params) {
+    if (root == NULL) {
+        return params;
+    }
+    symbol_t* s = (symbol_t*)(root->value);
+    if (s->flag != LINK_F) {
+        add(params, s);
+    }
+    enlist(root->left, params);
+    enlist(root->right, params);
 }
