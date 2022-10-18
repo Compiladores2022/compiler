@@ -152,6 +152,7 @@ tree_node_t* build_call(symtable_t* st, char* proc_name, tree_node_t* arguments)
     s->name = proc_name;
     s->lineno = lineno();
     s->params = proc_symbol->params;
+    s->type = proc_symbol->type;
     return init_unary_tree_s(s, arguments);
 }
 
