@@ -32,7 +32,8 @@ symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
 
 symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t flag) {
     symbol_t* s = NULL;
-    if (search_symbol(st, symbol_name) == NULL) {
+    list_t* l = (list_t*) st->stack->head->next->value;
+    if (search_symbol_l(l, symbol_name) == NULL) {
         s = create_symbol();
         s->name = symbol_name;
         s->flag = flag;

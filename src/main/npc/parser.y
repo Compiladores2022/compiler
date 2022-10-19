@@ -104,15 +104,15 @@ procedures:
        ;
 
 procedure:
-      TYPE ID '(' params ')' block          { $$ = build_procedure(st, $1, $2, $4, $6); }
-      | TYPE ID '(' params ')' EXTERN ';'   { $$ = build_procedure(st, $1, $2, $4, NULL); }
-      | TYPE ID '(' ')' block               { $$ = build_procedure(st, $1, $2, NULL, $5); }
-      | TYPE ID '(' ')' EXTERN ';'          { $$ = build_procedure(st, $1, $2, NULL, NULL); }
+      TYPE ID  '(' params ')' block                        { pop_level(st); $$ = build_procedure(st, $1, $2, $4, $6); }
+      | TYPE ID '(' params ')' EXTERN ';'                  { $$ = build_procedure(st, $1, $2, $4, NULL); }
+      | TYPE ID '(' ')' block                              { $$ = build_procedure(st, $1, $2, NULL, $5); }
+      | TYPE ID '(' ')' EXTERN ';'                         { $$ = build_procedure(st, $1, $2, NULL, NULL); }
       ;
 
-params:
-      TYPE ID                               { $$ = build_param(st, $1, $2); }
-      | params ',' TYPE ID                  { $$ = link($1, build_param(st, $3, $4)); }
+params: { push_level(st); }
+      TYPE ID                                              { $$ = build_param(st, $2, $3); }
+      | params ',' TYPE ID                                 { $$ = link($1, build_param(st, $3, $4)); }
       ;
 
 
@@ -146,12 +146,12 @@ return:
       ;
 
 conditional:
-           IF '(' expr ')' THEN block                   { $$ = build_if($3, $6, NULL); }
-           | IF '(' expr ')' THEN block ELSE block      { $$ = build_if($3, $6, $8); }
+           IF '(' expr ')' THEN block                                    { $$ = build_if($3, $6, NULL); }
+           | IF '(' expr ')' THEN block ELSE block                       { $$ = build_if($3, $6, $8); }
            ;
 
 while:
-     WHILE '(' expr ')' block               { $$ = build_while($3, $5); }
+     WHILE '(' expr ')' block      { $$ = build_while($3, $5); }
      ;
 
 
@@ -165,9 +165,9 @@ procedure_call:
            ;
 
 block:
-     '{' '}'                                { $$ = build_block(NULL, NULL); }
-     | '{' statements '}'                   { $$ = build_block(NULL, $2); }
-     | '{' declarations statements '}'      { $$ = build_block($2, $3); }
+     '{' '}'                                                    { $$ = build_block(NULL, NULL); }
+     | '{' statements '}'                                       { $$ = build_block(NULL, $2); }
+     | '{' { push_level(st); } declarations statements '}'      { $$ = build_block($3, $4); pop_level(st); }
      ;
 
 exprs:

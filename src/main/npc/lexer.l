@@ -44,7 +44,7 @@ else "else"
 while "while"
 return "return"
 comment "//".*\n
-ignore \n|" "
+ignore \n|" "|\t
 other .
 
 %x C_COMMENT
