@@ -1,0 +1,14 @@
+program {
+
+    integer x = 12;
+    integer y = 3;
+
+    integer main(integer y) {
+	integer x = 1;
+	if (x > 1) then {
+	    integer y = 2; // Param redeclaration should be forbidden 
+	    return y;
+	}
+        return x % y;
+    }
+}
