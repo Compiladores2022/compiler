@@ -39,7 +39,11 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t
         s->flag = flag;
         s->type = symbol_type;
         s->value = 0; // Default value
-        s->offset = (glob_offset--) * MEM_OFFSET;
+        if (flag == ID_F) {
+            s->offset = (glob_offset--) * MEM_OFFSET;
+        } else if (flag == PARAM_F) {
+            // TODO (push upwards?)
+        }
         /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */
         insert_symbol(st, s);
     } else {

@@ -10,6 +10,8 @@
 #include "../../tree/tree-node.h"
 #include "../parser.tab.h"
 
+#define MEM_OFFSET 4
+
 void out_msg(int status);
 
 symtable_t* symbol_table(symtable_t* st);

@@ -4,6 +4,9 @@
 #include "../utils/utils.h"
 #include "typecheck.h"
 #include "../npc/parser.tab.h"
+#include "../npc/builder/builder.h"
+
+extern int glob_offset;
 
 char* expr_type_err_msg(int lineno, type_t operation_type, type_t operand_type) {
     char* msg = malloc(128 * sizeof(char));
@@ -154,6 +157,26 @@ void validate_params(symbol_t* s, tree_node_t* args) {
     }
 }
 
+int frame_size(tree_node_t* node) {
+
+    int count = 0;
+
+    if (!node) {
+        return 0;
+    }
+
+    symbol_t* s = (symbol_t*) node->value;
+    if (s->flag == DECL_F || s->flag == UN_OP_F || s->flag == BIN_OP_F) {
+       count++;
+    }
+
+    count += frame_size(node->left);
+    count += frame_size(node->middle);
+    count += frame_size(node->right);
+
+    return count;
+}
+
 void check_types(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -191,7 +214,15 @@ void check_types(symbol_t* s, tree_node_t* node) {
         }
     }
     if (s->flag == PROC_F) {
+        printf("IN PROC ********************** \n");
         validate_proc(s, node->right); // node->right because there is the block
+        int size = frame_size(node->right);
+        printf("GLOB: %d \n", glob_offset);
+        printf("MEM: %d \n", MEM_OFFSET);
+        printf("PROC OFFSET: %d \n", s->offset);
+        printf("SIZE: %d \n", size);
+        glob_offset = glob_offset - size;
+        s->offset = glob_offset * MEM_OFFSET;
     }
     if (s->flag == CALL_F) {
         validate_params(s, node->middle);
