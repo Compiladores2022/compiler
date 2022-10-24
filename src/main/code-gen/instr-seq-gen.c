@@ -53,6 +53,18 @@ instr_type_t un_op_to_instr_type(char* op) {
     exit(1);
 }
 
+int labels_counter = 0;
+
+symbol_t* get_label() {
+    symbol_t* s = create_symbol();
+    labels_counter++;
+    char* name = (char*) malloc(sizeof(char) * 10);
+    sprintf(name, ".L%d", labels_counter);
+    s->name = name;
+    s->flag = LABEL_F;
+    return s;
+}
+
 void build_instruction_seq(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -77,6 +89,26 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         if (node->middle) {
             symbol_t* middle = (symbol_t*) node->middle->value;
             instruction_t* instruction = new_instruction(RET, NULL, NULL, middle);
+            add_instruction(instruction_seq, instruction);
+        }
+    }
+    if (s->flag == IF_F) {
+        traverse_tree(node->middle, build_instruction_seq, 1);
+        symbol_t* middle = (symbol_t*) node->middle->value;
+        symbol_t* skip_then_label = get_label();
+        symbol_t* skip_else_label = get_label();
+        instruction_t* instruction = new_instruction(JMP, middle, NULL, skip_then_label);
+        add_instruction(instruction_seq, instruction);
+        traverse_tree(node->left, build_instruction_seq, 1);
+        if (node->right) {
+            instruction = new_instruction(JMP, middle, NULL, skip_else_label);
+            add_instruction(instruction_seq, instruction);
+        }
+        instruction = new_instruction(LBL, NULL, NULL, skip_then_label);
+        add_instruction(instruction_seq, instruction);
+        if (node->right) {
+            traverse_tree(node->right, build_instruction_seq, 1);
+            instruction = new_instruction(LBL, NULL, NULL, skip_else_label);
             add_instruction(instruction_seq, instruction);
         }
     }
@@ -125,6 +157,12 @@ char* type_to_str(instr_type_t type) {
     if (type == RET) {
         return "RET";
     }
+    if (type == JMP) {
+        return "JMP";
+    }
+    if (type == LBL) {
+        return "LBL";
+    }
     exit(1);
 }
 
@@ -134,13 +172,13 @@ void show_list(list_t* instructions) {
         instruction_t* instruction = (instruction_t*)cursor->value;
         printf("Instruction: \n");
         printf("Type: %s\n", type_to_str(instruction->type));
-        if (instruction->type != RET) {
+        if (instruction->s1) {
             printf("left operand name:  %s\n", instruction->s1->name);
             printf("left operand value:  %d\n", instruction->s1->value);
-            if (instruction->type != MOV && instruction->type != MIN && instruction->type != NEG) {
-                printf("right operand name: %s\n", instruction->s2->name);
-                printf("right operand value: %d\n", instruction->s2->value);
-            }
+        }
+        if (instruction->s2) {
+            printf("right operand name: %s\n", instruction->s2->name);
+            printf("right operand value: %d\n", instruction->s2->value);
         }
         printf("result name: %s\n", instruction->s3->name);
         printf("result value: %d\n", instruction->s3->value);

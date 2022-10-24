@@ -17,6 +17,7 @@ typedef enum {
     PROC_F,
     CALL_F,
     PROG_F,
+    LABEL_F
 } flag_t;
 
 #endif

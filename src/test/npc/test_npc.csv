@@ -20,3 +20,6 @@ test_mod003,0
 test_mod004,-1
 test_div001,17
 test_div002,-5
+test_if001,1
+test_if002,12312
+test_if003,1234

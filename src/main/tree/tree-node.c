@@ -34,7 +34,7 @@ tree_node_t* init_ternary_tree(void* value, tree_node_t* left, tree_node_t* midd
     return node;
 }
 
-void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
+void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*), int is_build_instr_func) {
     if (!root) {
         return;
     }
@@ -43,59 +43,61 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
         return;
     }
     if (s->flag == BIN_OP_F) {
-        traverse_tree(root->left, f);
-        traverse_tree(root->right, f);
+        traverse_tree(root->left, f, is_build_instr_func);
+        traverse_tree(root->right, f, is_build_instr_func);
         (*f)(s, root);
     }
     if (s->flag == UN_OP_F) {
-        traverse_tree(root->middle, f);
+        traverse_tree(root->middle, f, is_build_instr_func);
         (*f)(s, root);
     }
     if (s->flag == ASSIGN_F) {
-        traverse_tree(root->right, f);
+        traverse_tree(root->right, f, is_build_instr_func);
         (*f)(s, root);
     }
     if (s->flag == DECL_F) {
         if (!root->right) {
             return;
         }
-        traverse_tree(root->right, f);
+        traverse_tree(root->right, f, is_build_instr_func);
         (*f)(s, root);
     }
     if (s->flag == LINK_F) {
-        traverse_tree(root->left, f);
-        traverse_tree(root->right, f);
+        traverse_tree(root->left, f, is_build_instr_func);
+        traverse_tree(root->right, f, is_build_instr_func);
     }
     if (s->flag == RETURN_F) {
-        traverse_tree(root->middle, f);
+        traverse_tree(root->middle, f, is_build_instr_func);
         (*f)(s, root);
     }
     if (s->flag == IF_F) {
-        traverse_tree(root->middle, f); // We process the cond first
-        traverse_tree(root->left, f);
-        traverse_tree(root->right, f);
+        if (!is_build_instr_func) {
+            traverse_tree(root->middle, f, is_build_instr_func); // We process the cond first
+            traverse_tree(root->left, f, is_build_instr_func);
+            traverse_tree(root->right, f, is_build_instr_func);
+        }
         (*f)(s, root);
     }
     if (s->flag == WHILE_F) {
-        traverse_tree(root->left, f); // We process the cond first
-        traverse_tree(root->right, f);
+        traverse_tree(root->left, f, is_build_instr_func); // We process the cond first
+        traverse_tree(root->right, f, is_build_instr_func);
         (*f)(s, root);
     }
     if (s->flag == BLOCK_F) {
-        traverse_tree(root->left, f);
-        traverse_tree(root->right, f);
+        traverse_tree(root->left, f, is_build_instr_func);
+        traverse_tree(root->right, f, is_build_instr_func);
     }
     if (s->flag == PROC_F) {
-        traverse_tree(root->left, f);
-        traverse_tree(root->right, f);
+        traverse_tree(root->left, f, is_build_instr_func);
+        traverse_tree(root->right, f, is_build_instr_func);
         (*f)(s, root);
     }
     if (s->flag == CALL_F) {
-        traverse_tree(root->middle, f);
+        traverse_tree(root->middle, f, is_build_instr_func);
         (*f)(s, root);
     }
     if (s->flag == PROG_F) {
-        traverse_tree(root->left, f);
-        traverse_tree(root->right, f);
+        traverse_tree(root->left, f, is_build_instr_func);
+        traverse_tree(root->right, f, is_build_instr_func);
     }
 }

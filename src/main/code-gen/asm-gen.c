@@ -151,9 +151,28 @@ char* create_neg_instruction(instruction_t* instruction) {
 }
 
 char* create_ret_instruction(instruction_t* instruction) {
-    char* mov_eax = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
-    return mov_eax;
+    char* ret = (char*) malloc(100 * sizeof(char));
+    sprintf(ret, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
+    sprintf(ret, "%s\n\tmovq    %%rsp, %%rbp\n\tpopq    %%rbp\n\tret", ret);
+    return ret;
+}
+
+char* create_jmp_instruction(instruction_t* instruction) {
+    char* jmp = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    if (instruction->s1) {
+        sprintf(jmp, "\tcmpl    $0, %d(%%rbp)\n\tje      %s", instruction->s1->offset, label_name);
+    } else {
+        sprintf(jmp, "\tjmp     %s", label_name);
+    }
+    return jmp;
+}
+
+char* create_lbl_instruction(instruction_t* instruction) {
+    char* lbl = (char*) malloc(20 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(lbl, "%s:", label_name);
+    return lbl;
 }
 
 char* create_asm_instruction(instruction_t* instruction) {
@@ -186,6 +205,10 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_mov_instruction(instruction);
         case RET:
             return create_ret_instruction(instruction);
+        case JMP:
+            return create_jmp_instruction(instruction);
+        case LBL:
+            return create_lbl_instruction(instruction);
         default:
             printf("Invalid instruction type\n");
             exit(1);

@@ -17,7 +17,9 @@ typedef enum instr_type_t {
     LT,
     MIN,
     NEG,
-    RET
+    RET,
+    JMP,
+    LBL
 } instr_type_t;
 
 typedef struct instruction_t {

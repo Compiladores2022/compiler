@@ -18,7 +18,6 @@ tree_node_t* init_binary_tree(void* value, tree_node_t* left, tree_node_t* right
 
 tree_node_t* init_ternary_tree(void* value, tree_node_t* left, tree_node_t* middle, tree_node_t* right);
 
-
-void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*));
+void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*), int is_build_instr_func);
 
 #endif
