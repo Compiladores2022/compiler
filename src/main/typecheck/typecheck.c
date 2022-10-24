@@ -154,6 +154,25 @@ void validate_params(symbol_t* s, tree_node_t* args) {
     }
 }
 
+void check_id_re_declaration(symbol_t* s, tree_node_t* node) {
+    if (!node) {
+        return;
+    }
+    symbol_t* curr_s = node->value;
+    if (curr_s->flag == DECL_F) {
+        symbol_t* other = (symbol_t*) node->left->value;
+        if (is_symbol_in_list(s->params, other)) {
+            char* msg = (char*) malloc(sizeof(char) * 50);
+            sprintf(msg, "Error - Identifier '%s' from procedure %s is trying to be re-declared"\
+                    " in line %d", other->name, s->name, curr_s->lineno);
+            yyerror(msg);
+        }
+    }
+    check_id_re_declaration(s, node->left);
+    check_id_re_declaration(s, node->middle);
+    check_id_re_declaration(s, node->right);
+}
+
 void check_types(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -191,6 +210,7 @@ void check_types(symbol_t* s, tree_node_t* node) {
         }
     }
     if (s->flag == PROC_F) {
+        check_id_re_declaration(s, node->right);
         validate_proc(s, node->right); // node->right because there is the block
     }
     if (s->flag == CALL_F) {

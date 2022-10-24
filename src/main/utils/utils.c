@@ -113,3 +113,15 @@ list_t* enlist(tree_node_t* root, list_t* params) {
     enlist(root->left, params);
     enlist(root->right, params);
 }
+
+int is_symbol_in_list(list_t* list, symbol_t* s) {
+    node_t* cursor = list->head->next;
+    while (cursor) {
+        symbol_t* other = (symbol_t*) cursor->value;
+        if (!strcmp(s->name, other->name)) {
+            return 1;
+        }
+        cursor = cursor->next;
+    }
+    return 0;
+}

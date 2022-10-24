@@ -30,6 +30,8 @@ void show_tree(tree_node_t* root);
 
 list_t* enlist(tree_node_t* root, list_t* params);
 
+int is_symbol_in_list(list_t* list, symbol_t* s);
+
 void show_params(list_t* params);
 
 #endif
