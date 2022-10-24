@@ -4,6 +4,9 @@
 #include "../utils/utils.h"
 #include "typecheck.h"
 #include "../npc/parser.tab.h"
+#include "../npc/builder/builder.h"
+
+extern int glob_offset;
 
 char* expr_type_err_msg(int lineno, type_t operation_type, type_t operand_type) {
     char* msg = malloc(128 * sizeof(char));
@@ -115,7 +118,7 @@ type_t validate_unary_expr(symbol_t* s, type_t operand) {
     }
 }
 
-void validate_proc(symbol_t* s, tree_node_t* node) {
+void validate_proc_returns_type(symbol_t* s, tree_node_t* node) {
     if (node == NULL) {
         return;
     }
@@ -127,9 +130,9 @@ void validate_proc(symbol_t* s, tree_node_t* node) {
             yyerror(err_msg(node_sym->lineno, expected_type, given_type));
         }
     }
-    validate_proc(s, node->left);
-    validate_proc(s, node->middle);
-    validate_proc(s, node->right);
+    validate_proc_returns_type(s, node->left);
+    validate_proc_returns_type(s, node->middle);
+    validate_proc_returns_type(s, node->right);
 }
 
 void validate_params(symbol_t* s, tree_node_t* args) {
@@ -173,6 +176,26 @@ void check_id_re_declaration(symbol_t* s, tree_node_t* node) {
     check_id_re_declaration(s, node->right);
 }
 
+int frame_size(tree_node_t* node) {
+
+    int count = 0;
+
+    if (!node) {
+        return 0;
+    }
+
+    symbol_t* s = (symbol_t*) node->value;
+    if (s->flag == DECL_F || s->flag == UN_OP_F || s->flag == BIN_OP_F) {
+       count++;
+    }
+
+    count += frame_size(node->left);
+    count += frame_size(node->middle);
+    count += frame_size(node->right);
+
+    return count;
+}
+
 void check_types(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -210,8 +233,16 @@ void check_types(symbol_t* s, tree_node_t* node) {
         }
     }
     if (s->flag == PROC_F) {
+        printf("IN PROC ********************** \n");
         check_id_re_declaration(s, node->right);
-        validate_proc(s, node->right); // node->right because there is the block
+        validate_proc_returns_type(s, node->right); // node->right because there is the block
+        int size = frame_size(node->right);
+        printf("GLOB: %d \n", glob_offset);
+        printf("MEM: %d \n", MEM_OFFSET);
+        printf("PROC OFFSET: %d \n", s->offset);
+        printf("SIZE: %d \n", size);
+        glob_offset = glob_offset - size;
+        s->offset = glob_offset * MEM_OFFSET;
     }
     if (s->flag == CALL_F) {
         validate_params(s, node->middle);
