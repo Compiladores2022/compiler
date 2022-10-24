@@ -13,6 +13,8 @@ typedef struct {
 
 list_t* init_list(void);
 
+int is_empty(list_t* l);
+
 void add(list_t* l, void* v);
 
 void add_first(list_t* l, void* v);

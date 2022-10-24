@@ -1,8 +1,12 @@
 program {
     integer x = 12;
     integer y = 3;
-    integer main(integer x, integer y) {
+    integer f(integer x, integer y) {
     	integer x = 1;
         return x % y;
+    }
+
+    integer main() {
+        return f(1,2);
     }
 }

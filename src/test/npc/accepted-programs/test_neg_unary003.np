@@ -5,8 +5,13 @@ program {
     bool z = !(x || y);
     bool w = !x && !y;
 
-    bool main() {
-        return z == w;
+    integer main() {
+        if (z == w) {
+            return 0;
+        } else {
+          return 1;
+        }
+        return 0;
     }
 
 }

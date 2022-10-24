@@ -2,7 +2,7 @@ program {
     integer x = 12;
     integer y = 3;
     bool z = true;
-    integer main(integer y) {
+    integer f(integer y) {
     	integer x = 1;
         while (x > 1) {
             bool z = false;
@@ -13,5 +13,9 @@ program {
             z = z && (x > 1);
         }
         return x % y;
+    }
+
+    integer main() {
+        return f(4);
     }
 }

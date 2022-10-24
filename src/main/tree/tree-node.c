@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "tree-node.h"
+#include "../utils/utils.h"
 #include "../symbol/symbol.h"
 
 tree_node_t* init_leaf(void* value) {
@@ -72,8 +73,12 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
     }
     if (s->flag == IF_F) {
         traverse_tree(root->middle, f); // We process the cond first
+        // jump_to_label1_if(!cond)
         traverse_tree(root->left, f);
+        // jump_to_label2
+        // label1
         traverse_tree(root->right, f);
+        //label2
         (*f)(s, root);
     }
     if (s->flag == WHILE_F) {
@@ -86,6 +91,7 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*)) {
         traverse_tree(root->right, f);
     }
     if (s->flag == PROC_F) {
+        list_procedures(s);
         traverse_tree(root->left, f);
         traverse_tree(root->right, f);
         (*f)(s, root);
