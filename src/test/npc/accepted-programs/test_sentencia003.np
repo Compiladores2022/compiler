@@ -1,7 +1,12 @@
 program {
 
-    bool main() {
-        return  (false && true || true);
+    integer main() {
+        if (false && true || true) {
+           return 0;
+        } else {
+           return 1;
+        }
+        return 0;
     }
 
 } 

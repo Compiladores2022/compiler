@@ -5,6 +5,8 @@
 #include "utils.h"
 #include "../npc/parser.tab.h"
 
+extern list_t* procedures;
+
 const char* extension(const char path[])
 {
     const char *result;
@@ -114,6 +116,16 @@ list_t* enlist(tree_node_t* root, list_t* params) {
     enlist(root->right, params);
 }
 
+void validate_main_profile(type_t type, tree_node_t* params) {
+    if (type != INT_T && type != VOID_T)
+        yyerror("Function main() can only return integer or void types");
+
+    list_t* params_list = init_list();
+    params_list = enlist(params, params_list);
+    if (!is_empty(params_list))
+        yyerror("Cannot pass arguments to main function");
+}
+
 int is_symbol_in_list(list_t* list, symbol_t* s) {
     node_t* cursor = list->head->next;
     while (cursor) {
@@ -124,4 +136,17 @@ int is_symbol_in_list(list_t* list, symbol_t* s) {
         cursor = cursor->next;
     }
     return 0;
+}
+
+void list_procedures(symbol_t* s) {
+    if (search_symbol_l(procedures, s->name) != NULL) {
+        return;
+    }
+    add_symbol(procedures, s);
+}
+
+void check_main(list_t* procedures) {
+    if (search_symbol_l(procedures, "main") == NULL) {
+        yyerror("Could not find a function main");
+    }
 }

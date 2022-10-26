@@ -2,7 +2,6 @@ program {
 
     integer main() {
         return 2 * 14 + 1; 
-        //Resultado esperado = 29
     }
 
 }

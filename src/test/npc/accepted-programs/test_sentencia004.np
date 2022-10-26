@@ -1,8 +1,13 @@
 program {
     bool y = true;
 
-    bool main() {
-        return  (false && true || true);
+    integer main() {
+        if (false && true || true) {
+            return 0;
+        } else {
+            return 1;
+        }
+        return 0;
         // & tiene predencia sobre el | - resultado esperado = true
         // bool x = false;
         // return x & y;

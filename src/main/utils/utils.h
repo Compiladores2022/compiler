@@ -30,8 +30,14 @@ void show_tree(tree_node_t* root);
 
 list_t* enlist(tree_node_t* root, list_t* params);
 
+void validate_main_profile(type_t type, tree_node_t* params);
+
 int is_symbol_in_list(list_t* list, symbol_t* s);
 
 void show_params(list_t* params);
+
+void list_procedures(symbol_t* s);
+
+void check_main(list_t* procedures);
 
 #endif

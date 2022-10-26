@@ -144,6 +144,9 @@ tree_node_t* build_param(symtable_t* st, type_t param_type, char* param_name) {
 }
 
 tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, tree_node_t* params, tree_node_t* proc_block) {
+    if (!strcmp(proc_name, "main")) {
+        validate_main_profile(proc_type, params);
+    }
     symbol_t* symbol = build_id(st, proc_name, proc_type, PROC_F);
     list_t* params_list = init_list();
     symbol->params = enlist(params, params_list);

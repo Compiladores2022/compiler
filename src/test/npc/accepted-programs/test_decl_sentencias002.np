@@ -5,21 +5,9 @@ program {
     integer  x1 =2;
     bool b2 = false || true;
 
-    bool main() {
-        b2 = (false);
-        return b2;
+    integer main() {
+        x1 = 4;
+        return x1 + 1;
     }
-
-// x1 = x1 * aux + 1;
-// return ((x1));
-
-// x1 = x1 * aux + 1;
-// return ((x1));
-
-// x1 = x1 * aux + 1;
-// return ((aux + 2)*4*8*x1);
-
-// x1 = x1 + 10;
-// return ( (x1 +1)*1*1*1);
 
 }
