@@ -22,3 +22,10 @@ test_div002,-5
 test_if001,1
 test_if002,12312
 test_if003,1234
+test_fib0,0
+test_fib1,1
+test_fib5,5
+test_fib7,13
+test_fib9,34
+test_fib10,55
+test_fact10,3628800

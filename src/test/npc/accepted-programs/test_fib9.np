@@ -1,0 +1,20 @@
+program {
+
+    integer main() {
+        integer n = 9;
+        integer fib_n = 0;
+        integer fib_n1 = 1;
+        integer i = 0;
+        if (n == 0) then {
+            return fib_n;
+        }
+        while (i < n) {
+            integer aux = fib_n1;
+            fib_n1 = fib_n1 + fib_n;
+            fib_n = aux;
+            i = i + 1;
+        }
+        return fib_n;
+    }
+
+}
