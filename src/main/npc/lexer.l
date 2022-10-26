@@ -12,6 +12,8 @@ void yyerror(const char* msg);
 
 int lineno();
 
+int error_count;
+
 %}
 
 %option noyywrap
@@ -52,55 +54,55 @@ other .
 %%
 
 {eol}                           {
-                                    printf("EOL : %s\n", yytext);
+                                    // printf("EOL : %s\n", yytext);
                                     return *yytext;
                                 }
 
 {comma}                         {
-                                    printf("COMMA : %s\n", yytext);
+                                    // printf("COMMA : %s\n", yytext);
                                     return *yytext;
                                 }
 
 {brackets}                      {
-                                    printf("BRACKET : %s\n", yytext);
+                                    // printf("BRACKET : %s\n", yytext);
                                     return *yytext;
                                 }
 
 {program}                       {
-                                    printf("PROG : %s\n",yytext);
+                                    // printf("PROG : %s\n",yytext);
                                     return PROG;
                                 }
 
 {extern}                        {
-                                    printf("EXTERN : %s\n",yytext);
+                                    // printf("EXTERN : %s\n",yytext);
                                     return EXTERN;
                                 }
 
 {integer_literal}               {
-                                    printf("INTEGER : %d\n",atoi(yytext));
+                                    // printf("INTEGER : %d\n",atoi(yytext));
                                     yylval.ival = atoi(yytext);
                                     return INTEGER;
                                 }
 
 {bool_literal}                  {
-                                    printf("BOOL : %s\n", yytext);
+                                    // printf("BOOL : %s\n", yytext);
                                     yylval.bval = atob(yytext);
                                     return BOOL;
                                 }
 
 {type}                          {
-                                    printf("TYPE : %s\n", yytext);
+                                    // printf("TYPE : %s\n", yytext);
                                     yylval.tval = atot(yytext);
                                     return TYPE;
                                 }
 
 {return}                        {
-                                    printf("RETURN : %s\n", yytext);
+                                    // printf("RETURN : %s\n", yytext);
                                     return RETURN;
                                 }
 
 {assignment}                    {
-                                    printf("ASSIGNMENT : %s\n", yytext);
+                                    // printf("ASSIGNMENT : %s\n", yytext);
                                     yylval.sval = strdup(yytext);
                                     return ASSIGNMENT;
                                 }
@@ -110,7 +112,7 @@ other .
                                 }
 
 {eq_op}                         {
-                                    printf("BIN_OP : %s\n", yytext);
+                                    // printf("BIN_OP : %s\n", yytext);
                                     yylval.sval = strdup(yytext);
                                     return EQT;
 
@@ -127,33 +129,33 @@ other .
                                 }
 
 {bin_op}                        {
-                                    printf("OP : %s\n",yytext);
+                                    // printf("OP : %s\n",yytext);
                                     yylval.sval = strdup(yytext);
                                     return *yytext;
                                 }
 
 {if}                            {
-                                    printf("IF : %s\n",yytext);
+                                    // printf("IF : %s\n",yytext);
                                     return IF;
                                 }
 
 {then}                          {
-                                    printf("THEN : %s\n",yytext);
+                                    // printf("THEN : %s\n",yytext);
                                     return THEN;
                                 }
 
 {else}                          {
-                                    printf("ELSE : %s\n",yytext);
+                                    // printf("ELSE : %s\n",yytext);
                                     return ELSE;
                                 }
 
 {while}                         {
-                                    printf("WHILE : %s\n",yytext);
+                                    // printf("WHILE : %s\n",yytext);
                                     return WHILE;
                                 }
 
 {id}                            {
-                                    printf("ID : %s\n",yytext);
+                                    // printf("ID : %s\n",yytext);
                                     yylval.sval = strdup(yytext);
                                     return ID;
                                 }
@@ -173,12 +175,12 @@ other .
 %%
 
 void yyerror(const char* msg) {
+    error_count++;
     if (!msg) {
 	    printf("%s%d\n","-> Syntax error in line: ",yylineno);
     } else {
         printf("%s\n", msg);
     }
-    exit(1);
 }
 
 int lineno() {

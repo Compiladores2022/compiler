@@ -40,4 +40,6 @@ void list_procedures(symbol_t* s);
 
 void check_main(list_t* procedures);
 
+char* format_err(char* err, int lineno);
+
 #endif

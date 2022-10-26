@@ -11,42 +11,42 @@ extern int glob_offset;
 char* expr_type_err_msg(int lineno, type_t operation_type, type_t operand_type) {
     char* msg = malloc(128 * sizeof(char));
     if (operation_type == INT_T) {
-        sprintf(msg, "Type error in line %d - Arithmetic expressions do not accept %s type operands",
-                lineno, show_type(operand_type));
+        sprintf(msg, "Arithmetic expressions do not accept %s type operands",
+                show_type(operand_type));
     } else if (operation_type == BOOL_T) {
-        sprintf(msg, "Type error in line %d - Boolean expressions do not accept %s type operands",
-                lineno, show_type(operand_type));
+        sprintf(msg, "Boolean expressions do not accept %s type operands",
+                show_type(operand_type));
     }
-    return msg;
+    return format_err(msg, lineno);
 }
 
 char* eq_cmp_type_err_msg(int lineno) {
     char* msg = malloc(128 * sizeof(char));
-    sprintf(msg, "Type error in line %d - == comparison must be used between operands of the same type", lineno);
-    return msg;
+    sprintf(msg, "== comparison must be used between operands of the same type");
+    return format_err(msg, lineno);
 }
 
 char* gt_lt_cmp_type_err_msg(int lineno, char* op) {
     char* msg = malloc(128 * sizeof(char));
-    sprintf(msg, "Type error in line %d - %s comparison must be used between integer operands", lineno, op);
-    return msg;
+    sprintf(msg, "%s comparison must be used between integer operands", op);
+    return format_err(msg, lineno);
 }
 
 char* diff_param_arg_type_err_msg(type_t param_type, type_t arg_type, char* proc_name, int lineno, int param_index) {
     char* msg = (char*) malloc(100 * sizeof(char));
     sprintf(msg, "%s for %s in the %dth parameter", err_msg(lineno, param_type, arg_type), proc_name, param_index);
-    return msg;
+    return format_err(msg, lineno);
 }
 
 char* diff_size_of_params_args(node_t* params_cursor, node_t* args_cursor, char* proc_name, int lineno) {
     char* msg = (char*) malloc(100 * sizeof(char));
     if (params_cursor) {
-        sprintf(msg, "Arguments missing for %s in line %d", proc_name, lineno);
+        sprintf(msg, "Arguments missing for %s", proc_name);
     }
     if (args_cursor) {
-        sprintf(msg, "Too many arguments for %s in line %d", proc_name, lineno);
+        sprintf(msg, "Too many arguments for %s", proc_name);
     }
-    return msg;
+    return format_err(msg, lineno);
 }
 
 void validate_arithmetic_expression(int lineno, type_t left, type_t right) {
@@ -96,7 +96,7 @@ type_t validate_binary_expr(symbol_t* s, type_t left, type_t right) {
     } else {
         char* err_msg = malloc(128 * sizeof(char));
         sprintf(err_msg, "Undefined operation '%s'", s->name);
-        yyerror(err_msg);
+        yyerror(format_err(err_msg, s->lineno));
     }
 }
 
@@ -114,7 +114,7 @@ type_t validate_unary_expr(symbol_t* s, type_t operand) {
     } else {
         char* err_msg = malloc(128 * sizeof(char));
         sprintf(err_msg, "Undefined operation '%s'", s->name);
-        yyerror(err_msg);
+        yyerror(format_err(err_msg, s->lineno));
     }
 }
 
@@ -233,14 +233,14 @@ void check_types(symbol_t* s, tree_node_t* node) {
         }
     }
     if (s->flag == PROC_F) {
-        printf("IN PROC ********************** \n");
+        /* printf("IN PROC ********************** \n"); */
         check_id_re_declaration(s, node->right);
         validate_proc_returns_type(s, node->right); // node->right because there is the block
         int size = frame_size(node->right);
-        printf("GLOB: %d \n", glob_offset);
-        printf("MEM: %d \n", MEM_OFFSET);
-        printf("PROC OFFSET: %d \n", s->offset);
-        printf("SIZE: %d \n", size);
+        /* printf("GLOB: %d \n", glob_offset); */
+        /* printf("MEM: %d \n", MEM_OFFSET); */
+        /* printf("PROC OFFSET: %d \n", s->offset); */
+        /* printf("SIZE: %d \n", size); */
         glob_offset = glob_offset - size;
         s->offset = glob_offset * MEM_OFFSET;
     }
