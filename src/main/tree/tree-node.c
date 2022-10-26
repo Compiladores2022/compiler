@@ -80,8 +80,10 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*), int is
         (*f)(s, root);
     }
     if (s->flag == WHILE_F) {
-        traverse_tree(root->left, f, is_build_instr_func); // We process the cond first
-        traverse_tree(root->right, f, is_build_instr_func);
+        if (!is_build_instr_func) {
+            traverse_tree(root->left, f, is_build_instr_func); // We process the cond first
+            traverse_tree(root->right, f, is_build_instr_func);
+        }
         (*f)(s, root);
     }
     if (s->flag == BLOCK_F) {

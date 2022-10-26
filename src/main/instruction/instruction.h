@@ -19,6 +19,8 @@ typedef enum instr_type_t {
     NEG,
     RET,
     JMP,
+    JE,
+    JNE,
     LBL
 } instr_type_t;
 

@@ -93,24 +93,52 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         }
     }
     if (s->flag == IF_F) {
+        // generate Condition instructions
         traverse_tree(node->middle, build_instruction_seq, 1);
-        symbol_t* middle = (symbol_t*) node->middle->value;
+        symbol_t* condition = (symbol_t*) node->middle->value;
         symbol_t* skip_then_label = get_label();
         symbol_t* skip_else_label = get_label();
-        instruction_t* instruction = new_instruction(JMP, middle, NULL, skip_then_label);
+        // JMP !Condition Label1 (skip then)
+        instruction_t* instruction = new_instruction(JE, condition, NULL, skip_then_label);
         add_instruction(instruction_seq, instruction);
+        // generate THEN Block instructions
         traverse_tree(node->left, build_instruction_seq, 1);
         if (node->right) {
-            instruction = new_instruction(JMP, middle, NULL, skip_else_label);
+            // JMP Label2 (skip else)
+            instruction = new_instruction(JMP, NULL, NULL, skip_else_label);
             add_instruction(instruction_seq, instruction);
         }
+        // Label1 (skip then)
         instruction = new_instruction(LBL, NULL, NULL, skip_then_label);
         add_instruction(instruction_seq, instruction);
         if (node->right) {
+            // generate ELSE Block instructions
             traverse_tree(node->right, build_instruction_seq, 1);
+            // Label2 (skip else)
             instruction = new_instruction(LBL, NULL, NULL, skip_else_label);
             add_instruction(instruction_seq, instruction);
         }
+    }
+    if (s->flag == WHILE_F) {
+        symbol_t* prev_block_label = get_label();
+        symbol_t* to_cond_label = get_label();
+        // JMP Label2
+        instruction_t* instruction = new_instruction(JMP, NULL, NULL, to_cond_label);
+        add_instruction(instruction_seq, instruction);
+        // Label1
+        instruction = new_instruction(LBL, NULL, NULL, prev_block_label);
+        add_instruction(instruction_seq, instruction);
+        // generate Block instructions
+        traverse_tree(node->right, build_instruction_seq, 1);
+        // Label2
+        instruction = new_instruction(LBL, NULL, NULL, to_cond_label);
+        add_instruction(instruction_seq, instruction);
+        // generate Condition instructions
+        traverse_tree(node->left, build_instruction_seq, 1);
+        // JMP Cond Label1
+        symbol_t* condition = (symbol_t*) node->left->value;
+        instruction = new_instruction(JNE, condition, NULL, prev_block_label);
+        add_instruction(instruction_seq, instruction);
     }
 }
 
@@ -159,6 +187,12 @@ char* type_to_str(instr_type_t type) {
     }
     if (type == JMP) {
         return "JMP";
+    }
+    if (type == JE) {
+        return "JE";
+    }
+    if (type == JNE) {
+        return "JNE";
     }
     if (type == LBL) {
         return "LBL";

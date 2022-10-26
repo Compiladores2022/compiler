@@ -160,12 +160,22 @@ char* create_ret_instruction(instruction_t* instruction) {
 char* create_jmp_instruction(instruction_t* instruction) {
     char* jmp = (char*) malloc(100 * sizeof(char));
     char* label_name = instruction->s3->name;
-    if (instruction->s1) {
-        sprintf(jmp, "\tcmpl    $0, %d(%%rbp)\n\tje      %s", instruction->s1->offset, label_name);
-    } else {
-        sprintf(jmp, "\tjmp     %s", label_name);
-    }
+    sprintf(jmp, "\tjmp     %s", label_name);
     return jmp;
+}
+
+char* create_je_instruction(instruction_t* instruction) {
+    char* je = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(je, "\tcmpl    $0, %d(%%rbp)\n\tje      %s", instruction->s1->offset, label_name);
+    return je;
+}
+
+char* create_jne_instruction(instruction_t* instruction) {
+    char* jne = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(jne, "\tcmpl    $0, %d(%%rbp)\n\tjne     %s", instruction->s1->offset, label_name);
+    return jne;
 }
 
 char* create_lbl_instruction(instruction_t* instruction) {
@@ -207,6 +217,10 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_ret_instruction(instruction);
         case JMP:
             return create_jmp_instruction(instruction);
+        case JE:
+            return create_je_instruction(instruction);
+        case JNE:
+            return create_jne_instruction(instruction);
         case LBL:
             return create_lbl_instruction(instruction);
         default:
