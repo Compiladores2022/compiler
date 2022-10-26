@@ -12,11 +12,13 @@ symtable_t* init_symtable(void) {
 }
 
 void push_level(symtable_t* st) {
+    /* printf("PUSHING LEVEL \n"); */
     list_t* l = init_list();
     push(st->stack, l);
 }
 
 void pop_level(symtable_t* st) {
+    /* printf("POPPING LEVEL \n"); */
     pop(st->stack);
 }
 

@@ -170,19 +170,19 @@ void show_list(list_t* instructions) {
     node_t* cursor = instructions->head->next;
     while (cursor) {
         instruction_t* instruction = (instruction_t*)cursor->value;
-        printf("Instruction: \n");
-        printf("Type: %s\n", type_to_str(instruction->type));
+        /* printf("Instruction: \n"); */
+        /* printf("Type: %s\n", type_to_str(instruction->type)); */
         if (instruction->s1) {
-            printf("left operand name:  %s\n", instruction->s1->name);
-            printf("left operand value:  %d\n", instruction->s1->value);
+            /* printf("left operand name:  %s\n", instruction->s1->name); */
+            /* printf("left operand value:  %d\n", instruction->s1->value); */
         }
         if (instruction->s2) {
-            printf("right operand name: %s\n", instruction->s2->name);
-            printf("right operand value: %d\n", instruction->s2->value);
+            /* printf("right operand name: %s\n", instruction->s2->name); */
+            /* printf("right operand value: %d\n", instruction->s2->value); */
         }
-        printf("result name: %s\n", instruction->s3->name);
-        printf("result value: %d\n", instruction->s3->value);
-        printf("************\n");
+        /* printf("result name: %s\n", instruction->s3->name); */
+        /* printf("result value: %d\n", instruction->s3->value); */
+        /* printf("************\n"); */
         cursor = cursor->next;
     }
 }

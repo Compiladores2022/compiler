@@ -74,10 +74,15 @@ char* show_type(type_t type) {
 }
 
 char* err_msg(int lineno, int expected_type, int given_type) {
-    char* msg = malloc(128 * sizeof(char));
-    sprintf(msg, "Type error in line %d - Expected %s but %s was found", 
-            lineno, show_type(expected_type), show_type(given_type));
-    return msg;
+    char* msg = malloc(25 * sizeof(char));
+    sprintf(msg, "Expected %s but %s was found", show_type(expected_type), show_type(given_type));
+    return format_err(msg, lineno);
+}
+
+char* format_err(char* err, int lineno) {
+    char* output = malloc(100 * sizeof(char));
+    sprintf(output, "ERROR: in line %d \n\t* %s", lineno, err);
+    return output;
 }
 
 void show_tree(tree_node_t* root) {
@@ -146,7 +151,9 @@ void list_procedures(symbol_t* s) {
 }
 
 void check_main(list_t* procedures) {
+    char* err_msg = malloc(50 * sizeof(char));
     if (search_symbol_l(procedures, "main") == NULL) {
-        yyerror("Could not find a function main");
+        sprintf(err_msg, "Could not find a function main");
+        yyerror(format_err(err_msg, 0));
     }
 }

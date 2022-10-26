@@ -8,10 +8,12 @@ extern FILE *yyin;
 extern void yyerror(const char* msg);
 extern int yyparse();
 extern int lineno();
+extern int error_count;
 
 char* filename;
 
 int main(int argc,char *argv[]) {
+    error_count = 0;
     ++argv,--argc;
     if (argc > 0) {
         filename = argv[0];
@@ -24,5 +26,6 @@ int main(int argc,char *argv[]) {
         yyin = stdin;
     }
     yyparse();
+    printf("%d errors found. \n", error_count);
     return 0;
 }
