@@ -4,7 +4,7 @@ program {
     bool x = !y;
 
     integer main() {
-        if (x == true) {
+        if (x == true) then {
             return 0;
         } else {
             return 1;

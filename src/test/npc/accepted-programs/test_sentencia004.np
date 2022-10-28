@@ -2,7 +2,7 @@ program {
     bool y = true;
 
     integer main() {
-        if (false && true || true) {
+        if (false && true || true) then {
             return 0;
         } else {
             return 1;

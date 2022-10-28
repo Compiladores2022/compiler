@@ -4,7 +4,7 @@ program {
     bool q = true;
 
     integer main() {
-        if (!(!p || q) == false) {
+        if (!(!p || q) == false) then {
             return 0;
         } else {
             return 1;

@@ -6,7 +6,7 @@ program {
     bool w = !x && !y;
 
     integer main() {
-        if (z == w) {
+        if (z == w) then {
             return 0;
         } else {
           return 1;
