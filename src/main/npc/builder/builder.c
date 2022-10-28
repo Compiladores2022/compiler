@@ -47,7 +47,7 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t
         /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */
         insert_symbol(st, s);
     } else {
-        char* msg = (char*) malloc(sizeof(char) * 50);
+        char* msg = (char*) malloc(sizeof(char) * 100);
         sprintf(msg, "Error - Identifier '%s' is trying to be re-declared in line %d", symbol_name, lineno());
         yyerror(msg);
     }
