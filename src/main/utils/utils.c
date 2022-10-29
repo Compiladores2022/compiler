@@ -104,7 +104,7 @@ void show_params(list_t* params) {
     node_t* cursor = params->head->next;
     while(cursor) {
         symbol_t* s = (symbol_t*)cursor->value;
-        printf("PARAM: %s\n", s->name);
+        /* printf("PARAM: %s\n", s->name); */
         cursor = cursor->next;
     }
 }
@@ -122,13 +122,19 @@ list_t* enlist(tree_node_t* root, list_t* params) {
 }
 
 void validate_main_profile(type_t type, tree_node_t* params) {
-    if (type != INT_T && type != VOID_T)
-        yyerror("Function main() can only return integer or void types");
+    if (type != INT_T && type != VOID_T) {
+        char* err_msg = malloc(50 * sizeof(char));
+        sprintf(err_msg, "Function main() can only return integer or void types");
+        yyerror(format_err(err_msg, lineno()));
+    }
 
     list_t* params_list = init_list();
     params_list = enlist(params, params_list);
-    if (!is_empty(params_list))
-        yyerror("Cannot pass arguments to main function");
+    if (!is_empty(params_list)) {
+        char* err_msg = malloc(50 * sizeof(char));
+        sprintf(err_msg, "Cannot pass arguments to main function");
+        yyerror(format_err(err_msg, lineno()));
+    }
 }
 
 int is_symbol_in_list(list_t* list, symbol_t* s) {

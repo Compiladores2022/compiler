@@ -8,7 +8,7 @@ error_keyword_as_id003,syntax error
 error_nombreVar001,syntax error
 error_nombreVar002,-> Syntax error in line:
 error_nombreVar003,syntax error
-error_re_declared_id_001,Error - Identifier 'x' is trying to be re-declared
+error_re_declared_id_001,Identifier 'x' is trying to be re-declared
 error_sintactico001,syntax error
 error_sintactico002,syntax error
 error_sintactico004,syntax error
@@ -43,4 +43,4 @@ error_type_of_call001,Expected bool but integer was found
 error_type_of_call002,Expected integer but bool was found
 error_type_of_call003,Boolean expressions do not accept integer type operands
 error_type_of_call004,Expected void but integer was found
-error_param_re_declaration001,Identifier 'x' from procedure sum is trying to be re-declared
+error_param_re_declaration001,Identifier 'x' from procedure 'sum' is trying to be re-declared

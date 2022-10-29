@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "parser.tab.h"
@@ -27,5 +28,7 @@ int main(int argc,char *argv[]) {
     }
     yyparse();
     printf("%d errors found. \n", error_count);
+    if (error_count > 0)
+        exit(1);
     return 0;
 }

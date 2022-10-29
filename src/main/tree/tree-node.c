@@ -40,6 +40,9 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*), int is
         return;
     }
     symbol_t* s = (symbol_t*)(root->value);
+    if (s == NULL) {
+        return;
+    }
     if (s->flag == ID_F || s->flag == BASIC_F) {
         return;
     }

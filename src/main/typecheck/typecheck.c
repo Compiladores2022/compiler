@@ -34,7 +34,7 @@ char* gt_lt_cmp_type_err_msg(int lineno, char* op) {
 
 char* diff_param_arg_type_err_msg(type_t param_type, type_t arg_type, char* proc_name, int lineno, int param_index) {
     char* msg = (char*) malloc(100 * sizeof(char));
-    sprintf(msg, "%s for %s in the %dth parameter", err_msg(lineno, param_type, arg_type), proc_name, param_index);
+    sprintf(msg, "Expected %s but %s was found for %s in the %dth parameter", show_type(param_type), show_type(arg_type), proc_name, param_index);
     return format_err(msg, lineno);
 }
 
@@ -165,10 +165,9 @@ void check_id_re_declaration(symbol_t* s, tree_node_t* node) {
     if (curr_s->flag == DECL_F) {
         symbol_t* other = (symbol_t*) node->left->value;
         if (is_symbol_in_list(s->params, other)) {
-            char* msg = (char*) malloc(sizeof(char) * 50);
-            sprintf(msg, "Error - Identifier '%s' from procedure %s is trying to be re-declared"\
-                    " in line %d", other->name, s->name, curr_s->lineno);
-            yyerror(msg);
+            char* msg = (char*) malloc(sizeof(char) * 100);
+            sprintf(msg, "Identifier '%s' from procedure '%s' is trying to be re-declared", other->name, s->name);
+            yyerror(format_err(msg, curr_s->lineno));
         }
     }
     check_id_re_declaration(s, node->left);
@@ -185,6 +184,7 @@ int frame_size(tree_node_t* node) {
     }
 
     symbol_t* s = (symbol_t*) node->value;
+
     if (s->flag == DECL_F || s->flag == UN_OP_F || s->flag == BIN_OP_F) {
        count++;
     }
@@ -200,6 +200,9 @@ void check_types(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
         symbol_t* right = (symbol_t*) node->right->value;
+        if (left == NULL || right == NULL) {
+            exit(1);
+        }
         s->type = validate_binary_expr(s, left->type, right->type);
     }
     if (s->flag == UN_OP_F) {

@@ -25,7 +25,9 @@ void out_msg(int status) {
 symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
     symbol_t* s = search_symbol(st, symbol_name);
     if (s == NULL) {
-        yyerror("Undeclared identifier");
+        char* err_msg = malloc(50 * sizeof(char));
+        sprintf(err_msg, "Undeclared identifier '%s'", symbol_name);
+        yyerror(format_err(err_msg, lineno()));
     }
     return s;
 }
@@ -47,9 +49,15 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t
         /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */
         insert_symbol(st, s);
     } else {
+        s = create_symbol();
+        s->name = symbol_name;
+        s->flag = flag;
+        s->type = symbol_type;
+        s->value = 0; // Default value
+        insert_symbol(st, s);
         char* msg = (char*) malloc(sizeof(char) * 100);
-        sprintf(msg, "Error - Identifier '%s' is trying to be re-declared in line %d", symbol_name, lineno());
-        yyerror(msg);
+        sprintf(msg, "Identifier '%s' is trying to be re-declared", symbol_name);
+        yyerror(format_err(msg, lineno()));
     }
     return s;
 }
@@ -157,6 +165,9 @@ tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, 
 tree_node_t* build_call(symtable_t* st, char* proc_name, tree_node_t* arguments) {
     symbol_t* s = create_symbol();
     symbol_t* proc_symbol = find_symbol(st, proc_name);
+    if (proc_symbol == NULL) {
+        return NULL;
+    }
     s->flag = CALL_F;
     s->name = proc_name;
     s->lineno = lineno();

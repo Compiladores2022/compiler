@@ -8,6 +8,7 @@ program {
         bool p = true;
         integer w = 3;
         integer z = suma(w, p);
+        bool y = 1;
         return;
     }
 
