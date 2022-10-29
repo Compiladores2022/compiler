@@ -26,9 +26,17 @@ int main(int argc,char *argv[]) {
     } else {
         yyin = stdin;
     }
+
     yyparse();
-    printf("%d errors found. \n", error_count);
+
+    if (error_count == 1) {
+        printf("1 error found. \n");
+    } else {
+        printf("%d errors found. \n", error_count);
+    }
+
     if (error_count > 0)
         exit(1);
+
     return 0;
 }

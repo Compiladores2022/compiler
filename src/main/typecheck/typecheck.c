@@ -201,7 +201,9 @@ void check_types(symbol_t* s, tree_node_t* node) {
         symbol_t* left = (symbol_t*) node->left->value;
         symbol_t* right = (symbol_t*) node->right->value;
         if (left == NULL || right == NULL) {
-            exit(1);
+            // At this point, if either is null is because we're tying to check
+            // the type of a symbol that doesn't exit (e.g., a var that wasn't declared)
+            exit(1); 
         }
         s->type = validate_binary_expr(s, left->type, right->type);
     }
