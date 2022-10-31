@@ -7,6 +7,8 @@
 
 list_t* instruction_seq;
 
+char* regs_name[6] = {"edi", "esi", "edx","ecx", "r8d", "r9d"};
+
 instr_type_t bin_op_to_instr_type(char* op) {
     if (!strcmp(op, "+")) {
         return ADD;
@@ -148,9 +150,6 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == CALL_F) {
-        const char *a[2];
-        a[0] = "blah";
-        a[1] = "hmm";
         //  int i = 0;
         //  for each p in s->params
         //      mov p to reg[i]
