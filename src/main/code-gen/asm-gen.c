@@ -6,6 +6,12 @@
 
 char* create_mov_instruction(instruction_t* instruction) {
     char* mov = (char*) malloc(100 * sizeof(char));
+    if (instruction->s3->flag == REG_F) {
+        sprintf(mov, "\tmovl    %d(%%rbp), %%%s", instruction->s1->offset, instruction->s3->name);
+        return mov;
+    }
+
+
     if (instruction->s1->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
     } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F || instruction->s1->flag == ID_F) {
@@ -186,6 +192,12 @@ char* create_lbl_instruction(instruction_t* instruction) {
     return lbl;
 }
 
+char* create_call_instruction(instruction_t* instruction) {
+    char* call = (char*) malloc(50 * sizeof(char));
+    sprintf(call, "\tcall    %s", instruction->s1->name);
+    return call;
+}
+
 char* create_asm_instruction(instruction_t* instruction) {
     switch (instruction->type) {
         case ADD:
@@ -224,6 +236,8 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_jne_instruction(instruction);
         case LBL:
             return create_lbl_instruction(instruction);
+        case CALL:
+            return create_call_instruction(instruction);
         default:
             printf("Invalid instruction type\n");
             exit(1);

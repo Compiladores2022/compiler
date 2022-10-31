@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../utils/utils.h"
+#include "../list/list.h"
 #include "../tree/tree-node.h"
 #include "../instruction/instruction.h"
 #include "../instruction/instruction-sequence.h"
@@ -149,16 +151,25 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         instruction = new_instruction(JNE, condition, NULL, prev_block_label);
         add_instruction(instruction_seq, instruction);
     }
+    /*
     if (s->flag == CALL_F) {
         int i = 0;
-        node_t* cursor = s->params->head->next;
-        while (node) {
-            symbol_t* param = (symbol_t*) node->value;
+        list_t* args = enlist(node->left, init_list());
+        node_t* cursor = args->head->next;
+        while (cursor) {
+            symbol_t* param = (symbol_t*) cursor->value;
+            printf("param: %s\n", param->name);
             instruction_t* instruction = new_instruction(MOV, param, NULL, create_register(regs_names[i]));
+            add_instruction(instruction_seq, instruction);
+            cursor = cursor->next;
             i++;
         }
-        // call s->name
+        // Check if we went out of the loop because with traverse all the parameters or because we
+        // need more than 6 parameters
+        instruction_t* call_inst = new_instruction(CALL, s, NULL, NULL);
+        add_instruction(instruction_seq, call_inst);
     }
+    */
 }
 
 char* type_to_str(instr_type_t type) {
