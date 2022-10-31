@@ -65,6 +65,13 @@ symbol_t* get_label() {
     return s;
 }
 
+symbol_t* create_register(char* reg_name) {
+    symbol_t* s = create_symbol();
+    s->name = reg_name;
+    s->flag = REG_F;
+    return s;
+}
+
 void build_instruction_seq(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -139,6 +146,16 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         symbol_t* condition = (symbol_t*) node->left->value;
         instruction = new_instruction(JNE, condition, NULL, prev_block_label);
         add_instruction(instruction_seq, instruction);
+    }
+    if (s->flag == CALL_F) {
+        const char *a[2];
+        a[0] = "blah";
+        a[1] = "hmm";
+        //  int i = 0;
+        //  for each p in s->params
+        //      mov p to reg[i]
+        //      i++
+        //  call s->name
     }
 }
 
@@ -220,4 +237,3 @@ void show_list(list_t* instructions) {
         cursor = cursor->next;
     }
 }
-
