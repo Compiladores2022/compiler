@@ -109,16 +109,16 @@ void show_params(list_t* params) {
     }
 }
 
-list_t* enlist(tree_node_t* root, list_t* params) {
+list_t* enlist(tree_node_t* root, list_t* list) {
     if (root == NULL) {
-        return params;
+        return list;
     }
     symbol_t* s = (symbol_t*)(root->value);
     if (s->flag != LINK_F) {
-        add(params, s);
+        add(list, s);
     }
-    enlist(root->left, params);
-    enlist(root->right, params);
+    enlist(root->left, list);
+    enlist(root->right, list);
 }
 
 void validate_main_profile(type_t type, tree_node_t* params) {

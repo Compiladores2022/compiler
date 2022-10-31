@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../utils/utils.h"
+#include "../list/list.h"
 #include "../tree/tree-node.h"
 #include "../instruction/instruction.h"
 #include "../instruction/instruction-sequence.h"
 
 list_t* instruction_seq;
+
+char* regs_names[6] = {"edi", "esi", "edx","ecx", "r8d", "r9d"};
 
 instr_type_t bin_op_to_instr_type(char* op) {
     if (!strcmp(op, "+")) {
@@ -65,6 +69,12 @@ symbol_t* get_label() {
     return s;
 }
 
+symbol_t* create_register(char* reg_name) {
+    symbol_t* s = create_symbol();
+    s->name = reg_name;
+    s->flag = REG_F;
+    return s;
+}
 
 void build_instruction_seq(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
@@ -166,6 +176,25 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, epilogue_inst);
 
     }
+    /*
+    if (s->flag == CALL_F) {
+        int i = 0;
+        list_t* args = enlist(node->left, init_list());
+        node_t* cursor = args->head->next;
+        while (cursor) {
+            symbol_t* param = (symbol_t*) cursor->value;
+            printf("param: %s\n", param->name);
+            instruction_t* instruction = new_instruction(MOV, param, NULL, create_register(regs_names[i]));
+            add_instruction(instruction_seq, instruction);
+            cursor = cursor->next;
+            i++;
+        }
+        // Check if we went out of the loop because with traverse all the parameters or because we
+        // need more than 6 parameters
+        instruction_t* call_inst = new_instruction(CALL, s, NULL, NULL);
+        add_instruction(instruction_seq, call_inst);
+    }
+    */
 }
 
 
@@ -247,4 +276,3 @@ void show_list(list_t* instructions) {
         cursor = cursor->next;
     }
 }
-
