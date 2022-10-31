@@ -40,6 +40,13 @@ char* create_add_instruction(instruction_t* instruction) {
 }
 
 char* create_sub_instruction(instruction_t* instruction) {
+
+    if (instruction->s2->flag == REG_F) {
+        char* subq = (char*) malloc(25 * sizeof(char));
+        sprintf(subq, "\tsubq    $%d, %%rsp", instruction->s1->offset);
+        return subq;
+    }
+
     char* mov_eax = mov_operand(instruction->s1, "eax");
     char* mov_edx = mov_operand(instruction->s2, "edx");
     char* sub = (char*) malloc(75 * sizeof(char));
@@ -230,20 +237,23 @@ char* create_asm_instruction(instruction_t* instruction) {
     }
 }
 
-char* prologue() {
-    return 
-        "\t.globl main\n"
-        "main:\n"
-        "\tpushq   %rbp\n"
-        "\tmovq    %rsp, %rbp";
+char* prologue(char* name) {
+    char* prologue = (char*) malloc(100 * sizeof(char));
+    sprintf(prologue,"\t.globl %s\n", name);
+    sprintf(prologue,"%s:\n", name);
+    sprintf(prologue,"%s:\n", name);
+    sprintf(prologue, "\tpushq   %%rbp\n");
+    sprintf(prologue, "\tmovq    %%rsp, %%rbp");
+    return prologue;
 }
 
 char* epilogue() {
     return
-        "\tmovq    %rsp, %rbp\n"
-        "\tpopq    %rbp\n"
+        "\tmovq    %%rsp, %%rbp\n"
+        "\tpopq    %%rbp\n"
         "\tret";
 }
+
 
 void create_asm(char* filename, list_t* instruction_seq) {
     FILE* f = fopen(filename, "w+");
@@ -252,7 +262,7 @@ void create_asm(char* filename, list_t* instruction_seq) {
         exit(1);
     }
     
-    fprintf(f, "%s\n", prologue());
+    /* fprintf(f, "%s\n", prologue()); */
 
     node_t* cursor = instruction_seq->head->next;
     while (cursor != NULL) {
@@ -262,7 +272,7 @@ void create_asm(char* filename, list_t* instruction_seq) {
         cursor = cursor->next;
     }
 
-    fprintf(f, "%s\n", epilogue());
+    /* fprintf(f, "%s\n", epilogue()); */
 
     fclose(f);
 }

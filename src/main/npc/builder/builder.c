@@ -44,6 +44,7 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t
         if (flag == ID_F) {
             s->offset = (glob_offset--) * MEM_OFFSET;
         } else if (flag == PARAM_F) {
+            s->offset = (glob_offset--) * MEM_OFFSET;
             // TODO (push upwards?)
         }
         /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */

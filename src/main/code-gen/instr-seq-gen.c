@@ -65,6 +65,7 @@ symbol_t* get_label() {
     return s;
 }
 
+
 void build_instruction_seq(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -140,7 +141,33 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         instruction = new_instruction(JNE, condition, NULL, prev_block_label);
         add_instruction(instruction_seq, instruction);
     }
+    if (s->flag == PROC_F) {
+        // generate prologue(s->name)
+        instruction_t* prologue_inst = new_instruction(ENTER, s, NULL, NULL);
+        add_instruction(instruction_seq, prologue_inst);
+
+        // set frame size
+        symbol_t* rsp = create_symbol();
+        rsp->flag = REG_F;
+        instruction_t* subq = new_instruction(SUB, s, rsp, NULL);
+        add_instruction(instruction_seq, subq);
+
+        // move params to registers
+        instruction_t* mov_arg;
+        for i in range(len(s->params)):
+            mov_arg = new_instruction(MOV, get_ith_param_register, NULL, s->params.get(i)->offset);
+
+
+        // generate block instructions
+        traverse_tree(node->right, build_instruction_seq, 1);
+
+        // generate epilogue()
+        instruction_t* epilogue_inst = new_instruction(LEAVE, NULL, NULL, NULL);
+        add_instruction(instruction_seq, epilogue_inst);
+
+    }
 }
+
 
 char* type_to_str(instr_type_t type) {
     if (type == ADD) {
