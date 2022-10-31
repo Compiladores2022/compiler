@@ -21,7 +21,8 @@ typedef enum instr_type_t {
     JMP,
     JE,
     JNE,
-    LBL
+    LBL,
+    CALL
 } instr_type_t;
 
 typedef struct instruction_t {
