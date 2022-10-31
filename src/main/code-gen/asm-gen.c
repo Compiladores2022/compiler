@@ -6,11 +6,10 @@
 
 char* prologue(char* name) {
     char* prologue = (char*) malloc(100 * sizeof(char));
-    sprintf(prologue,"\t.globl %s\n", name);
-    sprintf(prologue,"%s:\n", name);
-    sprintf(prologue,"%s:\n", name);
-    sprintf(prologue, "\tpushq   %%rbp\n");
-    sprintf(prologue, "\tmovq    %%rsp, %%rbp");
+    sprintf(prologue, "\t.globl %s", name);
+    sprintf(prologue, "%s\n%s:", prologue, name);
+    sprintf(prologue, "%s\n\tpushq   %%rbp", prologue);
+    sprintf(prologue, "%s\n\tmovq    %%rsp, %%rbp", prologue);
     return prologue;
 }
 
@@ -18,7 +17,7 @@ char* epilogue() {
     return
         "\tmovq    %%rsp, %%rbp\n"
         "\tpopq    %%rbp\n"
-        "\tret";
+        "\tret\n";
 }
 
 char* create_mov_instruction(instruction_t* instruction) {
@@ -67,10 +66,9 @@ char* create_add_instruction(instruction_t* instruction) {
 }
 
 char* create_sub_instruction(instruction_t* instruction) {
-
     if (instruction->s2->flag == REG_F) {
         char* subq = (char*) malloc(25 * sizeof(char));
-        sprintf(subq, "\tsubq    $%d, %%rsp", instruction->s1->offset);
+        sprintf(subq, "\tsubq    $%d, %%rsp", -instruction->s1->offset); // here is -offset because we made a substraction
         return subq;
     }
 
@@ -188,7 +186,8 @@ char* create_neg_instruction(instruction_t* instruction) {
 char* create_ret_instruction(instruction_t* instruction) {
     char* ret = (char*) malloc(100 * sizeof(char));
     sprintf(ret, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
-    sprintf(ret, "%s\n\tmovq    %%rsp, %%rbp\n\tpopq    %%rbp\n\tret", ret);
+    //sprintf(ret, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
+    //sprintf(ret, "%s\n\tmovq    %%rsp, %%rbp\n\tpopq    %%rbp\n\tret", ret);
     return ret;
 }
 

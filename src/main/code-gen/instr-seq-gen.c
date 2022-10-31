@@ -179,11 +179,10 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         // generate epilogue
         instruction_t* epilogue_inst = new_instruction(LEAVE, NULL, NULL, NULL);
         add_instruction(instruction_seq, epilogue_inst);
-
     }
     if (s->flag == CALL_F) {
         int i = 0;
-        list_t* args = enlist(node->left, init_list());
+        list_t* args = enlist(node->middle, init_list());
         node_t* cursor = args->head->next;
         while (cursor) {
             symbol_t* param = (symbol_t*) cursor->value;
