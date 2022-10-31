@@ -4,9 +4,30 @@
 #include "../list/list.h"
 #include "../instruction/instruction.h"
 
+char* prologue(char* name) {
+    char* prologue = (char*) malloc(100 * sizeof(char));
+    sprintf(prologue,"\t.globl %s\n", name);
+    sprintf(prologue,"%s:\n", name);
+    sprintf(prologue,"%s:\n", name);
+    sprintf(prologue, "\tpushq   %%rbp\n");
+    sprintf(prologue, "\tmovq    %%rsp, %%rbp");
+    return prologue;
+}
+
+char* epilogue() {
+    return
+        "\tmovq    %%rsp, %%rbp\n"
+        "\tpopq    %%rbp\n"
+        "\tret";
+}
+
 char* create_mov_instruction(instruction_t* instruction) {
     char* mov = (char*) malloc(100 * sizeof(char));
-    if (instruction->s3->flag == REG_F) {
+
+    if (instruction->s1->flag == REG_F) {
+        sprintf(mov, "\tmovl    %%%s, %d(%%rbp)", instruction->s1->name, instruction->s3->offset);
+        return mov;
+    } else if (instruction->s3->flag == REG_F) {
         sprintf(mov, "\tmovl    %d(%%rbp), %%%s", instruction->s1->offset, instruction->s3->name);
         return mov;
     }
@@ -205,6 +226,16 @@ char* create_call_instruction(instruction_t* instruction) {
     return call;
 }
 
+
+char* create_enter_instruction(instruction_t* instruction) {
+    char* enter = prologue(instruction->s1->name);
+    return enter;
+}
+
+char* create_leave_instruction() {
+    return epilogue();
+}
+
 char* create_asm_instruction(instruction_t* instruction) {
     switch (instruction->type) {
         case ADD:
@@ -245,27 +276,14 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_lbl_instruction(instruction);
         case CALL:
             return create_call_instruction(instruction);
+        case ENTER:
+            return create_enter_instruction(instruction);
+        case LEAVE:
+            return create_leave_instruction();
         default:
             printf("Invalid instruction type\n");
             exit(1);
     }
-}
-
-char* prologue(char* name) {
-    char* prologue = (char*) malloc(100 * sizeof(char));
-    sprintf(prologue,"\t.globl %s\n", name);
-    sprintf(prologue,"%s:\n", name);
-    sprintf(prologue,"%s:\n", name);
-    sprintf(prologue, "\tpushq   %%rbp\n");
-    sprintf(prologue, "\tmovq    %%rsp, %%rbp");
-    return prologue;
-}
-
-char* epilogue() {
-    return
-        "\tmovq    %%rsp, %%rbp\n"
-        "\tpopq    %%rbp\n"
-        "\tret";
 }
 
 

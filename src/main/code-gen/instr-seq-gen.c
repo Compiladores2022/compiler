@@ -152,31 +152,35 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == PROC_F) {
-        // generate prologue(s->name)
+        // generate prologue
         instruction_t* prologue_inst = new_instruction(ENTER, s, NULL, NULL);
         add_instruction(instruction_seq, prologue_inst);
 
         // set frame size
-        symbol_t* rsp = create_symbol();
-        rsp->flag = REG_F;
-        instruction_t* subq = new_instruction(SUB, s, rsp, NULL);
+        instruction_t* subq = new_instruction(SUB, s, create_register("rsp"), NULL);
         add_instruction(instruction_seq, subq);
 
         // move params to registers
-        instruction_t* mov_arg;
-        for i in range(len(s->params)):
-            mov_arg = new_instruction(MOV, get_ith_param_register, NULL, s->params.get(i)->offset);
-
+        int i = 0;
+        list_t* params = enlist(node->left, init_list());
+        node_t* cursor = params->head->next;
+        while (cursor) {
+            symbol_t* param = (symbol_t*) cursor->value;
+            printf("param: %s\n", param->name);
+            instruction_t* instruction = new_instruction(MOV, create_register(regs_names[i]), NULL, param);
+            add_instruction(instruction_seq, instruction);
+            cursor = cursor->next;
+            i++;
+        }
 
         // generate block instructions
         traverse_tree(node->right, build_instruction_seq, 1);
 
-        // generate epilogue()
+        // generate epilogue
         instruction_t* epilogue_inst = new_instruction(LEAVE, NULL, NULL, NULL);
         add_instruction(instruction_seq, epilogue_inst);
 
     }
-    /*
     if (s->flag == CALL_F) {
         int i = 0;
         list_t* args = enlist(node->left, init_list());
@@ -194,7 +198,6 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         instruction_t* call_inst = new_instruction(CALL, s, NULL, NULL);
         add_instruction(instruction_seq, call_inst);
     }
-    */
 }
 
 
@@ -252,6 +255,12 @@ char* type_to_str(instr_type_t type) {
     }
     if (type == LBL) {
         return "LBL";
+    }
+    if (type == ENTER) {
+        return "ENTER";
+    }
+    if (type == LEAVE) {
+        return "LEAVE";
     }
     exit(1);
 }
