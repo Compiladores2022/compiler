@@ -1,0 +1,12 @@
+program {
+
+    integer sum(integer x, integer y) {
+        integer x; // it should fail here
+        return x + y;
+    }
+
+    integer main() {
+        return sum(0, -1);
+    }
+
+}

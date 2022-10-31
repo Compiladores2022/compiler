@@ -1,0 +1,8 @@
+program {
+
+    void main() {
+        integer x = 25;
+        return x % 5 == 0;
+    }
+
+}

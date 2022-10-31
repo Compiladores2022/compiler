@@ -1,0 +1,19 @@
+program {
+    integer x = 12;
+    integer y = 3;
+    bool z = true;
+
+    integer main() {
+    	integer x = 1;
+        while (x == 1) {
+            bool z = false;
+            if (!z == false) then {
+               integer x = 2;
+               return x;
+            }
+            z = z && (x > 1);
+            x = x+1;
+        }
+        return x;
+    }
+}

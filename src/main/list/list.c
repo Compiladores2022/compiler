@@ -18,6 +18,10 @@ list_t* init_list(void) {
     return l;
 }
 
+int is_empty(list_t* l) {
+    return (l->head->next == NULL);
+}
+
 void add(list_t* l, void* v) {
     node_t* n = create_node(v);
 

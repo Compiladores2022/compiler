@@ -3,8 +3,13 @@ program {
     bool y = true;
     bool x = !!y;
 
-    bool main() {
-        return x;
+    integer main() {
+        if (x == true) then {
+            return 0;
+        } else {
+            return 1;
+        }
+        return 0;
     }
 
 }

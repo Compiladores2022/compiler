@@ -10,6 +10,8 @@
 #include "../../tree/tree-node.h"
 #include "../parser.tab.h"
 
+#define MEM_OFFSET 4
+
 void out_msg(int status);
 
 symtable_t* symbol_table(symtable_t* st);
@@ -42,7 +44,7 @@ tree_node_t* build_param(symtable_t* st, type_t param_type, char* param_name);
 
 tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, tree_node_t* params, tree_node_t* proc_block);
 
-tree_node_t* build_call(char* proc_name, tree_node_t* arguments);
+tree_node_t* build_call(symtable_t* st, char* proc_name, tree_node_t* arguments);
 
 tree_node_t* build_prog(tree_node_t* declarations, tree_node_t* procedures);
 

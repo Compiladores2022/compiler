@@ -1,0 +1,17 @@
+program {
+
+    integer main() {
+        integer a = 3;
+        integer b = 2;
+        if (a > b) then {
+            integer c = a;
+            integer d = b;
+            return c - d;
+        } else {
+            integer e = b;
+            integer f = a;
+            return f - e;
+        }
+    }
+
+}

@@ -12,8 +12,9 @@ char* create_mov_instruction(instruction_t* instruction) {
         sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
         sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
     } else {
-        printf("%s %d %d\n", instruction->s1->name, instruction->s1->value, instruction->s1->flag);
         printf("Error while attempting to create the asm file\n");
+        exit(1);
+        /* printf("%s %d %d\n", instruction->s1->name, instruction->s1->value, instruction->s1->flag); */
     }
     return mov;
 }
@@ -55,6 +56,26 @@ char* create_mul_instruction(instruction_t* instruction) {
     char* mov_res = (char*) malloc(100 * sizeof(char));
     sprintf(mul, "%s\n%s\n\timull   %%edx, %%eax", mov_edx, mov_eax);
     sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", mul, instruction->s3->offset);
+    return mov_res;
+}
+
+char* create_div_instruction(instruction_t* instruction) {
+    char* mov_eax = mov_operand(instruction->s1, "eax");
+    char* mov_ebx = mov_operand(instruction->s2, "ebx");
+    char* div = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(div, "%s\n%s\n\tcltd\n\tidivl   %%ebx", mov_eax, mov_ebx);
+    sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", div, instruction->s3->offset);
+    return mov_res;
+}
+
+char* create_mod_instruction(instruction_t* instruction) {
+    char* mov_eax = mov_operand(instruction->s1, "eax");
+    char* mov_ebx = mov_operand(instruction->s2, "ebx");
+    char* mod = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(mod, "%s\n%s\n\tcltd\n\tidivl   %%ebx", mov_eax, mov_ebx);
+    sprintf(mov_res, "%s\n\tmovl    %%edx, %d(%%rbp)", mod, instruction->s3->offset);
     return mov_res;
 }
 
@@ -131,9 +152,38 @@ char* create_neg_instruction(instruction_t* instruction) {
 }
 
 char* create_ret_instruction(instruction_t* instruction) {
-    char* mov_eax = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
-    return mov_eax;
+    char* ret = (char*) malloc(100 * sizeof(char));
+    sprintf(ret, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
+    sprintf(ret, "%s\n\tmovq    %%rsp, %%rbp\n\tpopq    %%rbp\n\tret", ret);
+    return ret;
+}
+
+char* create_jmp_instruction(instruction_t* instruction) {
+    char* jmp = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(jmp, "\tjmp     %s", label_name);
+    return jmp;
+}
+
+char* create_je_instruction(instruction_t* instruction) {
+    char* je = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(je, "\tcmpl    $0, %d(%%rbp)\n\tje      %s", instruction->s1->offset, label_name);
+    return je;
+}
+
+char* create_jne_instruction(instruction_t* instruction) {
+    char* jne = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(jne, "\tcmpl    $0, %d(%%rbp)\n\tjne     %s", instruction->s1->offset, label_name);
+    return jne;
+}
+
+char* create_lbl_instruction(instruction_t* instruction) {
+    char* lbl = (char*) malloc(20 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(lbl, "%s:", label_name);
+    return lbl;
 }
 
 char* create_asm_instruction(instruction_t* instruction) {
@@ -144,6 +194,10 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_sub_instruction(instruction);
         case MUL:
             return create_mul_instruction(instruction);
+        case DIV:
+            return create_div_instruction(instruction);
+        case MOD:
+            return create_mod_instruction(instruction);
         case AND:
             return create_and_instruction(instruction);
         case OR:
@@ -162,6 +216,14 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_mov_instruction(instruction);
         case RET:
             return create_ret_instruction(instruction);
+        case JMP:
+            return create_jmp_instruction(instruction);
+        case JE:
+            return create_je_instruction(instruction);
+        case JNE:
+            return create_jne_instruction(instruction);
+        case LBL:
+            return create_lbl_instruction(instruction);
         default:
             printf("Invalid instruction type\n");
             exit(1);

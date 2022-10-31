@@ -1,0 +1,14 @@
+program {
+
+    integer x = 12;
+    integer y = 3;
+
+    integer f(integer y) {
+    	integer x = 1;
+        return x % y;
+    }
+
+    integer main() {
+        return 0;
+    }
+}

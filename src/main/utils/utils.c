@@ -5,6 +5,8 @@
 #include "utils.h"
 #include "../npc/parser.tab.h"
 
+extern list_t* procedures;
+
 const char* extension(const char path[])
 {
     const char *result;
@@ -72,22 +74,15 @@ char* show_type(type_t type) {
 }
 
 char* err_msg(int lineno, int expected_type, int given_type) {
-    char* msg = malloc(128 * sizeof(char));
-    sprintf(msg, "Type error in line %d - Expected %s but %s was found", 
-            lineno, show_type(expected_type), show_type(given_type));
-    return msg;
+    char* msg = malloc(25 * sizeof(char));
+    sprintf(msg, "Expected %s but %s was found", show_type(expected_type), show_type(given_type));
+    return format_err(msg, lineno);
 }
 
-list_t* enlist(tree_node_t* root, list_t* params) {
-    if (root == NULL) {
-        return params;
-    }
-    symbol_t* s = (symbol_t*)(root->value);
-    if (s->flag == PARAM_F) {
-        add(params, s);
-    }
-    enlist(root->left, params);
-    enlist(root->right, params);
+char* format_err(char* err, int lineno) {
+    char* output = malloc(100 * sizeof(char));
+    sprintf(output, "ERROR: in line %d \n\t* %s", lineno, err);
+    return output;
 }
 
 void show_tree(tree_node_t* root) {
@@ -109,7 +104,62 @@ void show_params(list_t* params) {
     node_t* cursor = params->head->next;
     while(cursor) {
         symbol_t* s = (symbol_t*)cursor->value;
-        printf("PARAM: %s\n", s->name);
+        /* printf("PARAM: %s\n", s->name); */
         cursor = cursor->next;
+    }
+}
+
+list_t* enlist(tree_node_t* root, list_t* params) {
+    if (root == NULL) {
+        return params;
+    }
+    symbol_t* s = (symbol_t*)(root->value);
+    if (s->flag != LINK_F) {
+        add(params, s);
+    }
+    enlist(root->left, params);
+    enlist(root->right, params);
+}
+
+void validate_main_profile(type_t type, tree_node_t* params) {
+    if (type != INT_T && type != VOID_T) {
+        char* err_msg = malloc(50 * sizeof(char));
+        sprintf(err_msg, "Function main() can only return integer or void types");
+        yyerror(format_err(err_msg, lineno()));
+    }
+
+    list_t* params_list = init_list();
+    params_list = enlist(params, params_list);
+    if (!is_empty(params_list)) {
+        char* err_msg = malloc(50 * sizeof(char));
+        sprintf(err_msg, "Cannot pass arguments to main function");
+        yyerror(format_err(err_msg, lineno()));
+    }
+}
+
+int is_symbol_in_list(list_t* list, symbol_t* s) {
+    node_t* cursor = list->head->next;
+    while (cursor) {
+        symbol_t* other = (symbol_t*) cursor->value;
+        if (!strcmp(s->name, other->name)) {
+            return 1;
+        }
+        cursor = cursor->next;
+    }
+    return 0;
+}
+
+void list_procedures(symbol_t* s) {
+    if (search_symbol_l(procedures, s->name) != NULL) {
+        return;
+    }
+    add_symbol(procedures, s);
+}
+
+void check_main(list_t* procedures) {
+    char* err_msg = malloc(50 * sizeof(char));
+    if (search_symbol_l(procedures, "main") == NULL) {
+        sprintf(err_msg, "Could not find a function main");
+        yyerror(format_err(err_msg, 0));
     }
 }

@@ -1,0 +1,13 @@
+program {
+
+    integer main() {
+        integer x = 3;
+        integer y;
+        {
+            integer x = 2;
+            y = x;
+        }
+        return y;
+    }
+
+}

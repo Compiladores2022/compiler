@@ -1,0 +1,12 @@
+program {
+
+    bool and(bool p, bool q) {
+        return p && q;
+    }
+
+    void main() {
+        integer x;
+        x = and(true, true);
+    }
+
+}

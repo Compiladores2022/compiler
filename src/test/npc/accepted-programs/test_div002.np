@@ -1,0 +1,10 @@
+program {
+
+    integer w = -10;
+    integer z = 2;
+
+    integer main() {
+        return w / z;
+    }
+
+}

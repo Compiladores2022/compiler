@@ -152,7 +152,7 @@ npc: $(COMMON) \
 # BUILD RULES
 
 $(TARGETS):
-	$(CC) -o $@ $^
+	$(CC) -g -o $@ $^
 
 all: $(TARGETS)
 

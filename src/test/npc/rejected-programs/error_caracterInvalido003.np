@@ -1,6 +1,10 @@
-integer  nombreVar1 = 5;
+program {
 
-nombreVar1 = %true;
-return nombreVar1;
+    integer  nombreVar1 = 5;
 
+    bool main() {
+        nombreVar1 = %true;
+        return nombreVar1;
+    }
 
+}

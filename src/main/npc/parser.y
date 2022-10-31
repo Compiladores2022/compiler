@@ -24,6 +24,7 @@ int yylex();
 
 symtable_t* st;
 tree_node_t* root;
+list_t* procedures;
 extern list_t* instruction_seq;
 extern char* filename;
 
@@ -81,12 +82,13 @@ extern char* filename;
  
 %%
 
-init:                               { st = symbol_table(st); }
+init:                               { st = symbol_table(st); procedures = init_list(); }
     program                         {
-                                        root = $2; traverse_tree(root, check_types);
+                                        root = $2; traverse_tree(root, check_types, 0);
                                         instruction_seq = new_instruction_seq();
-                                        traverse_tree(root, build_instruction_seq);
+                                        traverse_tree(root, build_instruction_seq, 1);
                                         show_list(instruction_seq);
+                                        check_main(procedures);
                                         create_asm(asm_filename(filename), instruction_seq);
                                         out_msg(0);
                                     }
@@ -104,26 +106,32 @@ procedures:
        ;
 
 procedure:
-      TYPE ID '(' params ')' block          { $$ = build_procedure(st, $1, $2, $4, $6); }
-      | TYPE ID '(' params ')' EXTERN ';'   { $$ = build_procedure(st, $1, $2, $4, NULL); }
-      | TYPE ID '(' ')' block               { $$ = build_procedure(st, $1, $2, NULL, $5); }
-      | TYPE ID '(' ')' EXTERN ';'          { $$ = build_procedure(st, $1, $2, NULL, NULL); }
+      TYPE ID  '(' params ')' block                        { pop_level(st); $$ = build_procedure(st, $1, $2, $4, $6); }
+      | TYPE ID '(' params ')' EXTERN ';'                  { $$ = build_procedure(st, $1, $2, $4, NULL); }
+      | TYPE ID '(' ')' block                              { $$ = build_procedure(st, $1, $2, NULL, $5); }
+      | TYPE ID '(' ')' EXTERN ';'                         { $$ = build_procedure(st, $1, $2, NULL, NULL); }
       ;
 
-params:
-      TYPE ID                               { $$ = build_param(st, $1, $2); }
-      | params ',' TYPE ID                  { $$ = link($1, build_param(st, $3, $4)); }
+params: { push_level(st); }
+      TYPE ID                                              { $$ = build_param(st, $2, $3); }
+      | params ',' TYPE ID                                 { $$ = link($1, build_param(st, $3, $4)); }
       ;
 
-statements:
-          statement                         { $$ = $1; }
-          | statements statement            { $$ = link($1, $2); }
-          ;
 
 declarations:
             declaration                     { $$ = $1; }
             | declarations declaration      { $$ = link($1, $2); }
             ;
+
+declaration:
+           TYPE ID ASSIGNMENT expr ';'      { $$ = build_declaration(st, $1, $2, $4); }
+           | TYPE ID ';'                    { $$ = build_declaration(st, $1, $2, NULL); }
+           ;
+
+statements:
+          statement                         { $$ = $1; }
+          | statements statement            { $$ = link($1, $2); }
+          ;
 
 statement:
          assignment                         { $$ = $1; }
@@ -140,32 +148,28 @@ return:
       ;
 
 conditional:
-           IF '(' expr ')' THEN block                   { $$ = build_if($3, $6, NULL); }
-           | IF '(' expr ')' THEN block ELSE block      { $$ = build_if($3, $6, $8); }
+           IF '(' expr ')' THEN block                                    { $$ = build_if($3, $6, NULL); }
+           | IF '(' expr ')' THEN block ELSE block                       { $$ = build_if($3, $6, $8); }
            ;
 
 while:
-     WHILE '(' expr ')' block               { $$ = build_while($3, $5); }
+     WHILE '(' expr ')' block      { $$ = build_while($3, $5); }
      ;
 
-declaration:
-           TYPE ID ASSIGNMENT expr ';'      { $$ = build_declaration(st, $1, $2, $4); }
-           | TYPE ID ';'                    { $$ = build_declaration(st, $1, $2, NULL); }
-           ;
 
 assignment: 
           ID ASSIGNMENT expr ';'            { $$ = build_assignment(st, $1, $3); }
           ;
 
 procedure_call:
-           ID '(' ')'                       { $$ = build_call($1, NULL); }
-           | ID '(' exprs ')'               { $$ = build_call($1, $3); }
+           ID '(' ')'                       { $$ = build_call(st, $1, NULL); }
+           | ID '(' exprs ')'               { $$ = build_call(st, $1, $3); }
            ;
 
 block:
-     '{' '}'                                { $$ = build_block(NULL, NULL); }
-     | '{' statements '}'                   { $$ = build_block(NULL, $2); }
-     | '{' declarations statements '}'      { $$ = build_block($2, $3); }
+     '{' '}'                                                    { $$ = build_block(NULL, NULL); }
+     | '{' statements '}'                                       { $$ = build_block(NULL, $2); }
+     | '{' { push_level(st); } declarations statements '}'      { $$ = build_block($3, $4); pop_level(st); }
      ;
 
 exprs:

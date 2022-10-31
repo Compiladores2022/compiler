@@ -1,7 +1,11 @@
-integer  2aux = 88446;
-bool b1 = (false | true);
+program {
 
-b1 = (false);
-return b1;
+    integer  2aux = 88446;
+    bool b1 = (false | true);
 
+    bool main() {
+        b1 = (false);
+        return b1;
+    }
 
+}

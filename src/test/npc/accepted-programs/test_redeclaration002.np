@@ -1,0 +1,15 @@
+program {
+
+    integer x = 12;
+    integer y = 3;
+    bool z = true;
+
+    integer main() {
+    	integer x = 2;
+        if (x == 2) then {
+            bool z = false;
+            x = 3;
+        }
+        return x;
+    }
+}

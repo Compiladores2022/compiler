@@ -1,0 +1,11 @@
+program {
+
+    integer main() {
+        integer x = 1;
+        integer y = 3;
+        if (x + y) then {
+            return x;
+        }
+    }
+
+}

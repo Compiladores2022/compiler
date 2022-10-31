@@ -1,0 +1,12 @@
+program {
+
+    integer main() {
+        integer x = 12312;
+        integer y = 1234;
+        if (x < y || x == y) then {
+            return x;
+        }
+        return y;
+    }
+
+}

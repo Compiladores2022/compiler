@@ -1,3 +1,10 @@
-integer x = 52;
-integer y = 813;
-return x & y;
+program {
+
+    integer x = 52;
+    integer y = 813;
+
+    bool main() {
+        return x & y;
+    }
+
+}
