@@ -7,7 +7,7 @@
 
 list_t* instruction_seq;
 
-char* regs_name[6] = {"edi", "esi", "edx","ecx", "r8d", "r9d"};
+char* regs_names[6] = {"edi", "esi", "edx","ecx", "r8d", "r9d"};
 
 instr_type_t bin_op_to_instr_type(char* op) {
     if (!strcmp(op, "+")) {
@@ -150,11 +150,14 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == CALL_F) {
-        //  int i = 0;
-        //  for each p in s->params
-        //      mov p to reg[i]
-        //      i++
-        //  call s->name
+        int i = 0;
+        node_t* cursor = s->params->head->next;
+        while (node) {
+            symbol_t* param = (symbol_t*) node->value;
+            instruction_t* instruction = new_instruction(MOV, param, NULL, create_register(regs_names[i]));
+            i++;
+        }
+        // call s->name
     }
 }
 
