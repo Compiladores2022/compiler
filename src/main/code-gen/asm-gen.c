@@ -15,8 +15,8 @@ char* prologue(char* name) {
 
 char* epilogue() {
     return
-        "\tmovq    %%rsp, %%rbp\n"
-        "\tpopq    %%rbp\n"
+        "\tmovq    \%rsp, \%rbp\n"
+        "\tpopq    \%rbp\n"
         "\tret\n";
 }
 
