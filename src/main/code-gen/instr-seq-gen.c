@@ -196,6 +196,8 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         // need more than 6 parameters
         instruction_t* call_inst = new_instruction(CALL, s, NULL, NULL);
         add_instruction(instruction_seq, call_inst);
+        instruction_t* mov_res = new_instruction(MOV, create_register("eax"), NULL, s);
+        add_instruction(instruction_seq, mov_res);
     }
 }
 
