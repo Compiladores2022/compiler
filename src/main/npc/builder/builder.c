@@ -174,6 +174,7 @@ tree_node_t* build_call(symtable_t* st, char* proc_name, tree_node_t* arguments)
     s->lineno = lineno();
     s->params = proc_symbol->params;
     s->type = proc_symbol->type;
+    s->offset = (glob_offset--) * MEM_OFFSET;
     return init_unary_tree_s(s, arguments);
 }
 
