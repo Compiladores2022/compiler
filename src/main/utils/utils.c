@@ -117,6 +117,9 @@ list_t* enlist(tree_node_t* root, list_t* list) {
     if (s->flag != LINK_F) {
         add(list, s);
     }
+    if (s->flag == UN_OP_F || s->flag == BIN_OP_F) { // if the symbol is a OP then we don't traverse the children
+        return list;
+    }
     enlist(root->left, list);
     enlist(root->right, list);
 }
