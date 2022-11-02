@@ -34,11 +34,12 @@ char* create_mov_instruction(instruction_t* instruction) {
 
     if (instruction->s1->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
-    } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F || instruction->s1->flag == ID_F) {
+    } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F 
+            || instruction->s1->flag == ID_F || instruction->s1->flag == CALL_F) {
         sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
         sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
     } else {
-        printf("Error while attempting to create the asm file\n");
+        printf("Error while attempting to create the asm assignment\n");
         exit(1);
         /* printf("%s %d %d\n", instruction->s1->name, instruction->s1->value, instruction->s1->flag); */
     }
@@ -185,8 +186,7 @@ char* create_neg_instruction(instruction_t* instruction) {
 
 char* create_ret_instruction(instruction_t* instruction) {
     char* ret = (char*) malloc(100 * sizeof(char));
-    sprintf(ret, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
-    sprintf(ret, "%s\n\tmovl    %d(%%rbp), %%eax", ret, instruction->s3->offset);
+    sprintf(ret, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
     return ret;
 }
 
