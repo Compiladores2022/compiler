@@ -3,17 +3,21 @@ program {
     integer y = 3;
     bool z = true;
 
+    void print(integer x) extern;
+
     integer main() {
     	integer x = 1;
         while (x == 1) {
             bool z = false;
             if (!z == false) then {
-               integer x = 2;
-               return x;
+                integer x = 2;
+                print(x);
+                return x;
             }
             z = z && (x > 1);
             x = x+1;
         }
+        print(x);
         return x;
     }
 }

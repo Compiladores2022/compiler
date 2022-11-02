@@ -30,7 +30,7 @@ test_redeclaration001,1
 test_redeclaration002,3
 test_redeclaration003,2
 test_sentencia001,29
+test_sentencia002,0
 test_sentencia003,0
-test_sentencia004,0
 test_redeclaration_in_new_block001,2
 test_redeclaration_in_new_block002,3

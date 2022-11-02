@@ -1,11 +1,14 @@
 program {
 
+    void print(integer x) extern;
+    
     integer main() {
         integer n = 0;
         integer fib_n = 0;
         integer fib_n1 = 1;
         integer i = 0;
         if (n == 0) then {
+            print(fib_n);
             return fib_n;
         }
         while (i < n) {

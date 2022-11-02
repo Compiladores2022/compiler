@@ -1,6 +1,9 @@
 program {
 
+    void print(integer x) extern;
+
     integer main() {
+        print(7 % 3);
         return 7 % 3;
     }
 

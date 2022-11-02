@@ -1,11 +1,15 @@
 program {
 
+    void print(integer x) extern;
+
     integer main() {
         integer x = 12312;
         integer y = 1234;
         if (x > y) then {
+            print(x);
             return x;
         }
+        print(y);
         return y;
     }
 

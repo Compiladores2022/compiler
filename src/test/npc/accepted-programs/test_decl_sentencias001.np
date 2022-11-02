@@ -5,8 +5,11 @@ program {
     integer  x1 =2;
     bool b2 = false && true;
 
+    void print(integer x) extern;
+
     integer main() {
         aux = (33);
+        print(aux);
         return aux;
     }
 

@@ -1,11 +1,16 @@
 program {
+    
+    void print(integer x) extern;
 
     integer main() {
         if (false && true || true) then {
-           return 0;
+            print(0);
+            return 0;
         } else {
-           return 1;
+            print(1);
+            return 1;
         }
+        print(0);
         return 0;
     }
 

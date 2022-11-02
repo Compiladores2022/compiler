@@ -3,12 +3,17 @@ program {
     bool y = true;
     bool x = !!y;
 
+    void print(integer x) extern;
+
     integer main() {
         if (x == true) then {
+            print(0);
             return 0;
         } else {
+            print(1);
             return 1;
         }
+        print(0);
         return 0;
     }
 

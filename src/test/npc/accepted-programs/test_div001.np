@@ -3,7 +3,10 @@ program {
     integer w = 21223;
     integer z = 1232;
 
+    void print(integer x) extern;
+
     integer main() {
+        print(w / z);
         return w / z;
     }
 

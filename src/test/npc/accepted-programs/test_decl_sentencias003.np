@@ -4,9 +4,12 @@ program {
     bool b1 = (false || true);
     integer  x1 =2;
     bool b2 = (false||true) && true;
+    
+    void print(integer x) extern;
 
     integer main() {
         aux = x1 + 2;
+        print(aux % 2);
         return aux % 2;
     }
 

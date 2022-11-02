@@ -1,5 +1,7 @@
 program {
 
+    void print(integer x) extern;
+
     integer main() {
         integer fact = 1;
         integer n = 10;
@@ -8,6 +10,7 @@ program {
             fact = fact * i;
             i = i + 1;
         }
+        print(fact);
         return fact;
     }
 

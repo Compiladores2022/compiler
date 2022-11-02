@@ -5,7 +5,10 @@ program {
     integer y = 7 * x; // 56
     integer z = -1 * y; // -56
 
+    void print(integer x) extern;
+
     integer main() {
+        print(-z-6);
         return -z-6; // 50
     }
 

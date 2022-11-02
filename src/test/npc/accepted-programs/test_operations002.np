@@ -4,8 +4,11 @@ program {
     integer y = 7;
     integer z;
 
+    void print(integer x) extern;
+
     integer main() {
         z = x * y;
+        print(z);
         return z;
     }
 

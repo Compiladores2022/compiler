@@ -1,5 +1,7 @@
 program {
 
+    void print(integer x) extern;
+
     integer main() {
         integer n = 10;
         integer fib_n = 0;
@@ -14,6 +16,7 @@ program {
             fib_n = aux;
             i = i + 1;
         }
+        print(fib_n);
         return fib_n;
     }
 

@@ -4,12 +4,15 @@ program {
     integer y = 3;
     bool z = true;
 
+    void print(integer x) extern;
+
     integer main() {
     	integer x = 2;
         if (x == 2) then {
             bool z = false;
             x = 3;
         }
+        print(x);
         return x;
     }
 }

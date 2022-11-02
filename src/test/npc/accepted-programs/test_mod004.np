@@ -3,7 +3,10 @@ program {
     integer x = -13;
     integer y = 2;
 
+    void print(integer x) extern;
+
     integer main() {
+        print(x % y);
         return x % y;
     }
 
