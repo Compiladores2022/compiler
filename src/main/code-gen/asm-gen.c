@@ -15,7 +15,7 @@ char* prologue(char* name) {
 
 char* epilogue() {
     return
-        "\tmovq    \%rsp, \%rbp\n"
+        "\tmovq    \%rbp, \%rsp\n"
         "\tpopq    \%rbp\n"
         "\tret\n";
 }
@@ -186,8 +186,7 @@ char* create_neg_instruction(instruction_t* instruction) {
 char* create_ret_instruction(instruction_t* instruction) {
     char* ret = (char*) malloc(100 * sizeof(char));
     sprintf(ret, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
-    //sprintf(ret, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
-    //sprintf(ret, "%s\n\tmovq    %%rsp, %%rbp\n\tpopq    %%rbp\n\tret", ret);
+    sprintf(ret, "%s\n\tmovl    %d(%%rbp), %%eax", ret, instruction->s3->offset);
     return ret;
 }
 
