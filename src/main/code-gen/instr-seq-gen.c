@@ -76,6 +76,8 @@ symbol_t* create_register(char* reg_name) {
     return s;
 }
 
+tree_node_t* global_decl_node;
+
 void build_instruction_seq(symbol_t* s, tree_node_t* node) {
     if (s->flag == BIN_OP_F) {
         symbol_t* left = (symbol_t*) node->left->value;
@@ -164,6 +166,10 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         instruction_t* subq = new_instruction(SUB, s, create_register("rsp"), NULL);
         add_instruction(instruction_seq, subq);
 
+        if (!strcmp(s->name, "main")) { // add the global declarations
+            traverse_tree(global_decl_node, build_instruction_seq, 1);
+        }
+
         // move params to registers
         int i = 0;
         list_t* params = enlist(node->left, init_list());
@@ -202,6 +208,9 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, call_inst);
         instruction_t* mov_res = new_instruction(MOV, create_register("eax"), NULL, s);
         add_instruction(instruction_seq, mov_res);
+    }
+    if (s->flag == PROG_F) {
+        global_decl_node = node->left;
     }
 }
 

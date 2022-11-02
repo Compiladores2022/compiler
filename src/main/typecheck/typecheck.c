@@ -252,4 +252,7 @@ void check_types(symbol_t* s, tree_node_t* node) {
     if (s->flag == CALL_F) {
         validate_params(s, node->middle);
     }
+    if (s->flag == PROG_F) {
+        return; // Do nothing for PROG flag symbols
+    }
 }

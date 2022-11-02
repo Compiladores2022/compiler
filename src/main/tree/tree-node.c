@@ -108,7 +108,10 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*), int is
         (*f)(s, root);
     }
     if (s->flag == PROG_F) {
-        traverse_tree(root->left, f, is_build_instr_func);
+        if (!is_build_instr_func) {
+            traverse_tree(root->left, f, is_build_instr_func);
+        }
+        (*f)(s, root);
         traverse_tree(root->right, f, is_build_instr_func);
     }
 }
