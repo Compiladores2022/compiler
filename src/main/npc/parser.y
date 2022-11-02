@@ -87,7 +87,6 @@ init:                               { st = symbol_table(st); procedures = init_l
                                         root = $2; traverse_tree(root, check_types, 0);
                                         instruction_seq = new_instruction_seq();
                                         traverse_tree(root, build_instruction_seq, 1);
-                                        show_list(instruction_seq);
                                         check_main(procedures);
                                         create_asm(asm_filename(filename), instruction_seq);
                                         out_msg(0);
@@ -135,7 +134,7 @@ statements:
 
 statement:
          assignment                         { $$ = $1; }
-         | procedure_call                   { $$ = $1; }
+         | procedure_call ';'               { $$ = $1; }
          | conditional                      { $$ = $1; }
          | while                            { $$ = $1; }
          | block                            { $$ = $1; }
@@ -162,8 +161,8 @@ assignment:
           ;
 
 procedure_call:
-           ID '(' ')'                       { $$ = build_call(st, $1, NULL); }
-           | ID '(' exprs ')'               { $$ = build_call(st, $1, $3); }
+           ID '(' ')'                              { $$ = build_call(st, $1, NULL); }
+           | ID '(' exprs ')'                      { $$ = build_call(st, $1, $3); }
            ;
 
 block:
