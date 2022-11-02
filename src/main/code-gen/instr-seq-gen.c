@@ -152,6 +152,10 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == PROC_F) {
+        if (!node->right) { // If block is null then is an extern procedure
+            return;
+        }
+
         // generate prologue
         instruction_t* prologue_inst = new_instruction(ENTER, s, NULL, NULL);
         add_instruction(instruction_seq, prologue_inst);
@@ -180,6 +184,8 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, epilogue_inst);
     }
     if (s->flag == CALL_F) {
+        // generate arguments (possible complex expressions)
+        traverse_tree(node->middle, build_instruction_seq, 1);
         int i = 0;
         list_t* args = enlist(node->middle, init_list());
         node_t* cursor = args->head->next;
