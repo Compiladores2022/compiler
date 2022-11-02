@@ -166,7 +166,6 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         node_t* cursor = params->head->next;
         while (cursor) {
             symbol_t* param = (symbol_t*) cursor->value;
-            printf("param: %s\n", param->name);
             instruction_t* instruction = new_instruction(MOV, create_register(regs_names[i]), NULL, param);
             add_instruction(instruction_seq, instruction);
             cursor = cursor->next;
@@ -186,7 +185,6 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         node_t* cursor = args->head->next;
         while (cursor) {
             symbol_t* param = (symbol_t*) cursor->value;
-            printf("param: %s\n", param->name);
             instruction_t* instruction = new_instruction(MOV, param, NULL, create_register(regs_names[i]));
             add_instruction(instruction_seq, instruction);
             cursor = cursor->next;
