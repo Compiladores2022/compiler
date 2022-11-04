@@ -103,6 +103,9 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
             symbol_t* middle = (symbol_t*) node->middle->value;
             instruction_t* instruction = new_instruction(RET, NULL, NULL, middle);
             add_instruction(instruction_seq, instruction);
+        } else {
+            instruction_t* instruction = new_instruction(RET, NULL, NULL, NULL);
+            add_instruction(instruction_seq, instruction);
         }
     }
     if (s->flag == IF_F) {
@@ -185,9 +188,12 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         // generate block instructions
         traverse_tree(node->right, build_instruction_seq, 1);
 
-        // generate epilogue
-        instruction_t* epilogue_inst = new_instruction(LEAVE, NULL, NULL, NULL);
-        add_instruction(instruction_seq, epilogue_inst);
+        if (s->type == VOID_T) {
+            // generate epilogue only if function is void (otherwise it's included in the ret stmt)
+            instruction_t* epilogue_inst = new_instruction(LEAVE, NULL, NULL, NULL);
+            add_instruction(instruction_seq, epilogue_inst);
+        }
+
     }
     if (s->flag == CALL_F) {
         // generate arguments (possible complex expressions)
