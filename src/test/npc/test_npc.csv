@@ -26,7 +26,7 @@ test_neg_unary003,0
 test_neg_unary004,0
 test_operations001,-4
 test_operations002,21
-test_redeclaration001,1
+test_redeclaration001,0
 test_redeclaration002,3
 test_redeclaration003,2
 test_sentencia001,29

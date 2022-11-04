@@ -6,7 +6,7 @@ program {
     void print(integer x) extern;
 
     integer main() {
-        print(x % y)
+        print(x % y);
         return x % y;
     }
 
