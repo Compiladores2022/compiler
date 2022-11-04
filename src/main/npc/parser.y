@@ -106,7 +106,7 @@ procedures:
 
 procedure:
       TYPE ID  '(' params ')' block                        { pop_level(st); $$ = build_procedure(st, $1, $2, $4, $6); }
-      | TYPE ID '(' params ')' EXTERN ';'                  { $$ = build_procedure(st, $1, $2, $4, NULL); }
+      | TYPE ID '(' params ')' EXTERN ';'                  { pop_level(st); $$ = build_procedure(st, $1, $2, $4, NULL); }
       | TYPE ID '(' ')' block                              { $$ = build_procedure(st, $1, $2, NULL, $5); }
       | TYPE ID '(' ')' EXTERN ';'                         { $$ = build_procedure(st, $1, $2, NULL, NULL); }
       ;
