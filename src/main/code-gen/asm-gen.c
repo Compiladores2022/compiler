@@ -31,7 +31,6 @@ char* create_mov_instruction(instruction_t* instruction) {
         return mov;
     }
 
-
     if (instruction->s1->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
     } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F 
