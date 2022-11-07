@@ -63,6 +63,7 @@ extern char* filename;
 %type <node> expr
 %type <node> exprs
 %type <node> procedure
+%type <node> id_def
 %type <node> procedures
 %type <node> procedure_call
 %type <node> while
@@ -105,11 +106,14 @@ procedures:
        ;
 
 procedure:
-      TYPE ID  '(' params ')' block                        { pop_level(st); $$ = build_procedure(st, $1, $2, $4, $6); }
-      | TYPE ID '(' params ')' EXTERN ';'                  { pop_level(st); $$ = build_procedure(st, $1, $2, $4, NULL); }
-      | TYPE ID '(' ')' block                              { $$ = build_procedure(st, $1, $2, NULL, $5); }
-      | TYPE ID '(' ')' EXTERN ';'                         { $$ = build_procedure(st, $1, $2, NULL, NULL); }
+      id_def '(' params ')' block          { pop_level(st); $$ = build_procedure0($1, $3, $5); }
+      | id_def '(' params ')' EXTERN ';'   { pop_level(st); $$ = build_procedure0($1, $3, NULL); }
+      | id_def '(' ')' block               { $$ = build_procedure0($1, NULL, $4); }
+      | id_def '(' ')' EXTERN ';'          { $$ = build_procedure0($1, NULL, NULL); }
       ;
+
+id_def:
+      TYPE ID { $$ = build_procedure_symbol(st, $1, $2); } 
 
 params: { push_level(st); }
       TYPE ID                                              { $$ = build_param(st, $2, $3); }

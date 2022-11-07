@@ -152,6 +152,23 @@ tree_node_t* build_param(symtable_t* st, type_t param_type, char* param_name) {
     return init_leaf_s(symbol);
 }
 
+tree_node_t* build_procedure_symbol(symtable_t* st, type_t proc_type, char* proc_name) {
+    symbol_t* symbol = build_id(st, proc_name, proc_type, PROC_F);
+    return init_leaf_s(symbol);
+}
+
+tree_node_t* build_procedure0(tree_node_t* proc, tree_node_t* params, tree_node_t* proc_block) {
+    symbol_t* symbol = (symbol_t*) proc->value;
+    if (!strcmp(symbol->name, "main")) {
+        validate_main_profile(symbol->type, params);
+    }
+    list_t* params_list = init_list();
+    symbol->params = enlist(params, params_list);
+    show_params(symbol->params);
+    return init_binary_tree_s(symbol, params, proc_block);
+}
+
+/*
 tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, tree_node_t* params, tree_node_t* proc_block) {
     if (!strcmp(proc_name, "main")) {
         validate_main_profile(proc_type, params);
@@ -162,6 +179,7 @@ tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, 
     show_params(symbol->params);
     return init_binary_tree_s(symbol, params, proc_block);
 }
+*/
 
 tree_node_t* build_call(symtable_t* st, char* proc_name, tree_node_t* arguments) {
     symbol_t* s = create_symbol();
