@@ -197,6 +197,12 @@ char* create_ret_instruction(instruction_t* instruction) {
         //sprintf(ret, "%s\n%s", ret, epilogue());
         return ret;
     }
+    if (instruction->s3->flag == BASIC_F) {
+        sprintf(ret, "\tmovl    $%d, %%eax", instruction->s3->value);
+        sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
+        //sprintf(ret, "%s\n%s", ret, epilogue());
+        return ret;
+    }
     sprintf(ret, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
     sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
     //sprintf(ret, "%s\n%s", ret, epilogue());

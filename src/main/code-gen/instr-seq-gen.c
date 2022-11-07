@@ -193,13 +193,10 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         // generate block instructions
         traverse_tree(node->right, build_instruction_seq, 1);
 
-        //if (s->type == VOID_T) {
-            // generate epilogue only if function is void (otherwise it's included in the ret stmt)
-            symbol_t* proc_out = get_label();
-            instruction_t* epilogue_inst = new_instruction(LEAVE, curr_proc_out_lbl, NULL, NULL);
-            add_instruction(instruction_seq, epilogue_inst);
-        //}
-
+        // generate epilogue
+        symbol_t* proc_out = get_label();
+        instruction_t* epilogue_inst = new_instruction(LEAVE, curr_proc_out_lbl, NULL, NULL);
+        add_instruction(instruction_seq, epilogue_inst);
     }
     if (s->flag == CALL_F) {
         // generate arguments (possible complex expressions)

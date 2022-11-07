@@ -31,7 +31,7 @@ int main(int argc,char *argv[]) {
 
     if (error_count == 1) {
         printf("1 error found. \n");
-    } else {
+    } else if (error_count > 1) {
         printf("%d errors found. \n", error_count);
     }
 

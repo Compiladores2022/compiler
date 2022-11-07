@@ -1,0 +1,6 @@
+program {
+    integer main() {
+        integer x = 1;
+        x = 2;
+    }
+}

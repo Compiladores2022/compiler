@@ -175,6 +175,30 @@ void check_id_re_declaration(symbol_t* s, tree_node_t* node) {
     check_id_re_declaration(s, node->right);
 }
 
+int return_count(tree_node_t* node) {
+    int count = 0;
+    if (!node) {
+        return 0;
+    }
+    symbol_t* s = (symbol_t*) node->value;
+    if (s->flag == RETURN_F) {
+       count++;
+    }
+    count += return_count(node->left);
+    count += return_count(node->middle);
+    count += return_count(node->right);
+
+    return count;
+}
+
+void has_return(symbol_t* s, tree_node_t* node) {
+    char* msg = (char*) malloc(sizeof(char) * 100);
+    if (s->type != VOID_T && return_count(node->right) == 0) {
+        sprintf(msg, "Missing return statement in function %s.", s->name);
+        yyerror(format_err(msg, s->lineno));
+    }
+}
+
 int frame_size(tree_node_t* node) {
 
     int count = 0;
@@ -239,6 +263,7 @@ void check_types(symbol_t* s, tree_node_t* node) {
     }
     if (s->flag == PROC_F) {
         /* printf("IN PROC ********************** \n"); */
+        has_return(s, node->right);
         check_id_re_declaration(s, node->right);
         validate_proc_returns_type(s, node->right); // node->right because there is the block
         int size = frame_size(node->right);
