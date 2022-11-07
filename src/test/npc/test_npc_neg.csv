@@ -44,3 +44,5 @@ error_type_of_call002,Expected integer but bool was found
 error_type_of_call003,Boolean expressions do not accept integer type operands
 error_type_of_call004,Expected void but integer was found
 error_param_re_declaration001,Identifier 'x' from procedure 'sum' is trying to be re-declared
+error_missing_return001, Missing return statement in function main
+error_missing_return002, Missing return statement in function check_true

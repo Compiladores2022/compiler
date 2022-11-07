@@ -17,7 +17,7 @@ char* epilogue() {
     return
         "\tmovq    \%rbp, \%rsp\n"
         "\tpopq    \%rbp\n"
-        "\tret";
+        "\tret\n";
 }
 
 char* create_mov_instruction(instruction_t* instruction) {
@@ -187,6 +187,11 @@ char* create_ret_instruction(instruction_t* instruction) {
     char* ret = (char*) malloc(150 * sizeof(char));
     if (!instruction->s3) {
         sprintf(ret, "\tmovl    $0, %%eax");
+        sprintf(ret, "%s\n%s", ret, epilogue());
+        return ret;
+    }
+    if (instruction->s3->flag == BASIC_F) {
+        sprintf(ret, "\tmovl    $%d, %%eax", instruction->s3->value);
         sprintf(ret, "%s\n%s", ret, epilogue());
         return ret;
     }
