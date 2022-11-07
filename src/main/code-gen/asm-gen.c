@@ -27,7 +27,11 @@ char* create_mov_instruction(instruction_t* instruction) {
         sprintf(mov, "\tmovl    %%%s, %d(%%rbp)", instruction->s1->name, instruction->s3->offset);
         return mov;
     } else if (instruction->s3->flag == REG_F) {
-        sprintf(mov, "\tmovl    %d(%%rbp), %%%s", instruction->s1->offset, instruction->s3->name);
+        if (instruction->s1->flag == BASIC_F) {
+            sprintf(mov, "\tmovl    $%d, %%%s", instruction->s1->value, instruction->s3->name);
+        } else {
+            sprintf(mov, "\tmovl    %d(%%rbp), %%%s", instruction->s1->offset, instruction->s3->name);
+        }
         return mov;
     }
 
