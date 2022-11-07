@@ -13,11 +13,13 @@ char* prologue(char* name) {
     return prologue;
 }
 
-char* epilogue() {
-    return
-        "\tmovq    \%rbp, \%rsp\n"
-        "\tpopq    \%rbp\n"
-        "\tret";
+char* epilogue(char* curr_proc_out_lbl) {
+    char* epilogue = (char*) malloc(100 * sizeof(char));
+    sprintf(epilogue, "%s:", curr_proc_out_lbl);
+    sprintf(epilogue, "%s\n\tmovq    %%rbp, %%rsp", epilogue);
+    sprintf(epilogue, "%s\n\tpopq    %%rbp", epilogue);
+    sprintf(epilogue, "%s\n\tret", epilogue);
+    return epilogue;
 }
 
 char* create_mov_instruction(instruction_t* instruction) {
@@ -191,11 +193,13 @@ char* create_ret_instruction(instruction_t* instruction) {
     char* ret = (char*) malloc(150 * sizeof(char));
     if (!instruction->s3) {
         sprintf(ret, "\tmovl    $0, %%eax");
-        sprintf(ret, "%s\n%s", ret, epilogue());
+        sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
+        //sprintf(ret, "%s\n%s", ret, epilogue());
         return ret;
     }
     sprintf(ret, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
-    sprintf(ret, "%s\n%s", ret, epilogue());
+    sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
+    //sprintf(ret, "%s\n%s", ret, epilogue());
     return ret;
 }
 
@@ -239,8 +243,8 @@ char* create_enter_instruction(instruction_t* instruction) {
     return enter;
 }
 
-char* create_leave_instruction() {
-    return epilogue();
+char* create_leave_instruction(instruction_t* instruction) {
+    return epilogue(instruction->s1->name);
 }
 
 char* create_asm_instruction(instruction_t* instruction) {
@@ -286,7 +290,7 @@ char* create_asm_instruction(instruction_t* instruction) {
         case ENTER:
             return create_enter_instruction(instruction);
         case LEAVE:
-            return create_leave_instruction();
+            return create_leave_instruction(instruction);
         default:
             printf("Invalid instruction type\n");
             exit(1);
