@@ -193,19 +193,14 @@ char* create_ret_instruction(instruction_t* instruction) {
     char* ret = (char*) malloc(150 * sizeof(char));
     if (!instruction->s3) {
         sprintf(ret, "\tmovl    $0, %%eax");
-        sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
-        //sprintf(ret, "%s\n%s", ret, epilogue());
-        return ret;
+    } else {
+        if (instruction->s3->flag == BASIC_F) {
+            sprintf(ret, "\tmovl    $%d, %%eax", instruction->s3->value);
+        } else {
+            sprintf(ret, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
+        }
     }
-    if (instruction->s3->flag == BASIC_F) {
-        sprintf(ret, "\tmovl    $%d, %%eax", instruction->s3->value);
-        sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
-        //sprintf(ret, "%s\n%s", ret, epilogue());
-        return ret;
-    }
-    sprintf(ret, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
     sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
-    //sprintf(ret, "%s\n%s", ret, epilogue());
     return ret;
 }
 
