@@ -63,7 +63,9 @@ extern char* filename;
 %type <node> expr
 %type <node> exprs
 %type <node> procedure
-%type <node> id_def
+%type <node> proc_decl
+%type <node> proc_params_decl
+%type <node> proc_no_params_decl
 %type <node> procedures
 %type <node> procedure_call
 %type <node> while
@@ -106,18 +108,27 @@ procedures:
        ;
 
 procedure:
-      id_def '(' params ')' block          { pop_level(st); $$ = build_procedure0($1, $3, $5); }
-      | id_def '(' params ')' EXTERN ';'   { pop_level(st); $$ = build_procedure0($1, $3, NULL); }
-      | id_def '(' ')' block               { $$ = build_procedure0($1, NULL, $4); }
-      | id_def '(' ')' EXTERN ';'          { $$ = build_procedure0($1, NULL, NULL); }
+      proc_params_decl block                    { pop_level(st); $$ = build_procedure($1, $2); }
+      | proc_params_decl EXTERN ';'             { pop_level(st); $$ = build_procedure($1, NULL); }
+      | proc_no_params_decl block               { $$ = build_procedure($1, $2); }
+      | proc_no_params_decl EXTERN ';'          { $$ = build_procedure($1, NULL); }
       ;
 
-id_def:
-      TYPE ID { $$ = build_procedure_symbol(st, $1, $2); } 
+proc_params_decl:
+      proc_decl '(' params ')'                  { $$ = build_procedure_params($1, $3); } 
+      ;
+
+proc_no_params_decl:
+      proc_decl '(' ')'                         { $$ = build_procedure_params($1, NULL); } 
+      ;
+
+proc_decl:
+      TYPE ID                                   { $$ = build_procedure_symbol(st, $1, $2); }
+      ; 
 
 params: { push_level(st); }
-      TYPE ID                                              { $$ = build_param(st, $2, $3); }
-      | params ',' TYPE ID                                 { $$ = link($1, build_param(st, $3, $4)); }
+      TYPE ID                                   { $$ = build_param(st, $2, $3); }
+      | params ',' TYPE ID                      { $$ = link($1, build_param(st, $3, $4)); }
       ;
 
 

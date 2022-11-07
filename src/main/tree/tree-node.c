@@ -37,23 +37,11 @@ tree_node_t* init_ternary_tree(void* value, tree_node_t* left, tree_node_t* midd
 
 void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*), int is_build_instr_func) {
     if (!root) {
-        printf("Null root\n");
         return;
     }
-    printf("Non-Null root\n");
     symbol_t* s = (symbol_t*)(root->value);
     if (s == NULL) {
-        if (!is_build_instr_func) {
-            printf("Null on type checking\n");
-        } else {
-            printf("Null on instruction building\n");
-        }
         return;
-    }
-    if (!is_build_instr_func) {
-        printf("Type checking symbol: %s\n", s->name);
-    } else {
-        printf("Building instruction for symbol: %s\n", s->name);
     }
     if (s->flag == ID_F || s->flag == BASIC_F) {
         return;
@@ -108,8 +96,7 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*), int is
     if (s->flag == PROC_F) {
         if (!is_build_instr_func) {
             list_procedures(s);
-            traverse_tree(root->left, f, is_build_instr_func);
-            traverse_tree(root->right, f, is_build_instr_func);
+            traverse_tree(root->middle, f, is_build_instr_func);
         }
         (*f)(s, root);
     }

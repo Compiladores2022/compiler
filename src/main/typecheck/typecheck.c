@@ -263,10 +263,10 @@ void check_types(symbol_t* s, tree_node_t* node) {
     }
     if (s->flag == PROC_F) {
         /* printf("IN PROC ********************** \n"); */
-        has_return(s, node->right);
-        check_id_re_declaration(s, node->right);
-        validate_proc_returns_type(s, node->right); // node->right because there is the block
-        int size = frame_size(node->right);
+        has_return(s, node->middle);
+        check_id_re_declaration(s, node->middle);
+        validate_proc_returns_type(s, node->middle); // node->middle because there is the block
+        int size = frame_size(node->middle);
         /* printf("GLOB: %d \n", glob_offset); */
         /* printf("MEM: %d \n", MEM_OFFSET); */
         /* printf("PROC OFFSET: %d \n", s->offset); */

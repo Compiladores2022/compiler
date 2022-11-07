@@ -104,7 +104,7 @@ void show_params(list_t* params) {
     node_t* cursor = params->head->next;
     while(cursor) {
         symbol_t* s = (symbol_t*)cursor->value;
-        /* printf("PARAM: %s\n", s->name); */
+        printf("PARAM: %s\n", s->name);
         cursor = cursor->next;
     }
 }

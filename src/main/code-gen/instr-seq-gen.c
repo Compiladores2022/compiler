@@ -159,7 +159,7 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, instruction);
     }
     if (s->flag == PROC_F) {
-        if (!node->right) { // If block is null then is an extern procedure
+        if (!node->middle) { // If block is null then is an extern procedure
             return;
         }
 
@@ -180,7 +180,8 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
 
         // move params to registers
         int i = 0;
-        list_t* params = enlist(node->left, init_list());
+        symbol_t* symbol = (symbol_t*) node->value;
+        list_t* params = symbol->params; // enlist(node->left, init_list());
         node_t* cursor = params->head->next;
         while (cursor) {
             symbol_t* param = (symbol_t*) cursor->value;
@@ -191,7 +192,7 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         }
 
         // generate block instructions
-        traverse_tree(node->right, build_instruction_seq, 1);
+        traverse_tree(node->middle, build_instruction_seq, 1);
 
         // generate epilogue
         symbol_t* proc_out = get_label();

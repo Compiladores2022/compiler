@@ -41,13 +41,10 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t
         s->flag = flag;
         s->type = symbol_type;
         s->value = 0; // Default value
-        if (flag == ID_F) {
+        if (flag == ID_F || flag == PARAM_F) {
             s->offset = (glob_offset--) * MEM_OFFSET;
-        } else if (flag == PARAM_F) {
-            s->offset = (glob_offset--) * MEM_OFFSET;
-            // TODO (push upwards?)
         }
-        /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */
+        // printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
         insert_symbol(st, s);
     } else {
         s = create_symbol();
@@ -157,29 +154,21 @@ tree_node_t* build_procedure_symbol(symtable_t* st, type_t proc_type, char* proc
     return init_leaf_s(symbol);
 }
 
-tree_node_t* build_procedure0(tree_node_t* proc, tree_node_t* params, tree_node_t* proc_block) {
+tree_node_t* build_procedure_params(tree_node_t* proc, tree_node_t* params) {
     symbol_t* symbol = (symbol_t*) proc->value;
     if (!strcmp(symbol->name, "main")) {
         validate_main_profile(symbol->type, params);
     }
     list_t* params_list = init_list();
     symbol->params = enlist(params, params_list);
-    show_params(symbol->params);
-    return init_binary_tree_s(symbol, params, proc_block);
+    // show_params(symbol->params);
+    return init_leaf_s(symbol);
 }
 
-/*
-tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, tree_node_t* params, tree_node_t* proc_block) {
-    if (!strcmp(proc_name, "main")) {
-        validate_main_profile(proc_type, params);
-    }
-    symbol_t* symbol = build_id(st, proc_name, proc_type, PROC_F);
-    list_t* params_list = init_list();
-    symbol->params = enlist(params, params_list);
-    show_params(symbol->params);
-    return init_binary_tree_s(symbol, params, proc_block);
+tree_node_t* build_procedure(tree_node_t* proc, tree_node_t* proc_block) {
+    symbol_t* symbol = (symbol_t*) proc->value;
+    return init_unary_tree_s(symbol, proc_block);
 }
-*/
 
 tree_node_t* build_call(symtable_t* st, char* proc_name, tree_node_t* arguments) {
     symbol_t* s = create_symbol();
