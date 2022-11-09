@@ -36,3 +36,4 @@ test_redeclaration_in_new_block001,2
 test_redeclaration_in_new_block002,3
 test_prime_numbers,2357235711131719
 test_recursion,8
+test_recursive_fib,01123581321
