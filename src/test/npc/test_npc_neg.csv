@@ -46,3 +46,6 @@ error_type_of_call004,Expected void but integer was found
 error_param_re_declaration001,Identifier 'x' from procedure 'sum' is trying to be re-declared
 error_missing_return001, Missing return statement in function main
 error_missing_return002, Missing return statement in function check_true
+error_missing_main_proc, Could not find a function main
+error_main_with_arguments, Cannot pass arguments to main function
+error_main_return_type, Function main() can only return integer or void types

@@ -1,0 +1,7 @@
+program {
+
+    integer sum(integer x, integer y) {
+        return x + y;
+    }
+
+}
