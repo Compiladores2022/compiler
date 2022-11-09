@@ -87,10 +87,10 @@ extern char* filename;
 
 init:                               { st = symbol_table(st); procedures = init_list(); }
     program                         {
-                                        root = $2; traverse_tree(root, check_types, 0);
+                                        root = $2; check_main(procedures);
+                                        traverse_tree(root, check_types, 0);
                                         instruction_seq = new_instruction_seq();
                                         traverse_tree(root, build_instruction_seq, 1);
-                                        check_main(procedures);
                                         create_asm(asm_filename(filename), instruction_seq);
                                         out_msg(0);
                                     }

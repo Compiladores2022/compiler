@@ -152,7 +152,11 @@ int is_symbol_in_list(list_t* list, symbol_t* s) {
     return 0;
 }
 
-void list_procedures(symbol_t* s) {
+void register_procedure(symbol_t* s) {
+    if (s->flag != PROC_F) {
+        printf("register_procedure must be take a procedure symbol as parameter\n");
+        exit(1);
+    }
     if (search_symbol_l(procedures, s->name) != NULL) {
         return;
     }

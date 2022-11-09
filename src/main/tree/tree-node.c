@@ -95,7 +95,6 @@ void traverse_tree(tree_node_t* root, void (*f)(symbol_t*, tree_node_t*), int is
     }
     if (s->flag == PROC_F) {
         if (!is_build_instr_func) {
-            list_procedures(s);
             traverse_tree(root->middle, f, is_build_instr_func);
         }
         (*f)(s, root);

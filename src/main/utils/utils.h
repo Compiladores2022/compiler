@@ -36,7 +36,7 @@ int is_symbol_in_list(list_t* list, symbol_t* s);
 
 void show_params(list_t* params);
 
-void list_procedures(symbol_t* s);
+void register_procedure(symbol_t* s);
 
 void check_main(list_t* procedures);
 

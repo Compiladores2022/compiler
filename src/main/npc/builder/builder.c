@@ -151,6 +151,7 @@ tree_node_t* build_param(symtable_t* st, type_t param_type, char* param_name) {
 
 tree_node_t* build_procedure_symbol(symtable_t* st, type_t proc_type, char* proc_name) {
     symbol_t* symbol = build_id(st, proc_name, proc_type, PROC_F);
+    register_procedure(symbol);
     return init_leaf_s(symbol);
 }
 
