@@ -55,7 +55,7 @@ char* mov_operand(symbol_t* s, char* reg) {
     char* mov = (char*) malloc(100 * sizeof(char));
     if (s->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %%%s", s->value, reg);
-    } else if (s->flag == ID_F || s->flag == BIN_OP_F || s->flag == UN_OP_F || s->flag == PARAM_F) {
+    } else if (s->flag == ID_F || s->flag == BIN_OP_F || s->flag == UN_OP_F || s->flag == PARAM_F || s->flag == CALL_F) {
         sprintf(mov, "\tmovl    %d(%%rbp), %%%s", s->offset, reg);
     }
     return mov;
