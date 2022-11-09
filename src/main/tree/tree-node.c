@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "tree-node.h"
-#include "../utils/utils.h"
 #include "../symbol/symbol.h"
 
 tree_node_t* init_leaf(void* value) {
