@@ -41,6 +41,7 @@ symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t
         s->flag = flag;
         s->type = symbol_type;
         s->value = 0; // Default value
+        s->global = 0;
         if (flag == ID_F || flag == PARAM_F) {
             s->offset = (glob_offset--) * MEM_OFFSET;
         }
