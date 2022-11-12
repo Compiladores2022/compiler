@@ -1,0 +1,39 @@
+program {
+
+    integer x;
+        
+    void print(integer x) extern;
+
+    void reset() {
+        x = 0;
+    }
+    
+    void show_calls_to_fib() {
+        print(x);
+    }
+
+    integer fib(integer n) {
+        x = x+1;
+        if (n == 0 || n == 1) then {
+            return n;
+        }
+        return fib(n-1) + fib(n-2);
+    }
+
+    void call_fib_with(integer n) {
+        reset();
+        fib(n);
+        show_calls_to_fib();
+    }
+
+    void main() {
+        call_fib_with(0);
+        call_fib_with(1);
+        call_fib_with(2);
+        call_fib_with(3);
+        call_fib_with(4);
+        call_fib_with(5);
+    }
+
+}
+
