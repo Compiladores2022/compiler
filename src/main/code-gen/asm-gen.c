@@ -26,23 +26,43 @@ char* create_mov_instruction(instruction_t* instruction) {
     char* mov = (char*) malloc(100 * sizeof(char));
 
     if (instruction->s1->flag == REG_F) {
-        sprintf(mov, "\tmovl    %%%s, %d(%%rbp)", instruction->s1->name, instruction->s3->offset);
+        if (instruction->s3->global) {
+            sprintf(mov, "\tmovl    %%%s, %s(%%rip)", instruction->s1->name, instruction->s3->name);
+        } else {
+            sprintf(mov, "\tmovl    %%%s, %d(%%rbp)", instruction->s1->name, instruction->s3->offset);
+        }
         return mov;
     } else if (instruction->s3->flag == REG_F) {
         if (instruction->s1->flag == BASIC_F) {
             sprintf(mov, "\tmovl    $%d, %%%s", instruction->s1->value, instruction->s3->name);
         } else {
-            sprintf(mov, "\tmovl    %d(%%rbp), %%%s", instruction->s1->offset, instruction->s3->name);
+            if (instruction->s1->global) {
+                sprintf(mov, "\tmovl    %s(%%rip), %%%s", instruction->s1->name, instruction->s3->name);
+            } else {
+                sprintf(mov, "\tmovl    %d(%%rbp), %%%s", instruction->s1->offset, instruction->s3->name);
+            }
         }
         return mov;
     }
 
     if (instruction->s1->flag == BASIC_F) {
-        sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
+        if (instruction->s3->global) {
+            sprintf(mov, "\tmovl    $%d, %s(%%rip)", instruction->s1->value, instruction->s3->name);
+        } else {
+            sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
+        }
     } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F 
             || instruction->s1->flag == ID_F || instruction->s1->flag == CALL_F) {
-        sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
-        sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
+        if (instruction->s1->global) {
+            sprintf(mov, "\tmovl    %s(%%rip), %%edx", instruction->s1->name);
+        } else {
+            sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
+        }
+        if (instruction->s3->global) {
+            sprintf(mov, "%s\n\tmovl    %%edx, %s(%%rip)", mov, instruction->s3->name);
+        } else {
+            sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
+        }
     } else {
         printf("Error while attempting to create the asm assignment\n");
         exit(1);
@@ -56,7 +76,11 @@ char* mov_operand(symbol_t* s, char* reg) {
     if (s->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %%%s", s->value, reg);
     } else if (s->flag == ID_F || s->flag == BIN_OP_F || s->flag == UN_OP_F || s->flag == PARAM_F || s->flag == CALL_F) {
-        sprintf(mov, "\tmovl    %d(%%rbp), %%%s", s->offset, reg);
+        if (s->global) {
+            sprintf(mov, "\tmovl    %s(%%rip), %%%s", s->name, reg);
+        } else {
+            sprintf(mov, "\tmovl    %d(%%rbp), %%%s", s->offset, reg);
+        }
     }
     return mov;
 }
@@ -248,6 +272,12 @@ char* create_leave_instruction(instruction_t* instruction) {
     return epilogue(instruction->s1->name);
 }
 
+char* create_glob_decl_instruction(instruction_t* instruction) {
+    char* glob_decl = (char*) malloc(50 * sizeof(char));
+    sprintf(glob_decl, "\t.comm    %s,4,4", instruction->s1->name);
+    return glob_decl;
+}
+
 char* create_asm_instruction(instruction_t* instruction) {
     switch (instruction->type) {
         case ADD:
@@ -292,6 +322,8 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_enter_instruction(instruction);
         case LEAVE:
             return create_leave_instruction(instruction);
+        case GLB:
+            return create_glob_decl_instruction(instruction);
         default:
             printf("Invalid instruction type\n");
             exit(1);

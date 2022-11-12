@@ -78,6 +78,19 @@ symbol_t* create_register(char* reg_name) {
     return s;
 }
 
+// TODO: Move this to utils
+void enlist_decl_var_symbols(tree_node_t* root, list_t* list) {
+    if (!root) {
+        return;
+    }
+    symbol_t* s = (symbol_t*) root->value;
+    if (s->flag == DECL_F) {
+        add(list, (symbol_t*) root->left->value);
+    }
+    enlist_decl_var_symbols(root->left, list);
+    enlist_decl_var_symbols(root->right, list);
+}
+
 tree_node_t* global_decl_node;
 
 void build_instruction_seq(symbol_t* s, tree_node_t* node) {
@@ -220,6 +233,16 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, mov_res);
     }
     if (s->flag == PROG_F) {
+        list_t* glob_vars = init_list();
+        enlist_decl_var_symbols(node->left, glob_vars);
+        node_t* cursor = glob_vars->head->next;
+        while (cursor) {
+            symbol_t* s = (symbol_t*) cursor->value;
+            s->global = 1;
+            instruction_t* glob_decl_instr = new_instruction(GLB, s, NULL, NULL);
+            add_instruction(instruction_seq, glob_decl_instr);
+            cursor = cursor->next;
+        }
         global_decl_node = node->left;
     }
 }
