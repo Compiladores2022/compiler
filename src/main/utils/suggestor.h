@@ -3,6 +3,6 @@
 
 #include "../list/list.h"
 
-char* get_suggestion(char* word, list_t* poss_suggestions);
+char* get_suggestion(char* word);
 
 #endif

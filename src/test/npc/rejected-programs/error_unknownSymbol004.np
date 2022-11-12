@@ -1,11 +1,10 @@
 program {
 
-    integer  nombreVar1 = 5;
+    int  nombreVar1 = 5;
     bool b1 = true;
 
     integer main() {
         nombreVar1 = 55;
-        return nombreVar1
     }
 
 }

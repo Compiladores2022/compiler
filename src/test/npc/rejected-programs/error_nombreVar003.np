@@ -2,9 +2,8 @@ program {
 
     integer  nombre!var1 = 45;
 
-    bool main() {
+    void main() {
         b1 = (false);
-        return b1;
     }
 
 }

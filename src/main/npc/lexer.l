@@ -5,13 +5,13 @@
 #include <stdio.h>
 
 #include "../utils/utils.h"
+#include "../utils/suggestor.h"
 #include "../symbol/types.h"
 #include "parser.tab.h"
 
 void yyerror(const char* msg);
 
 int lineno();
-
 int error_count;
 
 %}
@@ -176,8 +176,25 @@ other .
 
 void yyerror(const char* msg) {
     error_count++;
+    char* suggestion;
+
     if (!msg) {
-	    printf("%s%d\n","-> Syntax error in line: ",yylineno);
+        printf("Invalid identifier %s.\n", yytext);
+        if (error_count > 1) {
+            printf("%d errors found.\n", error_count);
+            exit(1);
+        }
+        printf("%d error found.\n", error_count);
+        exit(1);
+    }
+
+    if (!strcmp(msg, "syntax error")) {
+        suggestion = get_suggestion(yytext);
+        if (!strcmp(suggestion, "")) {
+            printf("SYNTAX ERROR: in line %d\n\t* Unknown symbol '%s'.\n", yylineno, yytext);
+            return;
+        }
+        printf("SYNTAX ERROR: in line %d\n\t* Unknown symbol '%s'. Did you mean '%s'?\n", yylineno, yytext, suggestion);
     } else {
         printf("%s\n", msg);
     }

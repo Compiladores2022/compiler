@@ -1,25 +1,25 @@
 program,expected_output
-error_caracterInvalido001,syntax error
-error_caracterInvalido002,syntax error
-error_caracterInvalido003,syntax error
-error_keyword_as_id001,syntax error
-error_keyword_as_id002,Undeclared identifier
-error_keyword_as_id003,syntax error
-error_nombreVar001,syntax error
-error_nombreVar002,-> Syntax error in line:
-error_nombreVar003,syntax error
+error_caracterInvalido001,* Unknown symbol '%'.
+error_caracterInvalido002,* Unknown symbol '}'.
+error_caracterInvalido003,* Unknown symbol '%'.
+error_keyword_as_id001,* Cannot use reserved word 'bool' as an identifier.
+error_keyword_as_id002,* Cannot use reserved word 'integer' as an identifier.
+error_keyword_as_id003,* Cannot use reserved word 'false' as an identifier.
+error_nombreVar001,* Unknown symbol '2'.
+error_nombreVar002,Invalid identifier _.
+error_nombreVar003,* Unknown symbol '!'.
 error_re_declared_id_001,Identifier 'x' is trying to be re-declared
-error_sintactico001,syntax error
-error_sintactico002,syntax error
-error_sintactico004,syntax error
-error_sintactico005,syntax error
-error_sintactico006,syntax error
-error_sintactico007,syntax error
-error_type001,syntax error
+error_sintactico001,* Cannot use reserved word 'integer' as an identifier.
+error_sintactico002,* Cannot use reserved word 'bool' as an identifier.
+error_sintactico004,* Unknown symbol '+'.
+error_sintactico005,* Unknown symbol '='.
+error_sintactico006,* Unknown symbol ')'.
+error_sintactico007,* Cannot use reserved word 'integer' as an identifier.
+error_type001,* Cannot use reserved word 'bool' as an identifier.
 error_type002,Arithmetic expressions do not accept bool type operands
 error_type003,Expected bool but integer was found
-error_type004,-> Syntax error in line:
-error_type005,-> Syntax error in line:
+error_type004,Invalid identifier |.
+error_type005,Invalid identifier &.
 error_type006,Arithmetic expressions do not accept bool type operands
 error_type007,Arithmetic expressions do not accept bool type operands
 error_type008,Arithmetic expressions do not accept bool type operands
@@ -49,3 +49,7 @@ error_missing_return002, Missing return statement in function check_true
 error_missing_main_proc, Could not find a function main
 error_main_with_arguments, Cannot pass arguments to main function
 error_main_return_type, Function main() can only return integer or void types
+error_unknownSymbol001,* Unknown symbol 'Program'. Did you mean 'program'?
+error_unknownSymbol002,* Unknown symbol 'intgr'. Did you mean 'integer'?
+error_unknownSymbol003,* Unknown symbol 'www'.
+error_unknownSymbol004,* Unknown symbol 'int'. Did you mean 'if'?
