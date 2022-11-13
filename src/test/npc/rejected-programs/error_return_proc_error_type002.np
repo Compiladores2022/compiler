@@ -1,0 +1,11 @@
+program {
+
+    integer x = 3;
+    integer y = 20;
+
+
+    bool main() {
+        return x % y;
+    }
+
+}

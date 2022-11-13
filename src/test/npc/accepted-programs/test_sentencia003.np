@@ -1,7 +1,17 @@
 program {
+    
+    void print(integer x) extern;
 
-    bool main() {
-        return  (false && true || true);
+    integer main() {
+        if (false && true || true) then {
+            print(0);
+            return 0;
+        } else {
+            print(1);
+            return 1;
+        }
+        print(0);
+        return 0;
     }
 
 } 

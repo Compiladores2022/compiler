@@ -1,0 +1,16 @@
+program {
+
+    void print(integer x) extern;
+
+    integer main() {
+        integer x = 3;
+        integer y;
+        {
+            integer x = 2;
+            y = x;
+        }
+        print(x);
+        return x;
+    }
+
+}

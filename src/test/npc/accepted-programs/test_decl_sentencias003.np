@@ -4,24 +4,13 @@ program {
     bool b1 = (false || true);
     integer  x1 =2;
     bool b2 = (false||true) && true;
+    
+    void print(integer x) extern;
 
-    bool main() {
-        b2 = (false) && true;
-        return b2 || false;
+    integer main() {
+        aux = x1 + 2;
+        print(aux % 2);
+        return aux % 2;
     }
 
 }
-
-// b1 = true;
-// return ((b1));
-
-// b1 = b1 & b2 | true;
-// return ((b1));
-
-
-// b1 = b1 & b2 & true;
-// b1 = false;
-// return b1 | false;
-
-// b2= b1 | true;
-// return ( (b1 | true)& true& true);

@@ -1,0 +1,19 @@
+program {
+        
+    void print(integer x) extern;
+
+    integer sum(integer x, integer y) {
+        if (y == 0) then {
+            return x;
+        }
+        return sum(x+1, y-1);
+    }
+
+    void main() {
+        integer x = 5;
+        integer y = 3;
+        print(sum(x, y));
+    }
+
+}
+

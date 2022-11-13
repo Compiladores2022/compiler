@@ -3,9 +3,9 @@ program {
     integer  nombreVar1 = 5;
     bool b1 = true;
 
-    bool main() {
+    integer main() {
         nombreVar1 = 55;
-        return nombreVar1 <  nombreVar1 + 1
+        return nombreVar1
     }
 
 }

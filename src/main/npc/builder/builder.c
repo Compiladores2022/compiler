@@ -25,25 +25,38 @@ void out_msg(int status) {
 symbol_t* find_symbol(symtable_t* st, char* symbol_name) {
     symbol_t* s = search_symbol(st, symbol_name);
     if (s == NULL) {
-        yyerror("Undeclared identifier");
+        char* err_msg = malloc(50 * sizeof(char));
+        sprintf(err_msg, "Undeclared identifier '%s'", symbol_name);
+        yyerror(format_err(err_msg, lineno()));
     }
     return s;
 }
 
 symbol_t* build_id(symtable_t* st, char* symbol_name, type_t symbol_type, flag_t flag) {
     symbol_t* s = NULL;
-    if (search_symbol(st, symbol_name) == NULL) {
+    list_t* l = (list_t*) st->stack->head->next->value;
+    if (search_symbol_l(l, symbol_name) == NULL) {
         s = create_symbol();
         s->name = symbol_name;
         s->flag = flag;
         s->type = symbol_type;
         s->value = 0; // Default value
-        s->offset = (glob_offset--) * MEM_OFFSET;
-        /* printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset); */
+        s->global = 0;
+        if (flag == ID_F || flag == PARAM_F) {
+            s->offset = (glob_offset--) * MEM_OFFSET;
+        }
+        // printf("id: %s, OFFSET: %d, glob: %d \n", s->name, s->offset, glob_offset);
         insert_symbol(st, s);
     } else {
-        printf("Error - Identifier '%s' is trying to be re-declared\n", symbol_name);
-        yyerror("Trying to re-declare an identifier");
+        s = create_symbol();
+        s->name = symbol_name;
+        s->flag = flag;
+        s->type = symbol_type;
+        s->value = 0; // Default value
+        insert_symbol(st, s);
+        char* msg = (char*) malloc(sizeof(char) * 100);
+        sprintf(msg, "Identifier '%s' is trying to be re-declared", symbol_name);
+        yyerror(format_err(msg, lineno()));
     }
     return s;
 }
@@ -137,19 +150,40 @@ tree_node_t* build_param(symtable_t* st, type_t param_type, char* param_name) {
     return init_leaf_s(symbol);
 }
 
-tree_node_t* build_procedure(symtable_t* st, type_t proc_type, char* proc_name, tree_node_t* params, tree_node_t* proc_block) {
+tree_node_t* build_procedure_symbol(symtable_t* st, type_t proc_type, char* proc_name) {
     symbol_t* symbol = build_id(st, proc_name, proc_type, PROC_F);
-    list_t* params_list = init_list();
-    symbol->params = enlist(params, params_list);
-    show_params(symbol->params);
-    return init_binary_tree_s(symbol, params, proc_block);
+    register_procedure(symbol);
+    return init_leaf_s(symbol);
 }
 
-tree_node_t* build_call(char* proc_name, tree_node_t* arguments) {
+tree_node_t* build_procedure_params(tree_node_t* proc, tree_node_t* params) {
+    symbol_t* symbol = (symbol_t*) proc->value;
+    if (!strcmp(symbol->name, "main")) {
+        validate_main_profile(symbol->type, params);
+    }
+    symbol->params = init_list();
+    enlist(params, symbol->params);
+    // show_params(symbol->params);
+    return init_leaf_s(symbol);
+}
+
+tree_node_t* build_procedure(tree_node_t* proc, tree_node_t* proc_block) {
+    symbol_t* symbol = (symbol_t*) proc->value;
+    return init_unary_tree_s(symbol, proc_block);
+}
+
+tree_node_t* build_call(symtable_t* st, char* proc_name, tree_node_t* arguments) {
     symbol_t* s = create_symbol();
+    symbol_t* proc_symbol = find_symbol(st, proc_name);
+    if (proc_symbol == NULL) {
+        return NULL;
+    }
     s->flag = CALL_F;
     s->name = proc_name;
     s->lineno = lineno();
+    s->params = proc_symbol->params;
+    s->type = proc_symbol->type;
+    s->offset = (glob_offset--) * MEM_OFFSET;
     return init_unary_tree_s(s, arguments);
 }
 

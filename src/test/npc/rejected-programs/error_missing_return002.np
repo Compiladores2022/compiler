@@ -1,0 +1,15 @@
+program {
+    void print(integer x) extern;
+
+    bool check_true(bool p) {
+        if (p == true) then {
+           print(0);
+        }
+    }
+
+    integer main() {
+        bool x = true;
+        bool ret = check_true(x);
+        return 0;
+    }
+}

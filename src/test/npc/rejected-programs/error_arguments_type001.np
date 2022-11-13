@@ -1,0 +1,15 @@
+program {
+    
+    integer sum(bool i, integer x, integer y) {
+        return x+y;
+    }
+
+    void main() {
+        bool p = true;
+        integer w = 4;
+        bool q = false;
+        integer z = sum(w, p, q);
+        return;
+    }
+
+}

@@ -5,12 +5,12 @@ program {
     integer  x1 =2;
     bool b2 = false && true;
 
-    bool main() {
-        b2 = (false);
-        return b2;
+    void print(integer x) extern;
 
-        // x1 = x1 * aux + 1;
-        // return ((x1));
+    integer main() {
+        aux = (33);
+        print(aux);
+        return aux;
     }
 
 }

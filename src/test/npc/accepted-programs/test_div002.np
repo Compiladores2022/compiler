@@ -1,0 +1,13 @@
+program {
+
+    integer w = -10;
+    integer z = 2;
+
+    void print(integer x) extern;
+
+    integer main() {
+        print(w / z);
+        return w / z;
+    }
+
+}

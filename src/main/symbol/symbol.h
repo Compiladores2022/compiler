@@ -13,6 +13,7 @@ typedef struct {
     int offset;
     int lineno;
     list_t* params;
+    int global;
 } symbol_t;
 
 symbol_t* create_symbol(void);

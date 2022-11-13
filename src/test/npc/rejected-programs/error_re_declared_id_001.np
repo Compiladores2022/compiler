@@ -6,5 +6,4 @@ program {
     bool main() {
         return x;
     }
-
 }

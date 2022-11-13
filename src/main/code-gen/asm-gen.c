@@ -4,16 +4,69 @@
 #include "../list/list.h"
 #include "../instruction/instruction.h"
 
+char* prologue(char* name) {
+    char* prologue = (char*) malloc(100 * sizeof(char));
+    sprintf(prologue, "\t.globl %s", name);
+    sprintf(prologue, "%s\n%s:", prologue, name);
+    sprintf(prologue, "%s\n\tpushq   %%rbp", prologue);
+    sprintf(prologue, "%s\n\tmovq    %%rsp, %%rbp", prologue);
+    return prologue;
+}
+
+char* epilogue(char* curr_proc_out_lbl) {
+    char* epilogue = (char*) malloc(100 * sizeof(char));
+    sprintf(epilogue, "%s:", curr_proc_out_lbl);
+    sprintf(epilogue, "%s\n\tmovq    %%rbp, %%rsp", epilogue);
+    sprintf(epilogue, "%s\n\tpopq    %%rbp", epilogue);
+    sprintf(epilogue, "%s\n\tret", epilogue);
+    return epilogue;
+}
+
 char* create_mov_instruction(instruction_t* instruction) {
     char* mov = (char*) malloc(100 * sizeof(char));
+
+    if (instruction->s1->flag == REG_F) {
+        if (instruction->s3->global) {
+            sprintf(mov, "\tmovl    %%%s, %s(%%rip)", instruction->s1->name, instruction->s3->name);
+        } else {
+            sprintf(mov, "\tmovl    %%%s, %d(%%rbp)", instruction->s1->name, instruction->s3->offset);
+        }
+        return mov;
+    } else if (instruction->s3->flag == REG_F) {
+        if (instruction->s1->flag == BASIC_F) {
+            sprintf(mov, "\tmovl    $%d, %%%s", instruction->s1->value, instruction->s3->name);
+        } else {
+            if (instruction->s1->global) {
+                sprintf(mov, "\tmovl    %s(%%rip), %%%s", instruction->s1->name, instruction->s3->name);
+            } else {
+                sprintf(mov, "\tmovl    %d(%%rbp), %%%s", instruction->s1->offset, instruction->s3->name);
+            }
+        }
+        return mov;
+    }
+
     if (instruction->s1->flag == BASIC_F) {
-        sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
-    } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F || instruction->s1->flag == ID_F) {
-        sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
-        sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
+        if (instruction->s3->global) {
+            sprintf(mov, "\tmovl    $%d, %s(%%rip)", instruction->s1->value, instruction->s3->name);
+        } else {
+            sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
+        }
+    } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F 
+            || instruction->s1->flag == ID_F || instruction->s1->flag == CALL_F) {
+        if (instruction->s1->global) {
+            sprintf(mov, "\tmovl    %s(%%rip), %%edx", instruction->s1->name);
+        } else {
+            sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
+        }
+        if (instruction->s3->global) {
+            sprintf(mov, "%s\n\tmovl    %%edx, %s(%%rip)", mov, instruction->s3->name);
+        } else {
+            sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
+        }
     } else {
-        printf("%s %d %d\n", instruction->s1->name, instruction->s1->value, instruction->s1->flag);
-        printf("Error while attempting to create the asm file\n");
+        printf("Error while attempting to create the asm assignment\n");
+        exit(1);
+        /* printf("%s %d %d\n", instruction->s1->name, instruction->s1->value, instruction->s1->flag); */
     }
     return mov;
 }
@@ -22,8 +75,12 @@ char* mov_operand(symbol_t* s, char* reg) {
     char* mov = (char*) malloc(100 * sizeof(char));
     if (s->flag == BASIC_F) {
         sprintf(mov, "\tmovl    $%d, %%%s", s->value, reg);
-    } else if (s->flag == ID_F || s->flag == BIN_OP_F || s->flag == UN_OP_F) {
-        sprintf(mov, "\tmovl    %d(%%rbp), %%%s", s->offset, reg);
+    } else if (s->flag == ID_F || s->flag == BIN_OP_F || s->flag == UN_OP_F || s->flag == PARAM_F || s->flag == CALL_F) {
+        if (s->global) {
+            sprintf(mov, "\tmovl    %s(%%rip), %%%s", s->name, reg);
+        } else {
+            sprintf(mov, "\tmovl    %d(%%rbp), %%%s", s->offset, reg);
+        }
     }
     return mov;
 }
@@ -39,6 +96,12 @@ char* create_add_instruction(instruction_t* instruction) {
 }
 
 char* create_sub_instruction(instruction_t* instruction) {
+    if (instruction->s2->flag == REG_F) {
+        char* subq = (char*) malloc(25 * sizeof(char));
+        sprintf(subq, "\tsubq    $%d, %%rsp", -instruction->s1->offset); // here is -offset because we made a substraction
+        return subq;
+    }
+
     char* mov_eax = mov_operand(instruction->s1, "eax");
     char* mov_edx = mov_operand(instruction->s2, "edx");
     char* sub = (char*) malloc(75 * sizeof(char));
@@ -55,6 +118,26 @@ char* create_mul_instruction(instruction_t* instruction) {
     char* mov_res = (char*) malloc(100 * sizeof(char));
     sprintf(mul, "%s\n%s\n\timull   %%edx, %%eax", mov_edx, mov_eax);
     sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", mul, instruction->s3->offset);
+    return mov_res;
+}
+
+char* create_div_instruction(instruction_t* instruction) {
+    char* mov_eax = mov_operand(instruction->s1, "eax");
+    char* mov_ebx = mov_operand(instruction->s2, "ebx");
+    char* div = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(div, "%s\n%s\n\tcltd\n\tidivl   %%ebx", mov_eax, mov_ebx);
+    sprintf(mov_res, "%s\n\tmovl    %%eax, %d(%%rbp)", div, instruction->s3->offset);
+    return mov_res;
+}
+
+char* create_mod_instruction(instruction_t* instruction) {
+    char* mov_eax = mov_operand(instruction->s1, "eax");
+    char* mov_ebx = mov_operand(instruction->s2, "ebx");
+    char* mod = (char*) malloc(75 * sizeof(char));
+    char* mov_res = (char*) malloc(100 * sizeof(char));
+    sprintf(mod, "%s\n%s\n\tcltd\n\tidivl   %%ebx", mov_eax, mov_ebx);
+    sprintf(mov_res, "%s\n\tmovl    %%edx, %d(%%rbp)", mod, instruction->s3->offset);
     return mov_res;
 }
 
@@ -131,9 +214,68 @@ char* create_neg_instruction(instruction_t* instruction) {
 }
 
 char* create_ret_instruction(instruction_t* instruction) {
-    char* mov_eax = (char*) malloc(100 * sizeof(char));
-    sprintf(mov_eax, "\tmovl    %d(%%rbp), %%eax\n\tmovl    %%eax, %%edi\n\tcall    print", instruction->s3->offset);
-    return mov_eax;
+    char* ret = (char*) malloc(150 * sizeof(char));
+    if (!instruction->s3) {
+        sprintf(ret, "\tmovl    $0, %%eax");
+    } else {
+        if (instruction->s3->flag == BASIC_F) {
+            sprintf(ret, "\tmovl    $%d, %%eax", instruction->s3->value);
+        } else {
+            sprintf(ret, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
+        }
+    }
+    sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
+    return ret;
+}
+
+char* create_jmp_instruction(instruction_t* instruction) {
+    char* jmp = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(jmp, "\tjmp     %s", label_name);
+    return jmp;
+}
+
+char* create_je_instruction(instruction_t* instruction) {
+    char* je = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(je, "\tcmpl    $0, %d(%%rbp)\n\tje      %s", instruction->s1->offset, label_name);
+    return je;
+}
+
+char* create_jne_instruction(instruction_t* instruction) {
+    char* jne = (char*) malloc(100 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(jne, "\tcmpl    $0, %d(%%rbp)\n\tjne     %s", instruction->s1->offset, label_name);
+    return jne;
+}
+
+char* create_lbl_instruction(instruction_t* instruction) {
+    char* lbl = (char*) malloc(20 * sizeof(char));
+    char* label_name = instruction->s3->name;
+    sprintf(lbl, "%s:", label_name);
+    return lbl;
+}
+
+char* create_call_instruction(instruction_t* instruction) {
+    char* call = (char*) malloc(50 * sizeof(char));
+    sprintf(call, "\tcall    %s", instruction->s1->name);
+    return call;
+}
+
+
+char* create_enter_instruction(instruction_t* instruction) {
+    char* enter = prologue(instruction->s1->name);
+    return enter;
+}
+
+char* create_leave_instruction(instruction_t* instruction) {
+    return epilogue(instruction->s1->name);
+}
+
+char* create_glob_decl_instruction(instruction_t* instruction) {
+    char* glob_decl = (char*) malloc(50 * sizeof(char));
+    sprintf(glob_decl, "\t.comm    %s,4,4", instruction->s1->name);
+    return glob_decl;
 }
 
 char* create_asm_instruction(instruction_t* instruction) {
@@ -144,6 +286,10 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_sub_instruction(instruction);
         case MUL:
             return create_mul_instruction(instruction);
+        case DIV:
+            return create_div_instruction(instruction);
+        case MOD:
+            return create_mod_instruction(instruction);
         case AND:
             return create_and_instruction(instruction);
         case OR:
@@ -162,26 +308,28 @@ char* create_asm_instruction(instruction_t* instruction) {
             return create_mov_instruction(instruction);
         case RET:
             return create_ret_instruction(instruction);
+        case JMP:
+            return create_jmp_instruction(instruction);
+        case JE:
+            return create_je_instruction(instruction);
+        case JNE:
+            return create_jne_instruction(instruction);
+        case LBL:
+            return create_lbl_instruction(instruction);
+        case CALL:
+            return create_call_instruction(instruction);
+        case ENTER:
+            return create_enter_instruction(instruction);
+        case LEAVE:
+            return create_leave_instruction(instruction);
+        case GLB:
+            return create_glob_decl_instruction(instruction);
         default:
             printf("Invalid instruction type\n");
             exit(1);
     }
 }
 
-char* prologue() {
-    return 
-        "\t.globl main\n"
-        "main:\n"
-        "\tpushq   %rbp\n"
-        "\tmovq    %rsp, %rbp";
-}
-
-char* epilogue() {
-    return
-        "\tmovq    %rsp, %rbp\n"
-        "\tpopq    %rbp\n"
-        "\tret";
-}
 
 void create_asm(char* filename, list_t* instruction_seq) {
     FILE* f = fopen(filename, "w+");
@@ -190,7 +338,7 @@ void create_asm(char* filename, list_t* instruction_seq) {
         exit(1);
     }
     
-    fprintf(f, "%s\n", prologue());
+    /* fprintf(f, "%s\n", prologue()); */
 
     node_t* cursor = instruction_seq->head->next;
     while (cursor != NULL) {
@@ -200,7 +348,7 @@ void create_asm(char* filename, list_t* instruction_seq) {
         cursor = cursor->next;
     }
 
-    fprintf(f, "%s\n", epilogue());
+    /* fprintf(f, "%s\n", epilogue()); */
 
     fclose(f);
 }

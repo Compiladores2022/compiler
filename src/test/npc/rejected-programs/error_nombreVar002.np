@@ -2,9 +2,8 @@ program {
 
     integer  _NOMBREvar1 = (false | true);
 
-    bool main() {
+    void main() {
         b1 = (false);
-        return b1;
     }
 
 }

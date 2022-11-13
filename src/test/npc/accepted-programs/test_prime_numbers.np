@@ -1,0 +1,32 @@
+program {
+        
+    void print(integer x) extern;
+
+    bool isPrime(integer n) {
+        integer i = 2;
+        while (i < n) {
+            if (n % i == 0) then {
+                return false;
+            }
+            i = i + 1;
+        }
+        return true;
+    }
+
+    void primes(integer n) {
+        integer i = 2;
+        while (i < n) {
+            if (isPrime(i)) then {
+                print(i);
+            }
+            i = i + 1;
+        }
+    }
+
+    void main() {
+        primes(10);
+        primes(20);
+    }
+
+}
+

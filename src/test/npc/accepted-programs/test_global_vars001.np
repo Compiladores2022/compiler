@@ -1,0 +1,22 @@
+program {
+
+    integer z = 3;
+    integer x = 6;
+    integer y = x+z;
+        
+    void print(integer x) extern;
+
+    integer fib(integer n) {
+        if (n == 0 || n == 1) then {
+            return n;
+        }
+        print(z);
+        return fib(n-1) + fib(n-2);
+    }
+
+    void main() {
+        print(fib(5));
+    }
+
+}
+
