@@ -138,7 +138,7 @@ void validate_proc_returns_type(symbol_t* s, tree_node_t* node) {
 void validate_params(symbol_t* s, tree_node_t* args) {
     list_t* params_list = s->params;
     list_t* args_list = init_list();
-    args_list = enlist(args, args_list);
+    enlist(args, args_list);
     node_t* params_cursor = params_list->head->next;
     node_t* args_cursor = args_list->head->next;
     int param_index = 1;
@@ -262,15 +262,10 @@ void check_types(symbol_t* s, tree_node_t* node) {
         }
     }
     if (s->flag == PROC_F) {
-        /* printf("IN PROC ********************** \n"); */
         has_return(s, node->middle);
         check_id_re_declaration(s, node->middle);
         validate_proc_returns_type(s, node->middle); // node->middle because there is the block
         int size = frame_size(node->middle);
-        /* printf("GLOB: %d \n", glob_offset); */
-        /* printf("MEM: %d \n", MEM_OFFSET); */
-        /* printf("PROC OFFSET: %d \n", s->offset); */
-        /* printf("SIZE: %d \n", size); */
         glob_offset = glob_offset - size;
         s->offset = glob_offset * MEM_OFFSET;
     }

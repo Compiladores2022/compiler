@@ -109,16 +109,16 @@ void show_params(list_t* params) {
     }
 }
 
-list_t* enlist(tree_node_t* root, list_t* list) {
+void enlist(tree_node_t* root, list_t* list) {
     if (root == NULL) {
-        return list;
+        return;
     }
     symbol_t* s = (symbol_t*)(root->value);
     if (s->flag != LINK_F) {
         add(list, s);
     }
     if (s->flag == UN_OP_F || s->flag == BIN_OP_F) { // if the symbol is a OP then we don't traverse the children
-        return list;
+        return;
     }
     enlist(root->left, list);
     enlist(root->right, list);
@@ -132,7 +132,7 @@ void validate_main_profile(type_t type, tree_node_t* params) {
     }
 
     list_t* params_list = init_list();
-    params_list = enlist(params, params_list);
+    enlist(params, params_list);
     if (!is_empty(params_list)) {
         char* err_msg = malloc(50 * sizeof(char));
         sprintf(err_msg, "Cannot pass arguments to main function");
@@ -170,3 +170,15 @@ void check_main(list_t* procedures) {
         yyerror(format_err(err_msg, 0));
     }
 }
+
+ void enlist_vars_declaration(tree_node_t* root, list_t* list) {
+     if (!root) {
+         return;
+     }
+     symbol_t* s = (symbol_t*) root->value;
+     if (s->flag == DECL_F) {
+         add(list, (symbol_t*) root->left->value);
+     }
+     enlist_vars_declaration(root->left, list);
+     enlist_vars_declaration(root->right, list);
+ } 

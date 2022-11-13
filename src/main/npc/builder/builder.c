@@ -161,8 +161,8 @@ tree_node_t* build_procedure_params(tree_node_t* proc, tree_node_t* params) {
     if (!strcmp(symbol->name, "main")) {
         validate_main_profile(symbol->type, params);
     }
-    list_t* params_list = init_list();
-    symbol->params = enlist(params, params_list);
+    symbol->params = init_list();
+    enlist(params, symbol->params);
     // show_params(symbol->params);
     return init_leaf_s(symbol);
 }

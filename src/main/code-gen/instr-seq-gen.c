@@ -78,19 +78,6 @@ symbol_t* create_register(char* reg_name) {
     return s;
 }
 
-// TODO: Move this to utils
-void enlist_decl_var_symbols(tree_node_t* root, list_t* list) {
-    if (!root) {
-        return;
-    }
-    symbol_t* s = (symbol_t*) root->value;
-    if (s->flag == DECL_F) {
-        add(list, (symbol_t*) root->left->value);
-    }
-    enlist_decl_var_symbols(root->left, list);
-    enlist_decl_var_symbols(root->right, list);
-}
-
 tree_node_t* global_decl_node;
 
 void build_instruction_seq(symbol_t* s, tree_node_t* node) {
@@ -194,7 +181,7 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         // move params to registers
         int i = 0;
         symbol_t* symbol = (symbol_t*) node->value;
-        list_t* params = symbol->params; // enlist(node->left, init_list());
+        list_t* params = symbol->params;
         node_t* cursor = params->head->next;
         while (cursor) {
             symbol_t* param = (symbol_t*) cursor->value;
@@ -216,7 +203,8 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         // generate arguments (possible complex expressions)
         traverse_tree(node->middle, build_instruction_seq, 1);
         int i = 0;
-        list_t* args = enlist(node->middle, init_list());
+        list_t* args = init_list();
+        enlist(node->middle, args);
         node_t* cursor = args->head->next;
         while (cursor) {
             symbol_t* param = (symbol_t*) cursor->value;
@@ -234,7 +222,7 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
     }
     if (s->flag == PROG_F) {
         list_t* glob_vars = init_list();
-        enlist_decl_var_symbols(node->left, glob_vars);
+        enlist_vars_declaration(node->left, glob_vars);
         node_t* cursor = glob_vars->head->next;
         while (cursor) {
             symbol_t* s = (symbol_t*) cursor->value;
