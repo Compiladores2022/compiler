@@ -1,0 +1,8 @@
+program {
+
+    integer x = y + z;
+
+    void main() {
+       integer var = x + integer;
+    }
+}

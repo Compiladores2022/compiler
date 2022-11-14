@@ -1,0 +1,22 @@
+name: Test Tree
+
+on:
+  push:
+    paths:
+      - '**/tree/*'
+  pull_request:
+    paths:
+      - '**/tree/*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test tree
+      run: |
+        make tree
+        ./tree

@@ -1,0 +1,23 @@
+name: Test Stack 
+
+on:
+  push:
+    paths:
+      - '**/stack/*'
+  pull_request:
+    paths:
+      - '**/stack/*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test stack
+      run: |
+        make stack
+        ./stack
+

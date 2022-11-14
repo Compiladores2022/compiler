@@ -1,0 +1,12 @@
+program {
+
+    integer sum(integer x, integer y, integer z) {
+        return x + y + z;
+    }
+
+    void main() {
+        integer w = 5;
+        return sum(2, 3, w);
+    }
+
+}

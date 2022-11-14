@@ -1,0 +1,11 @@
+program {
+
+    integer  nombreVar1=4;
+    bool b1= true;
+    integer x2 = 2;
+
+    void main() {
+        nombreVar1 = 55 +  +  2;
+    }
+
+}

@@ -1,0 +1,22 @@
+name: Test Symbol Table 
+
+on:
+  push:
+    paths:
+      - '**/symbol-table/*'
+  pull_request:
+    paths:
+      - '**/symbol-table/*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test symbol-table
+      run: |
+        make symbol_table
+        ./symbol_table

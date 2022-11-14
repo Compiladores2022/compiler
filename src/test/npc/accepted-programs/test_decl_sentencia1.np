@@ -1,0 +1,14 @@
+program {
+
+    integer  x1 = 0;
+    integer  x2 = 42;
+    bool x3 = true;
+
+    void print(integer x) extern;
+
+    integer main() {
+        print(x1 + (x2 * x2));
+        return x1 + (x2 * x2);
+    }
+
+}

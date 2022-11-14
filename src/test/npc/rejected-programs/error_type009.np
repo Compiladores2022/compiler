@@ -1,0 +1,11 @@
+program {
+    
+    bool p = false;
+    bool q = true;
+    bool r;
+
+    void main() {
+        r = p - q;
+    }
+
+}

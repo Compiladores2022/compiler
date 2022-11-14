@@ -1,0 +1,10 @@
+program {
+
+    integer x = 52;
+    integer y = 813;
+
+    void main() {
+        integer z = x & y;
+    }
+
+}

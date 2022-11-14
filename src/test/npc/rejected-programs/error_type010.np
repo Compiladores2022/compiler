@@ -1,0 +1,12 @@
+program {
+
+    bool p = false;
+    bool q = true;
+    bool r;
+
+    integer main() {
+        r = p * q;
+        return r;
+    }
+
+}

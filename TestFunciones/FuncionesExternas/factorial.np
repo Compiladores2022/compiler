@@ -1,0 +1,102 @@
+program{
+
+integer res=0;
+
+void printInteger(integer x) extern;
+void printFactorial(integer value) extern;
+void printFibonacci(integer value) extern;
+
+
+// retorna el factorial de v
+integer factorial (integer v){
+  integer limit=15;
+
+  if ( limit < v) then 
+  { 
+    
+      return (999); //return -1
+
+  }
+  { //nuevo bloque
+    integer c =0;
+    integer fact=1;
+    while (c<v){
+       c = c+1;
+       fact = fact*c;
+    }
+    return fact;
+  }
+}
+
+/* retorna el "n-esimo" numero de la serie de Fibonacci. 
+   fibonacci(1) = 1
+   fibonacci(2) = 1
+   fibonacci(3) = 2
+   fibonacci(4) = 3
+   fibonacci(5) = 5
+   fibonacci(6) = 8
+
+1 , 1 , 2 , 3 , 5 , 8 , 13 , 21 , 34 , 55 , 89 , 144 , 233 ..
+*/
+integer fibonacci(integer n)
+{
+    integer i =1;
+    integer term1=0; 
+    integer term2=1;
+    integer nextTerm=0;
+    
+  
+    while (i < n)
+    {   
+        nextTerm = term1 + term2;
+        term1 = term2;
+        term2 = nextTerm;
+        i = i+1;
+    }
+    return term2;
+}
+
+
+
+integer main(){
+       
+        integer x= ((4))+ 1 -1; // 4
+
+        res= factorial(x);
+
+        
+        printFactorial(x); printInteger(res);
+        
+
+        x= 6;
+        printFibonacci(x);
+        printInteger(fibonacci(x));
+
+     {  //nuevo bloque anonimo
+        integer x=0;
+        integer i=0;
+        integer aux=0;
+
+       // test fibonacci hasta 8
+
+
+    
+         x=8; // la cantidad de veces que ejecutara la funcion
+         i = 1;
+    
+         aux=1; 
+    
+         while (i<x){
+            integer res = fibonacci(aux);
+            aux = aux + 1;
+            printFibonacci(aux); printInteger(res);
+            i=i+1;
+         }
+
+      }//fin bloque
+        
+      return res;
+
+} //fin main
+
+}//fin program

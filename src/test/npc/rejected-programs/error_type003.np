@@ -1,0 +1,9 @@
+program {
+
+    bool p;
+
+    void main() {
+        p = 77;
+    }
+
+}

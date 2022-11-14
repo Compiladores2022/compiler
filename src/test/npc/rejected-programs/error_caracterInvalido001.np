@@ -1,0 +1,10 @@
+program {
+
+    integer nombreVar1 = 5;
+
+    integer main() {
+        nombreVar1 = %55;
+        return nombreVar1;
+    }
+
+}

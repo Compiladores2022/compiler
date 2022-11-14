@@ -1,0 +1,10 @@
+program {
+
+    integer  nombreVar1 = 5;
+
+    bool main() {
+        nombreVar1 = %true;
+        return nombreVar1;
+    }
+
+}

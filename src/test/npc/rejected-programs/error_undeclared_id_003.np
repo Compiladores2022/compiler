@@ -1,0 +1,7 @@
+program {
+
+    integer main() {
+        return x1 * aux & true;
+    }
+
+}

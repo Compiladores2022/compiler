@@ -1,0 +1,13 @@
+program {
+
+    integer x = 12;
+    integer y = 3;
+
+    void print(integer x) extern;
+
+    integer main() {
+        print(x % y);
+        return x % y;
+    }
+
+}

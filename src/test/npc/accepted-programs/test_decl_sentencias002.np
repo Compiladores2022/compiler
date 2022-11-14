@@ -1,0 +1,16 @@
+program {
+
+    integer  aux = 32;
+    bool b1 = (false || true);
+    integer  x1 =2;
+    bool b2 = false || true;
+
+    void print(integer x) extern;
+
+    integer main() {
+        x1 = 4;
+        print(x1 + 1);
+        return x1 + 1;
+    }
+
+}

@@ -1,0 +1,9 @@
+program {
+
+    integer  _NOMBREvar1 = (false | true);
+
+    void main() {
+        b1 = (false);
+    }
+
+}

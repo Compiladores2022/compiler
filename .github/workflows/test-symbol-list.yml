@@ -1,0 +1,22 @@
+name: Test Symbol List
+
+on:
+  push:
+    paths:
+      - '**/symbol-list/*'
+  pull_request:
+    paths:
+      - '**/symbol-list/*'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test symbol-list
+      run: |
+        make symbol_list
+        ./symbol_list

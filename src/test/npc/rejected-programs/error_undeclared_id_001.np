@@ -1,0 +1,9 @@
+program {
+
+    integer  nombreVar = (10);
+
+    integer main() {
+        return x1 * (x1 + 457);
+    }
+
+}

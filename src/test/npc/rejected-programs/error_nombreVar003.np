@@ -1,0 +1,9 @@
+program {
+
+    integer  nombre!var1 = 45;
+
+    void main() {
+        b1 = (false);
+    }
+
+}

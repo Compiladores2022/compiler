@@ -1,0 +1,7 @@
+program {
+
+    bool main() {
+        return true;
+    }
+
+}

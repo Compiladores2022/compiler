@@ -1,0 +1,11 @@
+program {
+    
+    integer  nombreVar1
+    bool b1;
+
+    integer main() {
+        nombreVar1 = 55;
+        return nombreVar1 + 1;
+    }
+
+}

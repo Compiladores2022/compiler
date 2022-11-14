@@ -1,0 +1,17 @@
+program {
+
+    void print(integer x) extern;
+
+    integer main() {
+        integer fact = 1;
+        integer n = 10;
+        integer i = 1;
+        while (i < n || i == n) {
+            fact = fact * i;
+            i = i + 1;
+        }
+        print(fact);
+        return fact;
+    }
+
+}

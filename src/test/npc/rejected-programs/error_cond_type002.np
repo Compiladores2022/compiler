@@ -1,0 +1,11 @@
+program {
+
+    void main() {
+        integer p = 4;
+        integer q = 3;
+        while (p % q) {
+            p = p * q;
+        }
+    }
+
+}

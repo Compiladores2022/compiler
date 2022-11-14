@@ -1,0 +1,10 @@
+program {
+    
+    integer foo = (4+77)*(5-10);
+    bool bar = p || q && r;
+
+    integer main() {
+        return foo;
+    }
+
+}

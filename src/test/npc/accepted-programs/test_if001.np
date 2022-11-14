@@ -1,0 +1,20 @@
+program {
+
+    void print(integer x) extern;
+
+    integer main() {
+        integer a = 3;
+        integer b = 2;
+        if (a > b) then {
+            integer c = a;
+            integer d = b;
+            print(c - d);
+            return c - d;
+        } else {
+            integer e = b;
+            integer f = a;
+            return f - e;
+        }
+    }
+
+}

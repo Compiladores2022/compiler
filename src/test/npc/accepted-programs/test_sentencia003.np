@@ -1,0 +1,19 @@
+program {
+    
+    void print(integer x) extern;
+
+    integer main() {
+        if (false && true || true) then {
+            print(0);
+            return 0;
+        } else {
+            print(1);
+            return 1;
+        }
+        print(0);
+        return 0;
+    }
+
+} 
+
+// & tiene predencia sobre el | - resultado esperado = true
