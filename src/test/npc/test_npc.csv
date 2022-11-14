@@ -41,3 +41,7 @@ test_global_vars001,33333335
 test_global_vars002,11235
 test_global_vars003,1135915
 test_global_vars004,8
+funciones,82
+test_fibonacci,011235813213455
+test_eq,111111
+test_even_fib,013821551443779872584

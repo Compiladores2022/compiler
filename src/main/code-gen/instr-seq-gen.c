@@ -1,6 +1,6 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "instr-seq-gen-utils.h"
 #include "../utils/utils.h"
 #include "../list/list.h"
 #include "../tree/tree-node.h"
@@ -12,71 +12,6 @@ list_t* instruction_seq;
 char* regs_names[6] = {"edi", "esi", "edx","ecx", "r8d", "r9d"};
 
 symbol_t* curr_proc_out_lbl;
-
-instr_type_t bin_op_to_instr_type(char* op) {
-    if (!strcmp(op, "+")) {
-        return ADD;
-    }
-    if (!strcmp(op, "-")) {
-        return SUB;
-    }
-    if (!strcmp(op, "*")) {
-        return MUL;
-    }
-    if (!strcmp(op, "/")) {
-        return DIV;
-    }
-    if (!strcmp(op, "%")) {
-        return MOD;
-    }
-    if (!strcmp(op, "&&")) {
-        return AND;
-    }
-    if (!strcmp(op, "||")) {
-        return OR;
-    }
-    if (!strcmp(op, "==")) {
-        return EQ;
-    }
-    if (!strcmp(op, ">")) {
-        return GT;
-    }
-    if (!strcmp(op, "<")) {
-        return LT;
-    }
-    printf("Error while generating 3D instruction - Unknown operation: %s\n", op);
-    exit(1);
-}
-
-instr_type_t un_op_to_instr_type(char* op) {
-    if (!strcmp(op, "-")) {
-        return MIN;
-    }
-    if (!strcmp(op, "!")) {
-        return NEG;
-    }
-    printf("Error while generating 3D instruction - Unknown operation: %s\n", op);
-    exit(1);
-}
-
-int labels_counter = 0;
-
-symbol_t* get_label() {
-    symbol_t* s = create_symbol();
-    labels_counter++;
-    char* name = (char*) malloc(sizeof(char) * 10);
-    sprintf(name, ".L%d", labels_counter);
-    s->name = name;
-    s->flag = LABEL_F;
-    return s;
-}
-
-symbol_t* create_register(char* reg_name) {
-    symbol_t* s = create_symbol();
-    s->name = reg_name;
-    s->flag = REG_F;
-    return s;
-}
 
 tree_node_t* global_decl_node;
 
@@ -174,7 +109,7 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         instruction_t* subq = new_instruction(SUB, s, create_register("rsp"), NULL);
         add_instruction(instruction_seq, subq);
 
-        if (!strcmp(s->name, "main")) { // add the global declarations
+        if (!strcmp(s->name, "main")) { // set the values of the global vars (if is nedeed)
             traverse_tree(global_decl_node, build_instruction_seq, 1);
         }
 
@@ -221,102 +156,17 @@ void build_instruction_seq(symbol_t* s, tree_node_t* node) {
         add_instruction(instruction_seq, mov_res);
     }
     if (s->flag == PROG_F) {
+        // Generate the special declaration for the global vars
         list_t* glob_vars = init_list();
         enlist_vars_declaration(node->left, glob_vars);
         node_t* cursor = glob_vars->head->next;
         while (cursor) {
             symbol_t* s = (symbol_t*) cursor->value;
-            s->global = 1;
+            s->global = 1; // Set global in true
             instruction_t* glob_decl_instr = new_instruction(GLB, s, NULL, NULL);
             add_instruction(instruction_seq, glob_decl_instr);
             cursor = cursor->next;
         }
         global_decl_node = node->left;
-    }
-}
-
-
-char* type_to_str(instr_type_t type) {
-    if (type == ADD) {
-        return "ADD";
-    }
-    if (type == SUB) {
-        return "SUB";
-    }
-    if (type == MUL) {
-        return "MUL";
-    }
-    if (type == DIV) {
-        return "DIV";
-    }
-    if (type == MOD) {
-        return "MOD";
-    }
-    if (type == AND) {
-        return "AND";
-    }
-    if (type == OR) {
-        return "OR";
-    }
-    if (type == EQ) {
-        return "EQ";
-    }
-    if (type == GT) {
-        return "GT";
-    }
-    if (type == LT) {
-        return "LT";
-    }
-    if (type == MIN) {
-        return "MIN";
-    }
-    if (type == NEG) {
-        return "NEG";
-    }
-    if (type == MOV) {
-        return "MOV";
-    }
-    if (type == RET) {
-        return "RET";
-    }
-    if (type == JMP) {
-        return "JMP";
-    }
-    if (type == JE) {
-        return "JE";
-    }
-    if (type == JNE) {
-        return "JNE";
-    }
-    if (type == LBL) {
-        return "LBL";
-    }
-    if (type == ENTER) {
-        return "ENTER";
-    }
-    if (type == LEAVE) {
-        return "LEAVE";
-    }
-    exit(1);
-}
-
-void show_list(list_t* instructions) {
-    node_t* cursor = instructions->head->next;
-    while (cursor) {
-        instruction_t* instruction = (instruction_t*)cursor->value;
-        /* printf("Instruction: \n"); */
-        /* printf("Type: %s\n", type_to_str(instruction->type)); */
-        if (instruction->s1) {
-            /* printf("left operand name:  %s\n", instruction->s1->name); */
-            /* printf("left operand value:  %d\n", instruction->s1->value); */
-        }
-        if (instruction->s2) {
-            /* printf("right operand name: %s\n", instruction->s2->name); */
-            /* printf("right operand value: %d\n", instruction->s2->value); */
-        }
-        /* printf("result name: %s\n", instruction->s3->name); */
-        /* printf("result value: %d\n", instruction->s3->value); */
-        /* printf("************\n"); */
-        cursor = cursor->next;
     }
 }

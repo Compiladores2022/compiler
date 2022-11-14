@@ -1,0 +1,24 @@
+program {
+        
+    void print(integer x) extern;
+
+    integer fib(integer n) {
+        if (n == 0 || n == 1) then {
+            return n;
+        }
+        return fib(n-1) + fib(n-2);
+    }
+
+    void main() {
+        integer n = 20;
+        integer i = 0;
+        while(i < n) {
+            if (i % 2 == 0) then {
+                print(fib(i));
+            }
+            i = i + 1;
+        }
+    }
+
+}
+

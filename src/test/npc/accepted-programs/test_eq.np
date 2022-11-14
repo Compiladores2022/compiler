@@ -1,0 +1,43 @@
+program {
+	
+    void print(bool x) extern;
+	
+	bool testEQ_1() {
+		bool b = 1 == 0;
+        return !b;
+	}
+	
+	bool testEQ_2() {
+		bool b = 0 == 1;
+        return !b;
+	}
+	
+	bool testEQ_3() {
+		bool b = 1 == 1;
+        return b;
+	}
+	
+	bool testEQ_4() {
+		bool b = -1 == 0;
+        return !b;
+	}
+	
+	bool testEQ_5() {
+		bool b = -2 == 1;
+        return !b;
+	}
+	
+	bool testEQ_6() {
+		bool b = 1 == -1;
+        return !b;
+	}
+
+	void main() {
+		print(testEQ_1());
+		print(testEQ_2());
+		print(testEQ_3());
+		print(testEQ_4());
+		print(testEQ_5());
+		print(testEQ_6());
+	}
+}
