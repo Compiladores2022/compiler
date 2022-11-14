@@ -40,3 +40,4 @@ test_recursive_fib,01123581321
 test_global_vars001,33333335
 test_global_vars002,11235
 test_global_vars003,1135915
+test_global_vars004,8
