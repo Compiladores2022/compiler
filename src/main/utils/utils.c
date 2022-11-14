@@ -170,15 +170,3 @@ void check_main(list_t* procedures) {
         yyerror(format_err(err_msg, 0));
     }
 }
-
- void enlist_vars_declaration(tree_node_t* root, list_t* list) {
-     if (!root) {
-         return;
-     }
-     symbol_t* s = (symbol_t*) root->value;
-     if (s->flag == DECL_F) {
-         add(list, (symbol_t*) root->left->value);
-     }
-     enlist_vars_declaration(root->left, list);
-     enlist_vars_declaration(root->right, list);
- } 

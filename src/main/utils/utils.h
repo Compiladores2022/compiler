@@ -1,12 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "../symbol-table/symbol-table.h"
 #include "../symbol-list/symbol-list.h"
-#include "../syntax-tree/syntax-tree.h"
-#include "../stack/stack.h"
 #include "../list/list.h"
-#include "../symbol/symbol.h"
 #include "../tree/tree-node.h"
 #include "../npc/parser.tab.h"
 
@@ -41,7 +37,5 @@ void register_procedure(symbol_t* s);
 void check_main(list_t* procedures);
 
 char* format_err(char* err, int lineno);
-
-void enlist_vars_declaration(tree_node_t* root, list_t* list);
 
 #endif
