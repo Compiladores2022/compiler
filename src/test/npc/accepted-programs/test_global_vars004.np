@@ -1,0 +1,26 @@
+program {
+
+    integer z = 3;
+    integer x = 6;
+    integer y = x+z;
+        
+    void print(integer x) extern;
+
+    integer fib(integer n) {
+        if (n == 0 || n == 1) then {
+            return n;
+        }
+        return fib(n-1) + fib(n-2);
+    }
+
+    integer test_return_global_var() {
+        return z;
+    }
+
+    void main() {
+        z = fib(6);
+        print(test_return_global_var());
+    }
+
+}
+

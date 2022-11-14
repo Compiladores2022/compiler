@@ -3,6 +3,7 @@
 #include "asm-gen.h"
 #include "../list/list.h"
 #include "../instruction/instruction.h"
+#include "asm-gen-utils.h"
 
 char* prologue(char* name) {
     char* prologue = (char*) malloc(100 * sizeof(char));
@@ -23,65 +24,16 @@ char* epilogue(char* curr_proc_out_lbl) {
 }
 
 char* create_mov_instruction(instruction_t* instruction) {
-    char* mov = (char*) malloc(100 * sizeof(char));
+    symbol_t* in = instruction->s1;
+    symbol_t* out = instruction->s3;
 
-    if (instruction->s1->flag == REG_F) {
-        if (instruction->s3->global) {
-            sprintf(mov, "\tmovl    %%%s, %s(%%rip)", instruction->s1->name, instruction->s3->name);
-        } else {
-            sprintf(mov, "\tmovl    %%%s, %d(%%rbp)", instruction->s1->name, instruction->s3->offset);
-        }
-        return mov;
-    } else if (instruction->s3->flag == REG_F) {
-        if (instruction->s1->flag == BASIC_F) {
-            sprintf(mov, "\tmovl    $%d, %%%s", instruction->s1->value, instruction->s3->name);
-        } else {
-            if (instruction->s1->global) {
-                sprintf(mov, "\tmovl    %s(%%rip), %%%s", instruction->s1->name, instruction->s3->name);
-            } else {
-                sprintf(mov, "\tmovl    %d(%%rbp), %%%s", instruction->s1->offset, instruction->s3->name);
-            }
-        }
-        return mov;
+    char* mov = (char*) malloc(200 * sizeof(char));
+    sprintf(mov, "\tmovl    %s", get_asm_address(in));
+    if (is_mem_ref(in) && is_mem_ref(out)) {
+        sprintf(mov, "%s%s", mov, get_edx_intermediation());
     }
+    sprintf(mov, "%s, %s", mov, get_asm_address(out));
 
-    if (instruction->s1->flag == BASIC_F) {
-        if (instruction->s3->global) {
-            sprintf(mov, "\tmovl    $%d, %s(%%rip)", instruction->s1->value, instruction->s3->name);
-        } else {
-            sprintf(mov, "\tmovl    $%d, %d(%%rbp)", instruction->s1->value, instruction->s3->offset);
-        }
-    } else if (instruction->s1->flag == BIN_OP_F || instruction->s1->flag == UN_OP_F 
-            || instruction->s1->flag == ID_F || instruction->s1->flag == CALL_F) {
-        if (instruction->s1->global) {
-            sprintf(mov, "\tmovl    %s(%%rip), %%edx", instruction->s1->name);
-        } else {
-            sprintf(mov, "\tmovl    %d(%%rbp), %%edx", instruction->s1->offset);
-        }
-        if (instruction->s3->global) {
-            sprintf(mov, "%s\n\tmovl    %%edx, %s(%%rip)", mov, instruction->s3->name);
-        } else {
-            sprintf(mov, "%s\n\tmovl    %%edx, %d(%%rbp)", mov, instruction->s3->offset);
-        }
-    } else {
-        printf("Error while attempting to create the asm assignment\n");
-        exit(1);
-        /* printf("%s %d %d\n", instruction->s1->name, instruction->s1->value, instruction->s1->flag); */
-    }
-    return mov;
-}
-
-char* mov_operand(symbol_t* s, char* reg) {
-    char* mov = (char*) malloc(100 * sizeof(char));
-    if (s->flag == BASIC_F) {
-        sprintf(mov, "\tmovl    $%d, %%%s", s->value, reg);
-    } else if (s->flag == ID_F || s->flag == BIN_OP_F || s->flag == UN_OP_F || s->flag == PARAM_F || s->flag == CALL_F) {
-        if (s->global) {
-            sprintf(mov, "\tmovl    %s(%%rip), %%%s", s->name, reg);
-        } else {
-            sprintf(mov, "\tmovl    %d(%%rbp), %%%s", s->offset, reg);
-        }
-    }
     return mov;
 }
 
@@ -98,7 +50,7 @@ char* create_add_instruction(instruction_t* instruction) {
 char* create_sub_instruction(instruction_t* instruction) {
     if (instruction->s2->flag == REG_F) {
         char* subq = (char*) malloc(25 * sizeof(char));
-        sprintf(subq, "\tsubq    $%d, %%rsp", -instruction->s1->offset); // here is -offset because we made a substraction
+        sprintf(subq, "\tsubq    $%d, %%rsp", -instruction->s1->offset);
         return subq;
     }
 
@@ -214,15 +166,13 @@ char* create_neg_instruction(instruction_t* instruction) {
 }
 
 char* create_ret_instruction(instruction_t* instruction) {
+    symbol_t* symbol_to_return = instruction->s3;
+
     char* ret = (char*) malloc(150 * sizeof(char));
-    if (!instruction->s3) {
+    if (!symbol_to_return) { // return void
         sprintf(ret, "\tmovl    $0, %%eax");
     } else {
-        if (instruction->s3->flag == BASIC_F) {
-            sprintf(ret, "\tmovl    $%d, %%eax", instruction->s3->value);
-        } else {
-            sprintf(ret, "\tmovl    %d(%%rbp), %%eax", instruction->s3->offset);
-        }
+        sprintf(ret, "\tmovl    %s, %%eax", get_asm_address(symbol_to_return));
     }
     sprintf(ret, "%s\n\tjmp     %s", ret, instruction->s1->name);
     return ret;
@@ -330,7 +280,6 @@ char* create_asm_instruction(instruction_t* instruction) {
     }
 }
 
-
 void create_asm(char* filename, list_t* instruction_seq) {
     FILE* f = fopen(filename, "w+");
     if (f == NULL) {
@@ -338,8 +287,6 @@ void create_asm(char* filename, list_t* instruction_seq) {
         exit(1);
     }
     
-    /* fprintf(f, "%s\n", prologue()); */
-
     node_t* cursor = instruction_seq->head->next;
     while (cursor != NULL) {
         instruction_t* instruction = (instruction_t*) cursor->value;
@@ -347,8 +294,6 @@ void create_asm(char* filename, list_t* instruction_seq) {
         fprintf(f, "%s\n", asm_instruction);
         cursor = cursor->next;
     }
-
-    /* fprintf(f, "%s\n", epilogue()); */
 
     fclose(f);
 }
